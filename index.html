@@ -1,37 +1,154 @@
-<script>
-    const spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "title": "各流派平均流行度",
-        "data": {
-            "url": "data/genre_popularity.csv",  // 注意路径
-            "format": {"type": "csv"}
-        },
-        "mark": "bar",
-        "encoding": {
-            "x": {
-                "field": "genre",
-                "type": "nominal",
-                "sort": "-y",
-                "title": "音乐流派"
-            },
-            "y": {
-                "field": "popularity",
-                "type": "quantitative",
-                "title": "流行度（平均播放量）"
-            },
-            "color": {
-                "field": "genre",
-                "type": "nominal",
-                "legend": null
-            },
-            "tooltip": [
-                {"field": "genre", "type": "nominal", "title": "流派"},
-                {"field": "popularity", "type": "quantitative", "title": "流行度", "format": ".1f"}
-            ]
-        },
-        "config": {
-            "view": {"stroke": "transparent"}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Genres Analysis - Team Project</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    };
-    vegaEmbed('#vis', spec);
-</script>
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f7f9fc;
+            color: #1a1a2e;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .step {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 60px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-4px);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            color: #1DB954;
+            border-left: 5px solid #1DB954;
+            padding-left: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+            padding-left: 25px;
+        }
+
+        .insight {
+            background: #e8f5e9;
+            border-left: 4px solid #1DB954;
+            padding: 16px 24px;
+            margin-top: 25px;
+            border-radius: 12px;
+            font-style: italic;
+            color: #2e7d32;
+        }
+
+        .vis-container {
+            margin: 30px 0;
+            min-height: 450px;
+        }
+
+        hr {
+            margin: 40px 0;
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .step { padding: 25px; }
+            h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Step 1: Most Popular Genres -->
+        <div class="step">
+            <h2>Step 1: What Are the Most Popular Genres?</h2>
+            <div class="subtitle">Overall popularity ranking across all tracks (mean value, ignoring time)</div>
+            <div id="chart-step1" class="vis-container"></div>
+            <div class="insight">
+                💡 Natural question arises: <strong>"What makes these genres popular?"</strong> — Let's explore the audio features behind them.
+            </div>
+        </div>
+
+        <!-- Step 2: Single vs Multi-Genre Tracks -->
+        <div class="step">
+            <h2>Step 2: Single-Genre vs Multi-Genre Tracks</h2>
+            <div class="subtitle">Multi-genre tracks tend to be more popular, but harder to analyze</div>
+            <div id="chart-step2" class="vis-container"></div>
+            <div class="insight">
+                💡 Decision: We'll <strong>filter to single-genre tracks</strong> for cleaner attribute analysis moving forward.
+            </div>
+        </div>
+
+        <!-- Step 3: Genre Audio Features -->
+        <div class="step">
+            <h2>Step 3: What Makes Each Genre Unique?</h2>
+            <div class="subtitle">Comparing audio features across genres (valence, energy, danceability, etc.)</div>
+            <div id="chart-step3" class="vis-container"></div>
+            <div class="insight">
+                💡 Interesting finding: Genres are <strong>converging in emotional space</strong> — no extreme differences in valence or energy.
+            </div>
+        </div>
+
+        <!-- Step 4: Time Dependence & Convergence -->
+        <div class="step">
+            <h2>Step 4: How Have Tastes Changed Over Time?</h2>
+            <div class="subtitle">More genres emerge, but popularity gaps are shrinking — tastes are converging</div>
+            <div id="chart-step4" class="vis-container"></div>
+            <div class="insight">
+                💡 Key takeaway: Previously, fewer genres with big popularity gaps. Now, more genres but everyone listens to a bit of everything.
+            </div>
+        </div>
+
+        <footer>
+            Data source: Spotify Songs Dataset | Explore your own taste in the sunburst visualization
+        </footer>
+    </div>
+
+    <script type="module">
+        // Import all 4 independent spec files
+        import { spec1 } from './specs/step1.js';
+        import { spec2 } from './specs/step2.js';
+        import { spec3 } from './specs/step3.js';
+        import { spec4 } from './specs/step4.js';
+        
+        // Render all charts
+        vegaEmbed('#chart-step1', spec1).catch(error => console.error('Step 1 error:', error));
+        vegaEmbed('#chart-step2', spec2).catch(error => console.error('Step 2 error:', error));
+        vegaEmbed('#chart-step3', spec3).catch(error => console.error('Step 3 error:', error));
+        vegaEmbed('#chart-step4', spec4).catch(error => console.error('Step 4 error:', error));
+    </script>
+</body>
+</html>
