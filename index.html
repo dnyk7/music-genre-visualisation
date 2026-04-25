@@ -1,154 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Genres Analysis - Team Project</title>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Songs — Data Visualization</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #f7f9fc;
-            color: #1a1a2e;
-            line-height: 1.6;
-        }
+  <!-- Vega & Vega-Lite -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-        .step {
-            background: white;
-            border-radius: 20px;
-            margin-bottom: 60px;
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-        }
+  <style>
+    :root {
+      --bg: #fafafa;
+      --text: #1a1a1a;
+      --muted: #666;
+      --accent: #1DB954;
+      --card-bg: #fff;
+      --border: #e5e5e5;
+    }
 
-        .step:hover {
-            transform: translateY(-4px);
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 16px;
-            color: #1DB954;
-            border-left: 5px solid #1DB954;
-            padding-left: 20px;
-        }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-        .subtitle {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 30px;
-            padding-left: 25px;
-        }
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: rgba(255,255,255,0.75);
+      max-width: 600px;
+    }
+    .scroll-hint {
+      margin-top: 3rem;
+      animation: bounce 2s infinite;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
 
-        .insight {
-            background: #e8f5e9;
-            border-left: 4px solid #1DB954;
-            padding: 16px 24px;
-            margin-top: 25px;
-            border-radius: 12px;
-            font-style: italic;
-            color: #2e7d32;
-        }
+    /* ── Scrollytelling ── */
+    .scrolly-container {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 1rem;
+    }
 
-        .vis-container {
-            margin: 30px 0;
-            min-height: 450px;
-        }
+    .step {
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+      gap: 3rem;
+      padding: 4rem 0;
+      opacity: 0.3;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .step:nth-child(even) { flex-direction: row-reverse; }
 
-        hr {
-            margin: 40px 0;
-            border: none;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #ddd, transparent);
-        }
+    .step-text {
+      flex: 0 0 35%;
+      max-width: 400px;
+    }
+    .step-text h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    .step-text p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+    .step-number {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 36px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
 
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: #888;
-            font-size: 0.85rem;
-        }
+    .step-chart {
+      flex: 1;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
 
-        @media (max-width: 768px) {
-            .step { padding: 25px; }
-            h2 { font-size: 1.4rem; }
-        }
-    </style>
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .step, .step:nth-child(even) {
+        flex-direction: column;
+        min-height: auto;
+      }
+      .step-text { flex: 1; max-width: 100%; text-align: center; }
+      .step-chart { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Step 1: Most Popular Genres -->
-        <div class="step">
-            <h2>Step 1: What Are the Most Popular Genres?</h2>
-            <div class="subtitle">Overall popularity ranking across all tracks (mean value, ignoring time)</div>
-            <div id="chart-step1" class="vis-container"></div>
-            <div class="insight">
-                💡 Natural question arises: <strong>"What makes these genres popular?"</strong> — Let's explore the audio features behind them.
-            </div>
-        </div>
 
-        <!-- Step 2: Single vs Multi-Genre Tracks -->
-        <div class="step">
-            <h2>Step 2: Single-Genre vs Multi-Genre Tracks</h2>
-            <div class="subtitle">Multi-genre tracks tend to be more popular, but harder to analyze</div>
-            <div id="chart-step2" class="vis-container"></div>
-            <div class="insight">
-                💡 Decision: We'll <strong>filter to single-genre tracks</strong> for cleaner attribute analysis moving forward.
-            </div>
-        </div>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>🎵 Spotify Songs</h1>
+    <p>Exploring popularity, genres, and audio features across decades of music data. Scroll down to begin the journey.</p>
+    <div class="scroll-hint">▼ Scroll to explore</div>
+  </section>
 
-        <!-- Step 3: Genre Audio Features -->
-        <div class="step">
-            <h2>Step 3: What Makes Each Genre Unique?</h2>
-            <div class="subtitle">Comparing audio features across genres (valence, energy, danceability, etc.)</div>
-            <div id="chart-step3" class="vis-container"></div>
-            <div class="insight">
-                💡 Interesting finding: Genres are <strong>converging in emotional space</strong> — no extreme differences in valence or energy.
-            </div>
-        </div>
+  <!-- Scrollytelling Steps -->
+  <div class="scrolly-container">
 
-        <!-- Step 4: Time Dependence & Convergence -->
-        <div class="step">
-            <h2>Step 4: How Have Tastes Changed Over Time?</h2>
-            <div class="subtitle">More genres emerge, but popularity gaps are shrinking — tastes are converging</div>
-            <div id="chart-step4" class="vis-container"></div>
-            <div class="insight">
-                💡 Key takeaway: Previously, fewer genres with big popularity gaps. Now, more genres but everyone listens to a bit of everything.
-            </div>
-        </div>
+    <!-- Step 1 -->
+    <section class="step" id="step1">
+      <div class="step-text">
+        <div class="step-number">1</div>
+        <h2>Popularity Distribution</h2>
+        <p>
+          Most tracks on Spotify cluster at lower popularity scores, with a long tail stretching toward the mainstream hits. 
+          This right-skewed distribution tells us that "going viral" is rare — the vast majority of songs remain niche.
+        </p>
+      </div>
+      <div class="step-chart" id="chart1"></div>
+    </section>
 
-        <footer>
-            Data source: Spotify Songs Dataset | Explore your own taste in the sunburst visualization
-        </footer>
-    </div>
+    <!-- Step 2 -->
+    <section class="step" id="step2">
+      <div class="step-text">
+        <div class="step-number">2</div>
+        <h2>Single vs. Multi-Genre</h2>
+        <p>
+          Tracks tagged with multiple genres tend to show different popularity patterns compared to single-genre tracks. 
+          Cross-genre appeal might help songs reach broader audiences — or dilute their identity.
+        </p>
+      </div>
+      <div class="step-chart" id="chart2"></div>
+    </section>
 
-    <script type="module">
-        // Import all 4 independent spec files
-        import { spec1 } from './specs/step1.js';
-        import { spec2 } from './specs/step2.js';
-        import { spec3 } from './specs/step3.js';
-        import { spec4 } from './specs/step4.js';
-        
-        // Render all charts
-        vegaEmbed('#chart-step1', spec1).catch(error => console.error('Step 1 error:', error));
-        vegaEmbed('#chart-step2', spec2).catch(error => console.error('Step 2 error:', error));
-        vegaEmbed('#chart-step3', spec3).catch(error => console.error('Step 3 error:', error));
-        vegaEmbed('#chart-step4', spec4).catch(error => console.error('Step 4 error:', error));
-    </script>
+    <!-- Step 3 -->
+    <section class="step" id="step3">
+      <div class="step-text">
+        <div class="step-number">3</div>
+        <h2>Audio Features Comparison</h2>
+        <p>
+          How do danceability, energy, and valence differ across genres? This step reveals the sonic fingerprints 
+          that distinguish EDM from Rock, or Pop from R&B.
+        </p>
+      </div>
+      <div class="step-chart" id="chart3"></div>
+    </section>
+
+    <!-- Step 4 -->
+    <section class="step" id="step4">
+      <div class="step-text">
+        <div class="step-number">4</div>
+        <h2>Time Convergence</h2>
+        <p>
+          Have genres become more alike over time? By tracking audio feature trends across decades, 
+          we can spot whether musical diversity is converging or diverging.
+        </p>
+      </div>
+      <div class="step-chart" id="chart4"></div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>Data Visualization Course · Group Project · Built with Vega-Lite</p>
+  </footer>
+
+  <script type="module">
+    import { spec1 } from './specs/step1.js';
+    import { spec2 } from './specs/step2.js';
+    import { spec3 } from './specs/step3.js';
+    import { spec4 } from './specs/step4.js';
+
+    const embedOpts = { actions: false, renderer: 'svg' };
+
+    vegaEmbed('#chart1', spec1, embedOpts);
+    vegaEmbed('#chart2', spec2, embedOpts);
+    vegaEmbed('#chart3', spec3, embedOpts);
+    vegaEmbed('#chart4', spec4, embedOpts);
+
+    // Scroll-triggered animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.25 });
+
+    document.querySelectorAll('.step').forEach(step => observer.observe(step));
+  </script>
+
 </body>
 </html>

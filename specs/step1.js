@@ -1,47 +1,55 @@
+// specs/step1.js
+// Step 1: Distribution of Track Popularity (Histogram)
+
 export const spec1 = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
-    "text": "Most Popular Genres",
+    "text": "Distribution of Track Popularity",
     "fontSize": 18,
-    "fontWeight": "bold"
+    "fontWeight": "bold",
+    "anchor": "start",
+    "color": "#333"
   },
-  "description": "Bar chart showing average popularity by genre",
+  "width": 700,
+  "height": 400,
   "data": {
-    "url": "/spotify_songs.csv",
+    "url": "spotify_songs.csv",
     "format": {"type": "csv"}
   },
+  "transform": [
+    {
+      "calculate": "isValid(datum.track_album_release_date) ? (test(/^[0-9]{4}$/, datum.track_album_release_date) ? toNumber(datum.track_album_release_date) : year(toDate(datum.track_album_release_date))) : null",
+      "as": "release_year"
+    },
+    {"filter": "datum.release_year >= 1970"},
+    {"filter": "isValid(datum.track_popularity)"}
+  ],
   "mark": {
     "type": "bar",
-    "tooltip": true,
-    "cornerRadiusEnd": 4
+    "color": "#4CC9F0",
+    "opacity": 0.85
   },
   "encoding": {
     "x": {
-      "field": "genre",
-      "type": "nominal",
-      "sort": "-y",
-      "title": "Music Genre",
-      "axis": {"labelAngle": -45, "labelFontSize": 11}
+      "field": "track_popularity",
+      "type": "quantitative",
+      "bin": {"maxbins": 50},
+      "title": "Track Popularity",
+      "axis": {"grid": false, "labelFontSize": 12, "titleFontSize": 14}
     },
     "y": {
-      "field": "popularity",
+      "aggregate": "count",
       "type": "quantitative",
-      "title": "Average Popularity",
-      "axis": {"grid": true}
-    },
-    "color": {
-      "field": "genre",
-      "type": "nominal",
-      "legend": null,
-      "scale": {"scheme": "greens"}
+      "title": "Number of Tracks",
+      "axis": {"grid": true, "gridColor": "#eee", "labelFontSize": 12, "titleFontSize": 14}
     },
     "tooltip": [
-      {"field": "genre", "type": "nominal", "title": "Genre"},
-      {"field": "popularity", "type": "quantitative", "title": "Popularity", "format": ".1f"}
+      {"field": "track_popularity", "type": "quantitative", "bin": true, "title": "Popularity Range"},
+      {"aggregate": "count", "type": "quantitative", "title": "Count"}
     ]
   },
   "config": {
-    "view": {"stroke": null},
-    "background": "transparent"
+    "view": {"stroke": "transparent"},
+    "font": "Inter, system-ui, sans-serif"
   }
 };

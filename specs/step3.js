@@ -1,57 +1,25 @@
+// specs/step3.js
+// Step 3: Audio Features Comparison (Placeholder)
+
 export const spec3 = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
-    "text": "Audio Features by Genre",
+    "text": "Step 3: Audio Features Comparison",
+    "subtitle": "(To be implemented by Person 3)",
     "fontSize": 18,
-    "fontWeight": "bold"
+    "fontWeight": "bold",
+    "subtitleFontSize": 13,
+    "subtitleColor": "#999",
+    "anchor": "start"
   },
-  "description": "Comparing valence, energy, danceability across top genres",
-  "data": {
-    "url": "/spotify_songs.csv",
-    "format": {"type": "csv"}
-  },
-  "transform": [
-    {
-      "fold": ["valence", "energy", "danceability", "acousticness", "instrumentalness"],
-      "as": ["feature", "value"]
-    }
-  ],
-  "mark": {
-    "type": "bar",
-    "tooltip": true,
-    "opacity": 0.85
-  },
+  "width": 700,
+  "height": 400,
+  "data": {"values": [{"msg": "Placeholder"}]},
+  "mark": {"type": "text", "align": "center", "baseline": "middle", "fontSize": 20, "color": "#ccc"},
   "encoding": {
-    "x": {
-      "field": "feature",
-      "type": "nominal",
-      "title": "Audio Feature",
-      "axis": {"labelAngle": -30}
-    },
-    "y": {
-      "field": "value",
-      "type": "quantitative",
-      "title": "Average Value",
-      "aggregate": "mean",
-      "scale": {"domain": [0, 1]},
-      "axis": {"grid": true}
-    },
-    "color": {
-      "field": "genre",
-      "type": "nominal",
-      "title": "Genre",
-      "scale": {"scheme": "viridis"},
-      "legend": {"columns": 2}
-    },
-    "tooltip": [
-      {"field": "feature", "title": "Feature"},
-      {"field": "genre", "title": "Genre"},
-      {"field": "value", "aggregate": "mean", "title": "Value", "format": ".2f"}
-    ]
+    "text": {"value": "Step 3 — Coming Soon"}
   },
   "config": {
-    "view": {"stroke": null},
-    "background": "transparent",
-    "legend": {"titleFontSize": 12, "labelFontSize": 10}
+    "view": {"stroke": "transparent"}
   }
 };

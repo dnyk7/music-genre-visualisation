@@ -1,54 +1,25 @@
+// specs/step4.js
+// Step 4: Time Convergence (Placeholder)
+
 export const spec4 = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
-    "text": "Genre Diversification & Popularity Convergence Over Time",
+    "text": "Step 4: Time Convergence",
+    "subtitle": "(To be implemented by Person 4)",
     "fontSize": 18,
-    "fontWeight": "bold"
+    "fontWeight": "bold",
+    "subtitleFontSize": 13,
+    "subtitleColor": "#999",
+    "anchor": "start"
   },
-  "description": "Line chart showing number of genres and popularity gap by decade",
-  "data": {
-    "url": "/spotify_songs.csv",
-    "format": {"type": "csv"}
+  "width": 700,
+  "height": 400,
+  "data": {"values": [{"msg": "Placeholder"}]},
+  "mark": {"type": "text", "align": "center", "baseline": "middle", "fontSize": 20, "color": "#ccc"},
+  "encoding": {
+    "text": {"value": "Step 4 — Coming Soon"}
   },
-  "transform": [
-    {
-      "calculate": "floor(datum.year / 10) * 10",
-      "as": "decade"
-    }
-  ],
-  "layer": [
-    {
-      "mark": {"type": "line", "strokeWidth": 3, "color": "#2d6a4f"},
-      "encoding": {
-        "x": {"field": "decade", "type": "ordinal", "title": "Decade"},
-        "y": {
-          "field": "genre_count",
-          "type": "quantitative",
-          "title": "Number of Genres",
-          "aggregate": "distinct",
-          "axis": {"titleColor": "#2d6a4f", "grid": true}
-        }
-      }
-    },
-    {
-      "mark": {"type": "line", "strokeWidth": 3, "strokeDash": [6, 4], "color": "#d00000"},
-      "encoding": {
-        "x": {"field": "decade", "type": "ordinal"},
-        "y": {
-          "field": "popularity_gap",
-          "type": "quantitative",
-          "title": "Popularity Gap (Max - Min)",
-          "aggregate": "ci0",
-          "axis": {"titleColor": "#d00000", "format": ".1f"}
-        }
-      }
-    }
-  ],
-  "resolve": {"scale": {"y": "independent"}},
   "config": {
-    "view": {"stroke": null},
-    "background": "transparent",
-    "axisLeft": {"titleFontSize": 12, "labelColor": "#2d6a4f"},
-    "axisRight": {"titleFontSize": 12, "labelColor": "#d00000"}
+    "view": {"stroke": "transparent"}
   }
 };
