@@ -1,0 +1,37 @@
+<script>
+    const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "title": "各流派平均流行度",
+        "data": {
+            "url": "data/genre_popularity.csv",  // 注意路径
+            "format": {"type": "csv"}
+        },
+        "mark": "bar",
+        "encoding": {
+            "x": {
+                "field": "genre",
+                "type": "nominal",
+                "sort": "-y",
+                "title": "音乐流派"
+            },
+            "y": {
+                "field": "popularity",
+                "type": "quantitative",
+                "title": "流行度（平均播放量）"
+            },
+            "color": {
+                "field": "genre",
+                "type": "nominal",
+                "legend": null
+            },
+            "tooltip": [
+                {"field": "genre", "type": "nominal", "title": "流派"},
+                {"field": "popularity", "type": "quantitative", "title": "流行度", "format": ".1f"}
+            ]
+        },
+        "config": {
+            "view": {"stroke": "transparent"}
+        }
+    };
+    vegaEmbed('#vis', spec);
+</script>
