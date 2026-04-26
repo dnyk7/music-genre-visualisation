@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --bg: #fafafa; --text: #1a1a1a; --muted: #666; --accent: #1DB954; --card-bg: #fff; --border: #e5e5e5; }
+    :root { --bg: #fafafa; --text: #1a1a1a; --muted: #666; --accent: #1DB954; --card-bg: #fff; --border: #e5e5e5; --step2-shift-right: 6vw; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
     .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; }
@@ -29,9 +29,45 @@
     .step-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
     .step-number { display: inline-block; width: 36px; height: 36px; background: var(--accent); color: #fff; border-radius: 50%; text-align: center; line-height: 36px; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem; }
     .step-chart { flex: 1; background: var(--card-bg); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 1.5rem; border: 1px solid var(--border); min-height: 500px; position: relative; }
-    .vega-bind { position: absolute !important; top: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-size: 13px; z-index: 100; }
-    .vega-bind label { font-weight: 600; color: #333; margin-right: 8px; }
-    .vega-bind input[type="radio"] { margin: 0 4px 0 8px; cursor: pointer; }
+    .vega-bind {
+      position: absolute !important;
+      top: 60px;
+      right: 10px;
+      background: rgba(255,255,255,0.95);
+      padding: 10px 14px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 13px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 120px;
+    }
+    .vega-bind span.vega-bind-name {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 2px;
+      display: block;
+    }
+    .vega-bind .vega-bind-radio {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .vega-bind label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      color: #444;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .vega-bind input[type="radio"] {
+      margin: 0;
+      cursor: pointer;
+    }
 
     /* ── Step 2: Sticky scrollytelling ── */
     .sticky-step {
@@ -57,6 +93,7 @@
       padding: 1.5rem;
       margin-top: 4rem;
       margin-bottom: 4rem;
+      transform: translateX(var(--step2-shift-right));
     }
 
     /* Chart title area (HTML, not Vega-Lite) */
@@ -129,8 +166,8 @@
     /* Decomposition indicator box */
     .decomp-box {
       position: absolute;
-      top: 60px;
-      left: 10px;
+      top: 015px;
+      left: 560px;
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -184,6 +221,7 @@
     .scrolling-text {
       width: 38%;
       padding-left: 3rem;
+      padding-bottom: 45vh;
       display: flex;
       flex-direction: column;
     }
@@ -230,9 +268,9 @@
       .vega-bind { position: relative !important; top: auto; right: auto; margin-bottom: 10px; }
 
       .sticky-step { flex-direction: column; }
-      .sticky-chart-wrapper { position: relative; top: auto; width: 100%; height: 520px; margin-top: 0; }
+      .sticky-chart-wrapper { position: relative; top: auto; width: 100%; height: 520px; margin-top: 0; transform: none; }
       .chart-states { height: 420px; }
-      .scrolling-text { width: 100%; padding-left: 0; }
+      .scrolling-text { width: 100%; padding-left: 0; padding-bottom: 0; }
       .text-step { min-height: auto; padding: 3rem 0; }
       .decomp-box { left: 10px; top: 90px; }
     }
@@ -411,6 +449,19 @@
       chartViews.stacked   = r2.view;
       chartViews.unstacked = r3.view;
 
+      function syncModeAcrossViews(modeValue) {
+        Object.values(chartViews).forEach(v => {
+          if (!v) return;
+          try { v.signal('mode', modeValue).run(); } catch(e) {}
+        });
+        requestAnimationFrame(() => {
+          Object.values(chartViews).forEach(v => {
+            if (!v) return;
+            try { v.resize().run(); } catch(e) {}
+          });
+        });
+      }
+
       // Force resize after initial render so hidden states get correct size
       requestAnimationFrame(() => {
         Object.values(chartViews).forEach(v => v && v.resize());
@@ -423,11 +474,7 @@
           if (isSyncing) return;
           isSyncing = true;
           updateDecompBox(value);
-          Object.entries(chartViews).forEach(([k, v]) => {
-            if (k !== name && v) {
-              try { v.signal('mode', value).run(); } catch(e) {}
-            }
-          });
+          syncModeAcrossViews(value);
           setTimeout(() => { isSyncing = false; }, 50);
         });
       });

@@ -27,16 +27,14 @@ const COLOR_TEST_3 = "#FF7F0E";
 
 const BAR_STROKE_WIDTH = 1.5;
 const BAR_STROKE_COLOR = COLOR_BAR_STROKE;
-const CHART1_BAR_OPACITY = 0.7;
-const CHART2_BAR_OPACITY = 0.7;
 
 const CHART_PADDING_LEFT   = 80;
 const CHART_PADDING_RIGHT  = 40;
 const CHART_PADDING_TOP    = 70;
 const CHART_PADDING_BOTTOM = 50;
 
-const SINGLE_DENSITY_SCALE = 4.5 * 100;
-const MULTI_DENSITY_SCALE  = 5.5 * 100;
+const SINGLE_DENSITY_SCALE = 4.5;
+const MULTI_DENSITY_SCALE  = 5.5;
 const SINGLE_COUNT_SCALE   = 4.5;
 const MULTI_COUNT_SCALE    = 5.5;
 
@@ -100,7 +98,7 @@ histData.forEach(d => {
   overallData.push({
     bin_start: d.bin_start,
     bin_end: d.bin_end,
-    y_density: (d.single_count + d.multi_count) / totalAll * 100,
+    y_density: (d.single_count + d.multi_count) / totalAll,
     y_count: d.single_count + d.multi_count
   });
 });
@@ -108,32 +106,19 @@ histData.forEach(d => {
 // ── State 2: Stacked (each group as proportion of total) ──
 const histStacked = [];
 histData.forEach(d => {
-  const singleDensity = d.single_count / totalAll * 100;
-  const multiDensity = d.multi_count / totalAll * 100;
-  const singleCount = d.single_count;
-  const multiCount = d.multi_count;
-
   histStacked.push({
     bin_start: d.bin_start,
     bin_end: d.bin_end,
     group: 'single-genre',
-    y_density: singleDensity,
-    y_count: singleCount,
-    y0_density: 0,
-    y1_density: singleDensity,
-    y0_count: 0,
-    y1_count: singleCount
+    y_density: d.single_count / totalAll,
+    y_count: d.single_count
   });
   histStacked.push({
     bin_start: d.bin_start,
     bin_end: d.bin_end,
     group: 'multi-genre',
-    y_density: multiDensity,
-    y_count: multiCount,
-    y0_density: singleDensity,
-    y1_density: singleDensity + multiDensity,
-    y0_count: singleCount,
-    y1_count: singleCount + multiCount
+    y_density: d.multi_count / totalAll,
+    y_count: d.multi_count
   });
 });
 
@@ -144,14 +129,14 @@ histData.forEach(d => {
     bin_start: d.bin_start,
     bin_end: d.bin_end,
     group: 'single-genre',
-    y_density: d.single_count / singleTotal * 100,
+    y_density: d.single_count / singleTotal,
     y_count: d.single_count
   });
   histLong.push({
     bin_start: d.bin_start,
     bin_end: d.bin_end,
     group: 'multi-genre',
-    y_density: d.multi_count / multiTotal * 100,
+    y_density: d.multi_count / multiTotal,
     y_count: d.multi_count
   });
 });
@@ -234,7 +219,7 @@ export const spec2a = {
       "bind": {
         "input": "radio",
         "options": ["density", "count"],
-        "labels": ["Density (%)", "Raw Count"],
+        "labels": ["Density", "Raw Count"],
         "name": "View Mode"
       }
     }
@@ -246,16 +231,12 @@ export const spec2a = {
         {
           "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
           "as": "y_val"
-        },
-        {
-          "calculate": "0",
-          "as": "y0_val"
         }
       ],
       "mark": {
-        "type": "rect",
+        "type": "bar",
         "color": COLOR_TEST_1,
-        "opacity": CHART1_BAR_OPACITY,
+        "opacity": 0.9,
         "strokeWidth": BAR_STROKE_WIDTH,
         "stroke": BAR_STROKE_COLOR
       },
@@ -263,24 +244,23 @@ export const spec2a = {
         "x": {
           "field": "bin_start",
           "type": "quantitative",
+          "bin": {"binned": true},
           "scale": {"domain": [0, 100]},
-          "axis": {"tickMinStep": 5},
           "title": "Track Popularity"
         },
-        "x2": {"field": "bin_end", "type": "quantitative"},
+        "x2": {"field": "bin_end"},
         "y": {
           "field": "y_val",
           "type": "quantitative",
           "title": {
-            "signal": "mode == 'density' ? 'Percentage' : 'Number of Tracks'"
+            "signal": "mode == 'density' ? 'Density' : 'Number of Tracks'"
           }
         },
-        "y2": {"field": "y0_val"},
         "tooltip": [
           {"field": "bin_start", "type": "quantitative", "title": "Range"},
           {"field": "bin_end",   "type": "quantitative", "title": "to"},
           {"field": "y_count",   "type": "quantitative", "title": "Count", "format": ","},
-          {"field": "y_density", "type": "quantitative", "title": "Percentage", "format": ".2f"}
+          {"field": "y_density", "type": "quantitative", "title": "Density", "format": ".4f"}
         ]
       }
     }
@@ -289,7 +269,7 @@ export const spec2a = {
     "view": {"stroke": "transparent"},
     "font": "Inter, system-ui, sans-serif",
     "axis": {"gridColor": COLOR_GRID, "labelFontSize": 12, "titleFontSize": 14},
-    "bar": {"cornerRadiusEnd": 2, "continuousBandSize": 24}
+    "bar": {"cornerRadiusEnd": 2}
   }
 };
 
@@ -311,7 +291,7 @@ export const spec2b = {
       "bind": {
         "input": "radio",
         "options": ["density", "count"],
-        "labels": ["Density (%)", "Raw Count"],
+        "labels": ["Density", "Raw Count"],
         "name": "View Mode"
       }
     }
@@ -323,19 +303,11 @@ export const spec2b = {
         {
           "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
           "as": "y_val"
-        },
-        {
-          "calculate": "mode == 'density' ? datum.y0_density : datum.y0_count",
-          "as": "y0_val"
-        },
-        {
-          "calculate": "mode == 'density' ? datum.y1_density : datum.y1_count",
-          "as": "y1_val"
         }
       ],
       "mark": {
-        "type": "rect",
-        "opacity": CHART2_BAR_OPACITY,
+        "type": "bar",
+        "opacity": 0.85,
         "strokeWidth": BAR_STROKE_WIDTH,
         "stroke": BAR_STROKE_COLOR
       },
@@ -343,19 +315,18 @@ export const spec2b = {
         "x": {
           "field": "bin_start",
           "type": "quantitative",
+          "bin": {"binned": true},
           "scale": {"domain": [0, 100]},
-          "axis": {"tickMinStep": 5},
           "title": "Track Popularity"
         },
-        "x2": {"field": "bin_end", "type": "quantitative"},
+        "x2": {"field": "bin_end"},
         "y": {
-          "field": "y1_val",
+          "field": "y_val",
           "type": "quantitative",
           "title": {
-            "signal": "mode == 'density' ? 'Percentage' : 'Number of Tracks'"
+            "signal": "mode == 'density' ? 'Density' : 'Number of Tracks'"
           }
         },
-        "y2": {"field": "y0_val"},
         "color": {
           "field": "group",
           "type": "nominal",
@@ -374,7 +345,7 @@ export const spec2b = {
           {"field": "bin_start", "type": "quantitative", "title": "Range"},
           {"field": "bin_end",   "type": "quantitative", "title": "to"},
           {"field": "y_count",   "type": "quantitative", "title": "Count", "format": ","},
-          {"field": "y_density", "type": "quantitative", "title": "Percentage", "format": ".2f"},
+          {"field": "y_density", "type": "quantitative", "title": "Density", "format": ".4f"},
           {"field": "group",     "type": "nominal",      "title": "Group"}
         ]
       }
@@ -384,7 +355,7 @@ export const spec2b = {
     "view": {"stroke": "transparent"},
     "font": "Inter, system-ui, sans-serif",
     "axis": {"gridColor": COLOR_GRID, "labelFontSize": 12, "titleFontSize": 14},
-    "bar": {"cornerRadiusEnd": 2, "continuousBandSize": 24}
+    "bar": {"cornerRadiusEnd": 2}
   }
 };
 
@@ -405,7 +376,7 @@ export const spec2c = {
       "bind": {
         "input": "radio",
         "options": ["density", "count"],
-        "labels": ["Density (%)", "Raw Count"],
+        "labels": ["Density", "Raw Count"],
         "name": "View Mode"
       }
     }
@@ -430,7 +401,7 @@ export const spec2c = {
         "x": {
           "field": "bin_start",
           "type": "quantitative",
-          "bin": {"binned": true, "step": 5},
+          "bin": {"binned": true},
           "scale": {"domain": [0, 100]},
           "title": "Track Popularity"
         },
@@ -440,7 +411,7 @@ export const spec2c = {
           "type": "quantitative",
           "stack": null,
           "title": {
-            "signal": "mode == 'density' ? 'Percentage' : 'Number of Tracks'"
+            "signal": "mode == 'density' ? 'Density' : 'Number of Tracks'"
           }
         },
         "color": {
@@ -456,7 +427,7 @@ export const spec2c = {
           {"field": "bin_start", "type": "quantitative", "title": "Range"},
           {"field": "bin_end",   "type": "quantitative", "title": "to"},
           {"field": "y_count",   "type": "quantitative", "title": "Count", "format": ","},
-          {"field": "y_density", "type": "quantitative", "title": "Percentage", "format": ".2f"},
+          {"field": "y_density", "type": "quantitative", "title": "Density", "format": ".4f"},
           {"field": "group",     "type": "nominal",      "title": "Group"}
         ]
       }
@@ -640,7 +611,7 @@ export const spec2c = {
     "view": {"stroke": "transparent"},
     "font": "Inter, system-ui, sans-serif",
     "axis": {"gridColor": COLOR_GRID, "labelFontSize": 12, "titleFontSize": 14},
-    "bar": {"cornerRadiusEnd": 2, "continuousBandSize": 24}
+    "bar": {"cornerRadiusEnd": 2}
   }
 };
 

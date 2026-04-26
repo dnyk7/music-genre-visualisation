@@ -12,7 +12,7 @@ export const spec3 = {
     "subtitleColor": "#999",
     "anchor": "start"
   },
-  "width": 700,
+  "width": 720,
   "height": 400,
   "data": {"values": [{"msg": "Placeholder"}]},
   "mark": {"type": "text", "align": "center", "baseline": "middle", "fontSize": 20, "color": "#ccc"},
