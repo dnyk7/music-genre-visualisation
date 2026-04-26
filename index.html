@@ -167,7 +167,7 @@
     .decomp-box {
       position: absolute;
       top: 015px;
-      left: 560px;
+      left: 505px;
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -177,6 +177,13 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       min-width: 150px;
       transition: opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .decomp-box.visible {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .decomp-row {
@@ -210,6 +217,14 @@
       font-weight: 600;
       color: var(--text);
       font-size: 12px;
+    }
+
+    .decomp-label {
+      color: #444;
+      font-size: 11px;
+      font-weight: 600;
+      min-width: 74px;
+      text-transform: lowercase;
     }
 
     .decomp-sub {
@@ -321,6 +336,7 @@
           <div class="decomp-row decomp-total">
             <span class="decomp-dot" style="background: #1F77B4;"></span>
             <span class="decomp-text">
+              <span class="decomp-label">total</span>
               <span class="decomp-main" id="decomp-total-main">24,162</span>
               <span class="decomp-sub" id="decomp-total-sub">100%</span>
             </span>
@@ -329,6 +345,7 @@
           <div class="decomp-row">
             <span class="decomp-dot" style="background: #5A9FD4;"></span>
             <span class="decomp-text">
+              <span class="decomp-label">single genre</span>
               <span class="decomp-main" id="decomp-single-main">22,511</span>
               <span class="decomp-sub" id="decomp-single-sub">93.2%</span>
             </span>
@@ -336,6 +353,7 @@
           <div class="decomp-row">
             <span class="decomp-dot" style="background: #FF7F0E;"></span>
             <span class="decomp-text">
+              <span class="decomp-label">multi genre</span>
               <span class="decomp-main" id="decomp-multi-main">1,651</span>
               <span class="decomp-sub" id="decomp-multi-sub">6.8%</span>
             </span>
@@ -415,6 +433,7 @@
     const decompSingleSub  = document.getElementById('decomp-single-sub');
     const decompMultiMain  = document.getElementById('decomp-multi-main');
     const decompMultiSub   = document.getElementById('decomp-multi-sub');
+    const decompBox        = document.getElementById('decomp-box');
 
     const stateTitles = {
       overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined — 24,162 total' },
@@ -517,6 +536,8 @@
             chartTitleText.textContent = t.title;
             chartSubtitleText.textContent = t.subtitle;
           }
+
+          decompBox.classList.toggle('visible', target !== 'overall');
 
           // Switch chart state
           chartStates.forEach(s => {

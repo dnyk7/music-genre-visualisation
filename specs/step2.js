@@ -271,14 +271,17 @@ export const spec2a = {
         "y": {
           "field": "y_val",
           "type": "quantitative",
+          "axis": {
+            "minExtent": 40,
+            "maxExtent": 40,
+            "labelExpr": "mode === 'count' ? format(datum.value, '~s') : format(datum.value, '.1f')"
+          },
           "title": {
             "signal": "mode == 'density' ? 'Percentage' : 'Number of Tracks'"
           }
         },
         "y2": {"field": "y0_val"},
         "tooltip": [
-          {"field": "bin_start", "type": "quantitative", "title": "Range"},
-          {"field": "bin_end",   "type": "quantitative", "title": "to"},
           {"field": "y_count",   "type": "quantitative", "title": "Count", "format": ","},
           {"field": "y_density", "type": "quantitative", "title": "Percentage", "format": ".2f"}
         ]
@@ -351,6 +354,11 @@ export const spec2b = {
         "y": {
           "field": "y1_val",
           "type": "quantitative",
+          "axis": {
+            "minExtent": 40,
+            "maxExtent": 40,
+            "labelExpr": "mode === 'count' ? format(datum.value, '~s') : format(datum.value, '.1f')"
+          },
           "title": {
             "signal": "mode == 'density' ? 'Percentage' : 'Number of Tracks'"
           }
@@ -363,16 +371,9 @@ export const spec2b = {
             "domain": ["single-genre", "multi-genre"],
             "range": [COLOR_TEST_2, COLOR_TEST_3]
           },
-          "legend": {
-            "orient": "top-right",
-            "title": null,
-            "labelFontSize": 11,
-            "offset": 4
-          }
+          "legend": null
         },
         "tooltip": [
-          {"field": "bin_start", "type": "quantitative", "title": "Range"},
-          {"field": "bin_end",   "type": "quantitative", "title": "to"},
           {"field": "y_count",   "type": "quantitative", "title": "Count", "format": ","},
           {"field": "y_density", "type": "quantitative", "title": "Percentage", "format": ".2f"},
           {"field": "group",     "type": "nominal",      "title": "Group"}
@@ -439,6 +440,11 @@ export const spec2c = {
           "field": "y_val",
           "type": "quantitative",
           "stack": null,
+          "axis": {
+            "minExtent": 40,
+            "maxExtent": 40,
+            "labelExpr": "mode === 'count' ? format(datum.value, '~s') : format(datum.value, '.1f')"
+          },
           "title": {
             "signal": "mode == 'density' ? 'Percentage' : 'Number of Tracks'"
           }
@@ -453,8 +459,6 @@ export const spec2c = {
           "legend": null
         },
         "tooltip": [
-          {"field": "bin_start", "type": "quantitative", "title": "Range"},
-          {"field": "bin_end",   "type": "quantitative", "title": "to"},
           {"field": "y_count",   "type": "quantitative", "title": "Count", "format": ","},
           {"field": "y_density", "type": "quantitative", "title": "Percentage", "format": ".2f"},
           {"field": "group",     "type": "nominal",      "title": "Group"}
