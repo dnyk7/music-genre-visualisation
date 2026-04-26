@@ -4,212 +4,345 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spotify Songs — Data Visualization</title>
-
-  <!-- Vega & Vega-Lite -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
-    :root {
-      --bg: #fafafa;
-      --text: #1a1a1a;
-      --muted: #666;
-      --accent: #1DB954;
-      --card-bg: #fff;
-      --border: #e5e5e5;
-    }
-
+    :root { --bg: #fafafa; --text: #1a1a1a; --muted: #666; --accent: #1DB954; --card-bg: #fff; --border: #e5e5e5; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .hero p { font-size: 1.25rem; color: rgba(255,255,255,0.75); max-width: 600px; }
+    .scroll-hint { margin-top: 3rem; animation: bounce 2s infinite; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+    @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-10px)} 60%{transform:translateY(-5px)} }
+    .scrolly-container { position: relative; max-width: 1200px; margin: 0 auto; padding: 4rem 1rem; }
 
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+    /* ── Standard steps (1, 3, 4) ── */
+    .step { display: flex; align-items: center; min-height: 100vh; gap: 3rem; padding: 4rem 0; opacity: 0.3; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .step.visible { opacity: 1; transform: translateY(0); }
+    .step:nth-child(even) { flex-direction: row-reverse; }
+    .step-text { flex: 0 0 35%; max-width: 400px; }
+    .step-text h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+    .step-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
+    .step-number { display: inline-block; width: 36px; height: 36px; background: var(--accent); color: #fff; border-radius: 50%; text-align: center; line-height: 36px; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem; }
+    .step-chart { flex: 1; background: var(--card-bg); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 1.5rem; border: 1px solid var(--border); min-height: 500px; position: relative; }
+    .vega-bind { position: absolute !important; top: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-size: 13px; z-index: 100; }
+    .vega-bind label { font-weight: 600; color: #333; margin-right: 8px; }
+    .vega-bind input[type="radio"] { margin: 0 4px 0 8px; cursor: pointer; }
+
+    /* ── Step 2: Sticky scrollytelling ── */
+    .sticky-step {
+      display: flex;
+      align-items: flex-start;
+      min-height: auto;
+      position: relative;
+      gap: 0;
+      padding: 0;
+    }
+    .sticky-step.visible { opacity: 1; transform: translateY(0); }
+
+    .sticky-chart-wrapper {
+      position: sticky;
+      top: 8vh;
+      width: 62%;
+      height: 560px;
+      flex-shrink: 0;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-top: 4rem;
+      margin-bottom: 4rem;
     }
 
-    /* ── Hero ── */
-    .hero {
+    /* Chart title area (HTML, not Vega-Lite) */
+    .chart-title-area {
+      margin-bottom: 8px;
+    }
+
+    .chart-title-area h3 {
+      font-size: 17px;
+      font-weight: bold;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .chart-title-area .subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .chart-states {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      overflow: hidden;
+    }
+
+    .chart-state {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+
+    .chart-state.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    /* Vega-Embed adds its own classes to the target element */
+    #step2 .chart-state,
+    #step2 .chart-state.vega-embed {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    #step2 .chart-state > div,
+    #step2 .chart-state.vega-embed > div {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    #step2 .chart-state svg,
+    #step2 .chart-state.vega-embed svg {
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+    }
+
+    /* Decomposition indicator box */
+    .decomp-box {
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      z-index: 50;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      min-width: 150px;
+      transition: opacity 0.3s ease;
+    }
+
+    .decomp-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 3px 0;
+    }
+
+    .decomp-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 5px 0;
+    }
+
+    .decomp-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .decomp-text {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .decomp-main {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .decomp-sub {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* Scrolling text column */
+    .scrolling-text {
+      width: 38%;
+      padding-left: 3rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .text-step {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 2rem;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: #fff;
-    }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 700;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-    }
-    .hero p {
-      font-size: 1.25rem;
-      color: rgba(255,255,255,0.75);
-      max-width: 600px;
-    }
-    .scroll-hint {
-      margin-top: 3rem;
-      animation: bounce 2s infinite;
-      color: rgba(255,255,255,0.5);
-      font-size: 0.9rem;
-    }
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-10px); }
-      60% { transform: translateY(-5px); }
-    }
-
-    /* ── Scrollytelling ── */
-    .scrolly-container {
-      position: relative;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 4rem 1rem;
-    }
-
-    .step {
-      display: flex;
-      align-items: center;
-      min-height: 100vh;
-      gap: 3rem;
       padding: 4rem 0;
       opacity: 0.3;
-      transform: translateY(40px);
-      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transform: translateY(20px);
+      transition: all 0.6s ease;
     }
-    .step.visible {
+
+    .text-step.active {
       opacity: 1;
       transform: translateY(0);
     }
-    .step:nth-child(even) { flex-direction: row-reverse; }
 
-    .step-text {
-      flex: 0 0 35%;
-      max-width: 400px;
-    }
-    .step-text h2 {
+    .text-step h2 {
       font-size: 2rem;
       font-weight: 700;
       margin-bottom: 1rem;
       color: var(--text);
     }
-    .step-text p {
+
+    .text-step p {
       color: var(--muted);
       font-size: 1.05rem;
       line-height: 1.7;
     }
-    .step-number {
-      display: inline-block;
-      width: 36px;
-      height: 36px;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 36px;
-      font-weight: 600;
-      font-size: 0.9rem;
+
+    .text-step .step-number {
       margin-bottom: 1rem;
     }
 
-    .step-chart {
-      flex: 1;
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-    }
+    footer { text-align: center; padding: 4rem 2rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--border); }
 
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--muted);
-      font-size: 0.9rem;
-      border-top: 1px solid var(--border);
-    }
-
-    /* ── Responsive ── */
     @media (max-width: 900px) {
-      .step, .step:nth-child(even) {
-        flex-direction: column;
-        min-height: auto;
-      }
+      .step, .step:nth-child(even) { flex-direction: column; min-height: auto; }
       .step-text { flex: 1; max-width: 100%; text-align: center; }
       .step-chart { width: 100%; }
+      .vega-bind { position: relative !important; top: auto; right: auto; margin-bottom: 10px; }
+
+      .sticky-step { flex-direction: column; }
+      .sticky-chart-wrapper { position: relative; top: auto; width: 100%; height: 520px; margin-top: 0; }
+      .chart-states { height: 420px; }
+      .scrolling-text { width: 100%; padding-left: 0; }
+      .text-step { min-height: auto; padding: 3rem 0; }
+      .decomp-box { left: 10px; top: 90px; }
     }
   </style>
 </head>
 <body>
-
-  <!-- Hero Section -->
   <section class="hero">
     <h1>🎵 Spotify Songs</h1>
     <p>Exploring popularity, genres, and audio features across decades of music data. Scroll down to begin the journey.</p>
     <div class="scroll-hint">▼ Scroll to explore</div>
   </section>
 
-  <!-- Scrollytelling Steps -->
   <div class="scrolly-container">
 
-    <!-- Step 1 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STEP 1: Overall Popularity                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <section class="step" id="step1">
       <div class="step-text">
         <div class="step-number">1</div>
         <h2>Popularity Distribution</h2>
-        <p>
-          Most tracks on Spotify cluster at lower popularity scores, with a long tail stretching toward the mainstream hits. 
-          This right-skewed distribution tells us that "going viral" is rare — the vast majority of songs remain niche.
-        </p>
+        <p>Most tracks on Spotify cluster at lower popularity scores, with a long tail stretching toward the mainstream hits. This right-skewed distribution tells us that "going viral" is rare — the vast majority of songs remain niche.</p>
       </div>
       <div class="step-chart" id="chart1"></div>
     </section>
 
-    <!-- Step 2 -->
-    <section class="step" id="step2">
-      <div class="step-text">
-        <div class="step-number">2</div>
-        <h2>Single vs. Multi-Genre</h2>
-        <p>
-          Tracks tagged with multiple genres tend to show different popularity patterns compared to single-genre tracks. 
-          Cross-genre appeal might help songs reach broader audiences — or dilute their identity.
-        </p>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STEP 2: Sticky Scrollytelling — Three States                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section class="step sticky-step" id="step2">
+
+      <!-- Left: sticky chart area -->
+      <div class="sticky-chart-wrapper">
+        <!-- HTML title (fixed across all states) -->
+        <div class="chart-title-area">
+          <h3 id="chart-title-text">Track Popularity Distribution</h3>
+          <div class="subtitle" id="chart-subtitle-text">All tracks combined</div>
+        </div>
+
+        <div class="chart-states">
+          <div class="chart-state active" id="state-overall"></div>
+          <div class="chart-state" id="state-stacked"></div>
+          <div class="chart-state" id="state-unstacked"></div>
+        </div>
+
+        <!-- Decomposition indicator -->
+        <div class="decomp-box" id="decomp-box">
+          <div class="decomp-row decomp-total">
+            <span class="decomp-dot" style="background: #1F77B4;"></span>
+            <span class="decomp-text">
+              <span class="decomp-main" id="decomp-total-main">24,162</span>
+              <span class="decomp-sub" id="decomp-total-sub">100%</span>
+            </span>
+          </div>
+          <div class="decomp-divider"></div>
+          <div class="decomp-row">
+            <span class="decomp-dot" style="background: #5A9FD4;"></span>
+            <span class="decomp-text">
+              <span class="decomp-main" id="decomp-single-main">22,511</span>
+              <span class="decomp-sub" id="decomp-single-sub">93.2%</span>
+            </span>
+          </div>
+          <div class="decomp-row">
+            <span class="decomp-dot" style="background: #FF7F0E;"></span>
+            <span class="decomp-text">
+              <span class="decomp-main" id="decomp-multi-main">1,651</span>
+              <span class="decomp-sub" id="decomp-multi-sub">6.8%</span>
+            </span>
+          </div>
+        </div>
       </div>
-      <div class="step-chart" id="chart2"></div>
+
+      <!-- Right: scrolling text paragraphs -->
+      <div class="scrolling-text">
+        <div class="text-step active" data-target="overall">
+          <div class="step-number">2</div>
+          <h2>Popularity Distribution</h2>
+          <p>Most tracks on Spotify cluster at lower popularity scores, with a long tail stretching toward the mainstream hits. This right-skewed distribution tells us that "going viral" is rare — the vast majority of songs remain niche.</p>
+        </div>
+        <div class="text-step" data-target="stacked">
+          <h2>Breaking Down by Genre Tags</h2>
+          <p>When we split tracks by how many genres they are tagged with, a clear picture emerges. <strong style="color: #5A9FD4;">Single-genre tracks</strong> make up the vast majority (~93%), while <strong style="color: #FF7F0E;">multi-genre tracks</strong> are a small but notable minority (~7%). Toggle the switch to see proportions vs. raw counts.</p>
+        </div>
+        <div class="text-step" data-target="unstacked">
+          <h2>Two Distinct Patterns</h2>
+          <p>Viewed separately, the two groups reveal very different popularity patterns. Multi-genre tracks skew significantly higher — their average popularity is ~63 vs. ~44 for single-genre tracks. The Gaussian curves show how sharply the two distributions diverge.</p>
+        </div>
+      </div>
     </section>
 
-    <!-- Step 3 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STEP 3: Audio Features                                        -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <section class="step" id="step3">
       <div class="step-text">
         <div class="step-number">3</div>
         <h2>Audio Features Comparison</h2>
-        <p>
-          How do danceability, energy, and valence differ across genres? This step reveals the sonic fingerprints 
-          that distinguish EDM from Rock, or Pop from R&B.
-        </p>
+        <p>How do danceability, energy, and valence differ across genres? This step reveals the sonic fingerprints that distinguish EDM from Rock, or Pop from R&B.</p>
       </div>
       <div class="step-chart" id="chart3"></div>
     </section>
 
-    <!-- Step 4 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STEP 4: Time Convergence                                      -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <section class="step" id="step4">
       <div class="step-text">
         <div class="step-number">4</div>
         <h2>Time Convergence</h2>
-        <p>
-          Have genres become more alike over time? By tracking audio feature trends across decades, 
-          we can spot whether musical diversity is converging or diverging.
-        </p>
+        <p>Have genres become more alike over time? By tracking audio feature trends across decades, we can spot whether musical diversity is converging or diverging.</p>
       </div>
       <div class="step-chart" id="chart4"></div>
     </section>
@@ -222,28 +355,141 @@
 
   <script type="module">
     import { spec1 } from './specs/step1.js';
-    import { spec2 } from './specs/step2.js';
+    import { spec2a, spec2b, spec2c } from './specs/step2.js';
     import { spec3 } from './specs/step3.js';
     import { spec4 } from './specs/step4.js';
 
-    const embedOpts = { actions: false, renderer: 'svg' };
+    const opts = { actions: true, renderer: 'svg' };
+    const optsNoActions = { actions: false, renderer: 'svg' };
 
-    vegaEmbed('#chart1', spec1, embedOpts);
-    vegaEmbed('#chart2', spec2, embedOpts);
-    vegaEmbed('#chart3', spec3, embedOpts);
-    vegaEmbed('#chart4', spec4, embedOpts);
+    // ── Step 1 ──
+    vegaEmbed('#chart1', spec1, opts);
 
-    // Scroll-triggered animations
-    const observer = new IntersectionObserver((entries) => {
+    // ── Step 2: three stacked chart states ──
+    const chartViews = {};
+
+    const chartTitleText    = document.getElementById('chart-title-text');
+    const chartSubtitleText = document.getElementById('chart-subtitle-text');
+
+    const decompTotalMain  = document.getElementById('decomp-total-main');
+    const decompTotalSub   = document.getElementById('decomp-total-sub');
+    const decompSingleMain = document.getElementById('decomp-single-main');
+    const decompSingleSub  = document.getElementById('decomp-single-sub');
+    const decompMultiMain  = document.getElementById('decomp-multi-main');
+    const decompMultiSub   = document.getElementById('decomp-multi-sub');
+
+    const stateTitles = {
+      overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined — 24,162 total' },
+      stacked:   { title: 'Popularity by Genre Tag Count', subtitle: 'Stacked view: single-genre vs multi-genre' },
+      unstacked: { title: 'Single vs. Multi-Genre Patterns', subtitle: 'Gaussian fit excludes 0–5 bin' }
+    };
+
+    function updateDecompBox(mode) {
+      if (mode === 'density') {
+        decompTotalMain.textContent  = '100%';
+        decompTotalSub.textContent   = '24,162';
+        decompSingleMain.textContent = '93.2%';
+        decompSingleSub.textContent  = '22,511';
+        decompMultiMain.textContent  = '6.8%';
+        decompMultiSub.textContent   = '1,651';
+      } else {
+        decompTotalMain.textContent  = '24,162';
+        decompTotalSub.textContent   = '100%';
+        decompSingleMain.textContent = '22,511';
+        decompSingleSub.textContent  = '93.2%';
+        decompMultiMain.textContent  = '1,651';
+        decompMultiSub.textContent   = '6.8%';
+      }
+    }
+
+    Promise.all([
+      vegaEmbed('#state-overall',   spec2a, optsNoActions),
+      vegaEmbed('#state-stacked',   spec2b, optsNoActions),
+      vegaEmbed('#state-unstacked', spec2c, optsNoActions)
+    ]).then(([r1, r2, r3]) => {
+      chartViews.overall   = r1.view;
+      chartViews.stacked   = r2.view;
+      chartViews.unstacked = r3.view;
+
+      // Force resize after initial render so hidden states get correct size
+      requestAnimationFrame(() => {
+        Object.values(chartViews).forEach(v => v && v.resize());
+      });
+
+      // Sync mode across all three states — prevent recursive updates
+      let isSyncing = false;
+      ['overall', 'stacked', 'unstacked'].forEach(name => {
+        chartViews[name].addSignalListener('mode', (signalName, value) => {
+          if (isSyncing) return;
+          isSyncing = true;
+          updateDecompBox(value);
+          Object.entries(chartViews).forEach(([k, v]) => {
+            if (k !== name && v) {
+              try { v.signal('mode', value).run(); } catch(e) {}
+            }
+          });
+          setTimeout(() => { isSyncing = false; }, 50);
+        });
+      });
+
+      updateDecompBox('density');
+    });
+
+    // ── Step 3 & 4 ──
+    vegaEmbed('#chart3', spec3, opts);
+    vegaEmbed('#chart4', spec4, opts);
+
+    // ── Scroll observers ──
+
+    // Standard steps (1, 3, 4): fade in when entering viewport
+    const stepObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('visible');
       });
     }, { threshold: 0.25 });
 
-    document.querySelectorAll('.step').forEach(step => observer.observe(step));
-  </script>
+    document.querySelectorAll('.step:not(.sticky-step)').forEach(step => {
+      stepObserver.observe(step);
+    });
 
+    // Step 2 sticky: also needs visible class for initial fade-in
+    stepObserver.observe(document.getElementById('step2'));
+
+    // Step 2 text-step observer: drives chart state switching
+    const textSteps   = document.querySelectorAll('#step2 .text-step');
+    const chartStates = document.querySelectorAll('#step2 .chart-state');
+
+    const textObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+          const target = entry.target.dataset.target;
+
+          // Update chart title
+          const t = stateTitles[target];
+          if (t) {
+            chartTitleText.textContent = t.title;
+            chartSubtitleText.textContent = t.subtitle;
+          }
+
+          // Switch chart state
+          chartStates.forEach(s => {
+            s.classList.toggle('active', s.id === `state-${target}`);
+          });
+
+          // Resize newly visible chart after CSS transition starts
+          requestAnimationFrame(() => {
+            if (chartViews[target]) chartViews[target].resize();
+          });
+
+          // Highlight active text paragraph
+          textSteps.forEach(s => {
+            s.classList.toggle('active', s === entry.target);
+          });
+        }
+      });
+    }, { threshold: [0, 0.25, 0.5, 0.75, 1.0] });
+
+    textSteps.forEach(step => textObserver.observe(step));
+  </script>
 </body>
 </html>

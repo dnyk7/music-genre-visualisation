@@ -1,6 +1,8 @@
 // specs/step1.js
 // Step 1: Distribution of Track Popularity (Histogram)
 
+const COLOR_ALL_PRIMARY = "#1F77B4";   // primary color for bars
+
 export const spec1 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
@@ -26,8 +28,8 @@ export const spec1 = {
   ],
   "mark": {
     "type": "bar",
-    "color": "#4CC9F0",
-    "opacity": 0.85
+    "color": COLOR_ALL_PRIMARY,
+    "opacity": 0.9
   },
   "encoding": {
     "x": {
