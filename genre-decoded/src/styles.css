@@ -1,0 +1,439 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Genre Decoded — styles.css
+   Design direction: dark editorial / music magazine
+   Fonts: Syne (display, headings) + DM Sans (body)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Variables ────────────────────────────────────────────────────────────── */
+:root {
+  /* Genre colours */
+  --c-edm:   #1DB954;
+  --c-latin: #F72585;
+  --c-pop:   #4CC9F0;
+  --c-rb:    #7B2D8B;
+  --c-rap:   #F77F00;
+  --c-rock:  #D62828;
+
+  /* Layout palette */
+  --bg:        #0a0a0a;
+  --surface:   #141414;
+  --surface2:  #1e1e1e;
+  --border:    #2a2a2a;
+  --text:      #f0f0f0;
+  --text-dim:  #888888;
+  --accent:    #1DB954;
+
+  /* Typography */
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Quarto overrides ───────────────────────────────────────────────────────
+#quarto-content, .page-columns { all: unset; display: block; }
+.quarto-title-block { display: none; } */
+
+/* ── Hero section ─────────────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 8vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(29,185,84,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(247,37,133,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  max-width: 16ch;
+}
+
+.hero h1 em { font-style: normal; color: var(--accent); }
+
+.hero-sub {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--text-dim);
+  max-width: 45ch;
+  margin-bottom: 3rem;
+}
+
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: bounce 2s ease-in-out infinite;
+}
+.scroll-hint::before { content: '↓'; font-size: 1.2rem; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
+}
+
+/* ── Scrollytelling Layout ────────────────────────────────────────────────── */
+.scrolly {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 3rem;
+  position: relative;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.scrolly-sticky {
+  position: sticky;
+  top: 0;
+  flex: 1.4;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  order: 2;
+  z-index: 10;
+}
+
+.scrolly-steps {
+  flex: 1;
+  order: 1;
+  padding: 5vh 0 10vh 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.step {
+  max-width: 38ch;
+  opacity: 0.15;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  margin-bottom: 10vh; /* ← this creates large gaps */
+  min-height: 40vh /* each step takes 60% of screen, not 100% */
+}
+
+.step.is-active { opacity: 1; transform: translateY(0); }
+
+.step-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.step h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+/* ── Chart Panel Grid ── */
+.chart-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+  display: grid;
+  /* Two equal columns for charts */
+  grid-template-columns: 1fr 1fr; 
+  gap: 1.5rem;
+  align-items: start;
+  transition: opacity 0.3s ease;
+}
+
+/* Prevent charts from being too huge */
+.chart-panel svg {
+  max-width: 100%;
+  height: auto;
+  max-height: 380px; 
+}
+
+/* Full-width slots that center their children */
+#slot-legend, 
+#slot-filters, 
+#slot-songs {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center; /* This centers the group of buttons */
+  width: 100%;
+}
+
+/* ── Chart Slots ── */
+/* Force side-by-side */
+#slot-radar { grid-column: 1; width: 100%; }
+#slot-bar   { grid-column: 2; width: 100%; }
+
+/* Responsive: Stack at smaller widths */
+@media (max-width: 1100px) {
+  .chart-panel {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+  #slot-radar, #slot-bar { grid-column: 1 / -1; }
+}
+
+/* ── UI Components ────────────────────────────────────────────────────────── */
+/* Center the flex containers for legend and filters */
+/* Ensure the legend/filters don't stretch their children */
+/* ── UI Components ── */
+.genre-legend {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.legend-item.active {
+  opacity: 1;
+  color: var(--text);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Filters row */
+.filters-wrap {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.filters-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.filters-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter-btn {
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.filter-btn:hover { border-color: #555; color: var(--text); }
+
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 600;
+}
+
+/* --- Charts --- */
+.radar-svg, .bar-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Song Cards ───────────────────────────────────────────────────────────── */
+.song-cards { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.song-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.song-card-rank {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-dim);
+}
+
+.song-card-name { font-size: 0.85rem; font-weight: 500; }
+.song-card-artist { font-size: 0.75rem; color: var(--text-dim); }
+
+.song-card-pop {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(29,185,84,0.1);
+  color: var(--accent);
+}
+
+/* ── Tooltip ──────────────────────────────────────────────────────────────── */
+.chart-tooltip {
+  position: fixed;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.75rem;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.chart-tooltip.visible { opacity: 1; }
+
+.section-divider { height: 1px; background: var(--border); margin: 0 8vw; }
+
+.takeaway {
+  border-left: 3px solid var(--accent);
+  padding: 0.8rem 1.2rem;
+  background: var(--surface2);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 1rem;
+}
+
+/* ── Mobile Layout Adjustments ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .scrolly { flex-direction: column; }
+  .scrolly-sticky {
+    position: relative;
+    height: auto;
+    width: 100%;
+    order: 1;
+    padding: 1rem;
+  }
+  .scrolly-steps { order: 2; padding: 2rem; }
+}
+
+.view-container {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.view-text {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 50ch;
+}
+
+.view-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.placeholder-chart {
+  height: 220px;
+  width: 100%;
+  border: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+/* Kill OJS wrapper interference that breaks Grid
+.observablehq {
+  display: contents !important;
+} */
