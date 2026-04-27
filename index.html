@@ -264,6 +264,13 @@
       color: var(--text);
     }
 
+    .text-step h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
     .text-step p {
       color: var(--muted);
       font-size: 1.05rem;
@@ -272,6 +279,11 @@
 
     .text-step .step-number {
       margin-bottom: 1rem;
+    }
+
+    .highlight {
+    background-color: rgba(225, 255, 0, 0.4);
+    font-weight: bold;
     }
 
     footer { text-align: center; padding: 4rem 2rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--border); }
@@ -306,9 +318,14 @@
     <section class="step" id="step1">
       <div class="step-text">
         <div class="step-number">1</div>
-        <h2>Popularity Distribution</h2>
-        <p>Most tracks on Spotify cluster at lower popularity scores, with a long tail stretching toward the mainstream hits. This right-skewed distribution tells us that "going viral" is rare — the vast majority of songs remain niche.</p>
-      </div>
+        <h2>Every Track Gets a Popularity Score — But What Does It Really Mean?</h2>
+        <p>Spotify assigns every track a <span class="highlight">popularity score from 0 to 100</span>, 
+          based on how often it's been played recently. 
+          It's Spotify's own measure of "what people are actually listening to". 
+          But here's the question: <strong>do most songs live in the mainstream spotlight, 
+          or quietly in the shadows?</strong> 
+          Let's look at the actual distribution — you might be surprised.</p>      
+        </div>
       <div class="step-chart" id="chart1"></div>
     </section>
 
@@ -365,16 +382,21 @@
       <div class="scrolling-text">
         <div class="text-step active" data-target="overall">
           <div class="step-number">2</div>
-          <h2>Popularity Distribution</h2>
-          <p>Most tracks on Spotify cluster at lower popularity scores, with a long tail stretching toward the mainstream hits. This right-skewed distribution tells us that "going viral" is rare — the vast majority of songs remain niche.</p>
-        </div>
+          <h2>The Largest Group? Songs That Barely Get Played</h2>
+          <p>The histogram reveals a surprising pattern: the <span class="highlight">tallest bar is at popularity 0–5</span>, containing <strong class="number">4,036 tracks</strong> — more than any other bin. That means the most common fate for a song on Spotify is to remain largely unheard. So what kind of songs <em>escape</em> this fate? The answer hides in an unexpected place: <span class="highlight">multi-genre tracks</span>. Notice how a small slice — only <strong class="number">1,651 tracks (6.8% of all songs)</strong> — carry <span class="highlight">multiple genre tags</span>. Yet as we move toward higher popularity, their presence grows dramatically.</p>        </div>
         <div class="text-step" data-target="stacked">
-          <h2>Breaking Down by Genre Tags</h2>
-          <p>When we split tracks by how many genres they are tagged with, a clear picture emerges. <strong style="color: #5A9FD4;">Single-genre tracks</strong> make up the vast majority (~93%), while <strong style="color: #FF7F0E;">multi-genre tracks</strong> are a small but notable minority (~7%). Toggle the switch to see proportions vs. raw counts.</p>
-        </div>
+          <h2>Multi-Genre Tracks: Small in Number, Massive at the Top</h2>
+          <p>When we split the histogram, a striking gap appears. <span style="color: #5A9FD4;">Single-genre tracks</span> (<strong class="number">22,511 tracks</strong>) dominate the low and middle bins, but fade out above 80. <span style="color: #FF7F0E;">Multi-genre tracks</span> tell a completely different story — they barely appear in low bins, yet <span class="highlight">dominate the highest popularity ranges</span>. In the top bins (80–100), multi-genre tracks <span class="highlight">outnumber single-genre tracks</span> despite being only <strong>6.8%</strong> of the dataset. Look at the 90–95 bin: <strong>4 single-genre tracks</strong> vs. <strong>39 multi-genre tracks</strong>.</p>        </div>
         <div class="text-step" data-target="unstacked">
-          <h2>Two Distinct Patterns</h2>
-          <p>Viewed separately, the two groups reveal very different popularity patterns. Multi-genre tracks skew significantly higher — their average popularity is ~63 vs. ~44 for single-genre tracks. The Gaussian curves show how sharply the two distributions diverge.</p>
+          <h2>The Statistical Divide: Two Different Worlds</h2>
+          <p>Fitting Gaussian curves reveals the true gap. Multi-genre tracks have a <span class="highlight">mean popularity of <strong>62.7</strong></span> — far above the single-genre mean of <strong>44.5</strong>. Their entire distribution shifts rightward, with almost no songs in the 0–20 range. This <strong>"popularity premium"</strong> likely comes from <span class="highlight">audience crossover</span> — a song tagged both "Pop" and "Hip Hop" gets playlists from both fanbases.</p>        
+          <div style="margin-bottom: 80px;"></div>
+          <h3>But Multi-Genre Complicates Things</h3>
+          <p>
+            Here's the catch: multi-genre tracks are <span class="highlight">harder to analyze</span> because their audio features (valence, energy, danceability) blend multiple styles. For clean, interpretable insights, we'll <strong>focus on single-genre tracks only</strong> moving forward.
+            <br>
+            Now let's ask: <span class="highlight">what makes each genre unique?</span> In the next part, we dive into <strong>audio features by genre</strong> — and discover something surprising.
+          </p>
         </div>
       </div>
     </section>
