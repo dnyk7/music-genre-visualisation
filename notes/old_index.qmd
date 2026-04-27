@@ -1,0 +1,296 @@
+---
+title: "Genre Decoded"
+format:
+  html:
+    theme: none
+    css: styles.css
+    toc: false
+    page-layout: full
+---
+
+<!--  
+The scrollytelling document
+rm -rf .quarto/    
+quarto render index.qmd --to html --output index.html
+-->
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-label">A Spotify Data Story</div>
+  <h1>Genres have <em>personalities</em> — but not as different as you'd think.</h1>
+  <p class="hero-sub">
+    We analysed 28,000 songs across 6 genres using Spotify's audio fingerprints.
+    Here's what we found.
+  </p>
+  <div class="scroll-hint">Scroll to explore</div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SECTION: WHAT MAKES A GENRE?
+     Layout: prose steps on left, sticky chart panel on right
+     ═══════════════════════════════════════════════════════════════════════ -->
+::: {#genre-scrolly-container}
+<section class="scroll-section" id="genre-personality">
+<div class="scrolly" id="genre-scrolly">
+
+  <div class="scrolly-steps" id="genre-steps">
+    </div>
+
+  <div class="scrolly-sticky">
+    <div class="chart-panel" id="main-chart-panel">
+      <div class="chart-panel-header">
+        <span class="chart-panel-title">Genre Audio Fingerprints</span>
+      </div>
+      <div class="genre-legend" id="genre-legend"></div>
+      <div id="radar-container"></div>
+      <div class="feature-filter-label">Highlight a feature →</div>
+      <div class="feature-filters" id="feature-filters"></div>
+      <div id="bar-container"></div>
+      <div id="song-cards-container"></div>
+    </div>
+  </div>
+
+</div>
+</section>
+:::
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     OJS: All reactive chart logic
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+```{ojs}
+//| output: false
+//| 
+// ── 0. Load data ─────────────────────────────────────────────────────────────
+genreProfiles = FileAttachment("data/processed/genre_profiles.json").json()
+topSongs      = FileAttachment("data/processed/top_songs.json").json()
+
+// ── 1. Top-level Constants (Accessible everywhere) ──────────────────────────
+FEATURES = ["Danceability", "Energy", "Valence", "Acousticness", "Tempo", "Speechiness"]
+
+// ── 2. Shared reactive state ──────────────────────────────────────────────────
+viewof selectedGenres = {
+  const container = document.getElementById("genre-legend")
+  const input = html`<input type="hidden">`;
+  const state = new Set(genreProfiles.map(d => d.genre));
+  input.value = state;
+
+  if (!container) return input;
+  container.innerHTML = "";
+
+  genreProfiles.forEach(d => {
+    const item = container.appendChild(document.createElement("div"))
+    item.className = "legend-item active"
+    item.style.borderColor = d.color
+    
+    const dot = item.appendChild(document.createElement("div"))
+    dot.className = "legend-dot"
+    dot.style.background = d.color
+
+    const label = item.appendChild(document.createElement("span"))
+    label.textContent = d.genre.toUpperCase()
+
+    item.addEventListener("click", () => {
+      if (state.has(d.genre)) {
+        state.delete(d.genre);
+        item.classList.remove("active");
+        item.style.borderColor = "transparent";
+        dot.style.opacity = "0.3";
+      } else {
+        state.add(d.genre);
+        item.classList.add("active");
+        item.style.borderColor = d.color;
+        dot.style.opacity = "1";
+      }
+      // CRITICAL: Re-wrap in a new Set so OJS detects the change
+      input.value = new Set(state);
+      input.dispatchEvent(new Event("input", {bubbles: true}));
+    });
+  })
+  return input
+}
+
+viewof selectedFeature = {
+  const container = document.getElementById("feature-filters");
+  const input = html`<input type="hidden">`;
+  input.value = null;
+
+  if (!container) return input;
+  container.innerHTML = "";
+  let activeBtn = null;
+
+  FEATURES.forEach(feat => {
+    const btn = container.appendChild(document.createElement("button"));
+    btn.className = "filter-btn";
+    btn.textContent = feat;
+
+    btn.addEventListener("click", () => {
+      if (activeBtn === btn) {
+        btn.classList.remove("active");
+        activeBtn = null;
+        input.value = null;
+      } else {
+        if (activeBtn) activeBtn.classList.remove("active");
+        btn.classList.add("active");
+        activeBtn = btn;
+        input.value = feat;
+      }
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  });
+
+  return input;
+}
+
+// ── 3. Filtered data (With Safety Guard) ──────────────────────────────────────
+filteredProfiles = {
+  // If selectedGenres hasn't initialized yet, show everything
+  if (!selectedGenres || typeof selectedGenres.has !== "function") {
+    return genreProfiles;
+  }
+  return genreProfiles.filter(d => selectedGenres.has(d.genre));
+}
+
+// ── 4. Radar chart (RESPONSIVE) ────────────────────────────────────────────────
+{
+  const container = document.getElementById("radar-container")
+  if (!container) return
+
+  const W = width > 900 ? (width / 4.5) : (width - 40);
+  const H = W;
+  const cx = W / 2, cy = H / 2
+  const R  = W * 0.35
+  const N  = FEATURES.length
+  const angles = FEATURES.map((_, i) => (Math.PI * 2 * i) / N - Math.PI / 2)
+
+  const pt = (feat, val) => {
+    const i = FEATURES.indexOf(feat)
+    const a = angles[i]
+    const r = val * R
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)]
+  }
+
+  const svgNS = "http://www.w3.org/2000/svg"
+  const svg = document.createElementNS(svgNS, "svg")
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`)
+  svg.setAttribute("width", W)
+  svg.setAttribute("height", H)
+  svg.style.overflow = "visible"
+
+  // Grid rings
+  [0.25, 0.5, 0.75, 1.0].forEach(r => {
+    const ring = document.createElementNS(svgNS, "polygon")
+    ring.setAttribute("points", angles.map(a => `${cx + r*R*Math.cos(a)},${cy + r*R*Math.sin(a)}`).join(" "))
+    ring.setAttribute("fill", "none")
+    ring.setAttribute("stroke", "#2a2a2a")
+    svg.appendChild(ring)
+  })
+
+  // Polygons
+  genreProfiles.forEach(d => {
+    const isSelected = selectedGenres.has(d.genre)
+    const pts = FEATURES.map(f => pt(f, d.features[f] ?? 0)).join(" ")
+    const poly = document.createElementNS(svgNS, "polygon")
+    poly.setAttribute("points", pts)
+    poly.setAttribute("fill", d.color)
+    poly.setAttribute("fill-opacity", isSelected ? "0.15" : "0.02")
+    poly.setAttribute("stroke", d.color)
+    poly.setAttribute("stroke-width", isSelected ? "2.5" : "0.5")
+    poly.style.transition = "all 0.4s ease"
+    svg.appendChild(poly)
+  })
+
+  container.innerHTML = ""
+  container.appendChild(svg)
+}
+
+// ── 5. Grouped bar chart (RESPONSIVE) ──────────────────────────────────────────
+{
+  const container = document.getElementById("bar-container")
+  if (!container) return
+
+  const W = width > 900 ? (width / 4.5) : (width - 40);
+  const H = 200
+  const margin = { top: 16, right: 8, bottom: 40, left: 28 }
+  const innerW = W - margin.left - margin.right
+  const innerH = H - margin.top - margin.bottom
+
+  const svgNS = "http://www.w3.org/2000/svg"
+  const svg = document.createElementNS(svgNS, "svg")
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`)
+  svg.setAttribute("width", W)
+
+  const g = document.createElementNS(svgNS, "g")
+  g.setAttribute("transform", `translate(${margin.left},${margin.top})`)
+  svg.appendChild(g)
+
+  const featW = innerW / FEATURES.length
+  const genreW = featW / genreProfiles.length
+
+  FEATURES.forEach((feat, fi) => {
+    const isHighlighted = selectedFeature === feat || selectedFeature === null
+    
+    genreProfiles.forEach((d, gi) => {
+      const isGenreOn = selectedGenres.has(d.genre)
+      const val = d.features[feat] ?? 0
+      const rect = document.createElementNS(svgNS, "rect")
+      rect.setAttribute("x", fi * featW + gi * genreW)
+      rect.setAttribute("y", innerH - (val * innerH))
+      rect.setAttribute("width", Math.max(genreW - 2, 1))
+      rect.setAttribute("height", val * innerH)
+      rect.setAttribute("fill", d.color)
+      rect.setAttribute("opacity", isHighlighted && isGenreOn ? 0.8 : 0.05)
+      g.appendChild(rect)
+    })
+  })
+
+  container.innerHTML = ""
+  container.appendChild(svg)
+}
+
+```
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     Scrollama: activates .step prose cards as user scrolls
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+```{=html}
+<script type="module">
+import scrollama from "https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm"
+
+function initScroller() {
+  const scroller = scrollama();
+  const steps = document.querySelectorAll("#genre-steps .step");
+
+  // Only initialize if the steps actually exist in the DOM
+  if (steps.length > 0) {
+    scroller
+      .setup({
+        step: "#genre-steps .step",
+        offset: 0.5,
+        debug: false
+      })
+      .onStepEnter((response) => {
+        window.dispatchEvent(new CustomEvent("step-change", { 
+          detail: response.element.dataset.step 
+        }));
+        steps.forEach(s => s.classList.remove('is-active'));
+        response.element.classList.add('is-active');
+      });
+
+    window.addEventListener("resize", scroller.resize);
+    console.log("Scrollama initialized successfully.");
+  } else {
+    // If not ready, try again in 100ms
+    setTimeout(initScroller, 100);
+  }
+}
+
+// Start the check
+initScroller();
+</script>
+```

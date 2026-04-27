@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.30">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Genre Decoded</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-html-640605f58ae58ee79329c070719e555b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b6a8276bf55561bdbc268162d41bd1f7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&amp;family=DM+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+
+<header id="title-block-header">
+<h1 class="title">Genre Decoded</h1>
+
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div class="hero">
+<div class="hero-label">
+A Spotify Data Story
+</div>
+<h1>
+Genres have <em>personalities</em> — but not as different as you’d think.
+</h1>
+<p class="hero-sub">
+We analysed 28,000 songs across 6 genres using Spotify’s audio fingerprints. Here’s what we found.
+</p>
+<div class="scroll-hint">
+Scroll to explore
+</div>
+</div>
+<div class="section-divider">
+
+</div>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SECTION: WHAT MAKES A GENRE?
+     Left: scrolling prose. Right: sticky chart panel (built entirely by OJS).
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scroll-section" id="genre-personality">
+<div id="genre-scrolly" class="scrolly">
+<pre><code>&lt;!-- LEFT: scrolling prose steps --&gt;
+&lt;div class="scrolly-steps" id="genre-steps"&gt;
+
+  &lt;div class="step is-active" data-step="intro"&gt;
+    &lt;div class="step-label"&gt;Section 1 · Genre Attributes&lt;/div&gt;
+    &lt;h2&gt;What makes a genre a genre?&lt;/h2&gt;
+    &lt;p&gt;
+      Spotify measures every song on six dimensions: how danceable it is,
+      how much energy it carries, how happy it sounds, how acoustic it feels,
+      how fast it moves, and how speech-heavy it is.
+    &lt;/p&gt;
+    &lt;p style="margin-top:0.75rem"&gt;
+      Together, these form a &lt;strong&gt;sonic fingerprint&lt;/strong&gt;. The radar chart
+      shows the median fingerprint for all six genres at once.
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;div class="step" data-step="latin-edm"&gt;
+    &lt;div class="step-label"&gt;Section 1 · Latin vs EDM&lt;/div&gt;
+    &lt;h2&gt;The happiest genre isn't EDM — it's Latin.&lt;/h2&gt;
+    &lt;p&gt;
+      &lt;strong&gt;Latin&lt;/strong&gt; scores highest on both &lt;em&gt;valence&lt;/em&gt; (happiness)
+      and &lt;em&gt;danceability&lt;/em&gt;. EDM is the most energetic, but sits surprisingly
+      low on valence — intense, not joyful.
+    &lt;/p&gt;
+    &lt;div class="takeaway"&gt;
+      &lt;strong&gt;Try it:&lt;/strong&gt; Click &lt;em&gt;latin&lt;/em&gt; and &lt;em&gt;edm&lt;/em&gt; in the legend
+      to isolate them and compare their radar shapes.
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="step" data-step="rap"&gt;
+    &lt;div class="step-label"&gt;Section 1 · Rap&lt;/div&gt;
+    &lt;h2&gt;Rap has one feature that sets it apart from everything else.&lt;/h2&gt;
+    &lt;p&gt;
+      Speechiness — the measure of how many words are in a track — spikes
+      hard for rap. Every other genre clusters near zero.
+      This is the single clearest genre separator in the entire dataset.
+    &lt;/p&gt;
+    &lt;div class="takeaway"&gt;
+      &lt;strong&gt;Try it:&lt;/strong&gt; Click &lt;em&gt;Speechiness&lt;/em&gt; in the feature buttons
+      to highlight it across all genres in the bar chart.
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="step" data-step="pop"&gt;
+    &lt;div class="step-label"&gt;Section 1 · Pop&lt;/div&gt;
+    &lt;h2&gt;Pop is the genre of averages.&lt;/h2&gt;
+    &lt;p&gt;
+      On every feature, pop sits closest to the dataset mean. No defining spike,
+      no extreme score. Pop's commercial logic is to borrow from everywhere
+      and offend no one.
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;div class="step" data-step="similarity"&gt;
+    &lt;div class="step-label"&gt;Section 1 · Takeaway&lt;/div&gt;
+    &lt;h2&gt;No genre is truly extreme. The gaps are smaller than you'd expect.&lt;/h2&gt;
+    &lt;p&gt;
+      The radar polygons overlap significantly. Latin and R&amp;amp;B are the most
+      similar pair. EDM and R&amp;amp;B are the most different — yet even they share
+      significant overlap in emotional space.
+    &lt;/p&gt;
+    &lt;div class="takeaway"&gt;
+      &lt;strong&gt;Next:&lt;/strong&gt; If genres are already converging in sound,
+      how much further have they come over the decades?
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;&lt;!-- /scrolly-steps --&gt;
+
+&lt;!-- RIGHT: sticky panel — OJS renders everything inside here --&gt;
+&lt;div class="scrolly-sticky"&gt;
+  &lt;div class="chart-panel" id="main-chart-panel"&gt;
+
+    &lt;!--
+      KEY ARCHITECTURE NOTE:
+      We do NOT put empty divs here for OJS to find.
+      Instead each OJS cell below outputs its DOM node directly,
+      and Quarto injects it in document order — which is AFTER this HTML.
+
+      The chart-panel grid layout applies to whatever children end up here,
+      but the children are created by the OJS blocks below via ojs-output divs
+      that Quarto inserts automatically.
+
+      We use a wrapper div with a known id so we can appendChild into it
+      AFTER the DOM is ready, using a MutationObserver approach — OR we
+      simply let OJS return html`` nodes and Quarto places them in-flow.
+
+      The cleanest approach: return html`` from each OJS cell, let Quarto
+      place them. We move them into chart-panel via JS after render.
+    --&gt;
+
+    &lt;!-- Placeholder slots — filled by moveCharts() below --&gt;
+    &lt;div id="slot-legend"&gt;&lt;/div&gt;
+    &lt;div id="slot-filters"&gt;&lt;/div&gt;
+    &lt;div id="slot-radar"&gt;&lt;/div&gt;
+    &lt;div id="slot-bar"&gt;&lt;/div&gt;
+    &lt;div id="slot-songs"&gt;&lt;/div&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;&lt;!-- /scrolly-sticky --&gt;</code></pre>
+</div>
+<!-- /scrolly -->
+</section>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     OJS DATA + STATE
+     These cells have output:false — they produce no visible output,
+     just reactive variables that the rendering cells depend on.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div class="cell hidden">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="151" data-source-offset="-82"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 150;"><span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>genreProfiles <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"data/processed/genre_profiles.json"</span>)<span class="op">.</span><span class="fu">json</span>()</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>topSongs      <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"data/processed/top_songs.json"</span>)<span class="op">.</span><span class="fu">json</span>()</span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a><span class="co">// ── Constants ────────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>FEATURES <span class="op">=</span> [<span class="st">"Danceability"</span><span class="op">,</span> <span class="st">"Energy"</span><span class="op">,</span> <span class="st">"Valence"</span><span class="op">,</span> <span class="st">"Acousticness"</span><span class="op">,</span> <span class="st">"Tempo"</span><span class="op">,</span> <span class="st">"Speechiness"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     OJS RENDERING CELLS
+     Each cell returns an html`` node. Quarto places it immediately after
+     the previous cell's output — all inside #quarto-content.
+     We then move each node into its slot inside chart-panel using JS.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="165" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 164;"><span id="cb3-165"><a href="#cb3-165" aria-hidden="true" tabindex="-1"></a><span class="co">// ── Legend (interactive genre filter) ───────────────────────────────────────</span></span>
+<span id="cb3-166"><a href="#cb3-166" aria-hidden="true" tabindex="-1"></a><span class="co">//</span></span>
+<span id="cb3-167"><a href="#cb3-167" aria-hidden="true" tabindex="-1"></a><span class="co">// We use Inputs.checkbox from the stdlib — this is the idiomatic OJS pattern.</span></span>
+<span id="cb3-168"><a href="#cb3-168" aria-hidden="true" tabindex="-1"></a><span class="co">// It gives us a reactive Set automatically; no manual event dispatching needed.</span></span>
+<span id="cb3-169"><a href="#cb3-169" aria-hidden="true" tabindex="-1"></a><span class="co">//</span></span>
+<span id="cb3-170"><a href="#cb3-170" aria-hidden="true" tabindex="-1"></a><span class="co">// Note: we style it ourselves because we need custom pill appearance.</span></span>
+<span id="cb3-171"><a href="#cb3-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-172"><a href="#cb3-172" aria-hidden="true" tabindex="-1"></a>viewof activeGenres <span class="op">=</span> {</span>
+<span id="cb3-173"><a href="#cb3-173" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Build a custom pill-based toggle, but return a proper OJS input</span></span>
+<span id="cb3-174"><a href="#cb3-174" aria-hidden="true" tabindex="-1"></a>  <span class="co">// so other cells can depend on it reactively.</span></span>
+<span id="cb3-175"><a href="#cb3-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-176"><a href="#cb3-176" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> allGenres <span class="op">=</span> genreProfiles<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">genre</span>)</span>
+<span id="cb3-177"><a href="#cb3-177" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> state <span class="op">=</span> <span class="kw">new</span> <span class="bu">Set</span>(allGenres)   <span class="co">// all on initially</span></span>
+<span id="cb3-178"><a href="#cb3-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-179"><a href="#cb3-179" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wrap <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;div class="genre-legend"&gt;&lt;/div&gt;`</span></span>
+<span id="cb3-180"><a href="#cb3-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-181"><a href="#cb3-181" aria-hidden="true" tabindex="-1"></a>  genreProfiles<span class="op">.</span><span class="fu">forEach</span>(d <span class="kw">=&gt;</span> {</span>
+<span id="cb3-182"><a href="#cb3-182" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> item <span class="op">=</span> wrap<span class="op">.</span><span class="fu">appendChild</span>(<span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb3-183"><a href="#cb3-183" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div class="legend-item active" style="border-color: </span><span class="sc">${</span>d<span class="op">.</span><span class="at">color</span><span class="sc">}</span><span class="vs">"&gt;</span></span>
+<span id="cb3-184"><a href="#cb3-184" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;div class="legend-dot" style="background: </span><span class="sc">${</span>d<span class="op">.</span><span class="at">color</span><span class="sc">}</span><span class="vs">"&gt;&lt;/div&gt;</span></span>
+<span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;span&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">genre</span><span class="op">.</span><span class="fu">toUpperCase</span>()<span class="sc">}</span><span class="vs">&lt;/span&gt;</span></span>
+<span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/div&gt;</span></span>
+<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a><span class="vs">    `</span>)</span>
+<span id="cb3-188"><a href="#cb3-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-189"><a href="#cb3-189" aria-hidden="true" tabindex="-1"></a>    item<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">"click"</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (state<span class="op">.</span><span class="fu">has</span>(d<span class="op">.</span><span class="at">genre</span>)) {</span>
+<span id="cb3-191"><a href="#cb3-191" aria-hidden="true" tabindex="-1"></a>        state<span class="op">.</span><span class="fu">delete</span>(d<span class="op">.</span><span class="at">genre</span>)</span>
+<span id="cb3-192"><a href="#cb3-192" aria-hidden="true" tabindex="-1"></a>        item<span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">remove</span>(<span class="st">"active"</span>)</span>
+<span id="cb3-193"><a href="#cb3-193" aria-hidden="true" tabindex="-1"></a>        item<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">borderColor</span> <span class="op">=</span> <span class="st">"transparent"</span></span>
+<span id="cb3-194"><a href="#cb3-194" aria-hidden="true" tabindex="-1"></a>        item<span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".legend-dot"</span>)<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">opacity</span> <span class="op">=</span> <span class="st">"0.3"</span></span>
+<span id="cb3-195"><a href="#cb3-195" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb3-196"><a href="#cb3-196" aria-hidden="true" tabindex="-1"></a>        state<span class="op">.</span><span class="fu">add</span>(d<span class="op">.</span><span class="at">genre</span>)</span>
+<span id="cb3-197"><a href="#cb3-197" aria-hidden="true" tabindex="-1"></a>        item<span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">add</span>(<span class="st">"active"</span>)</span>
+<span id="cb3-198"><a href="#cb3-198" aria-hidden="true" tabindex="-1"></a>        item<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">borderColor</span> <span class="op">=</span> d<span class="op">.</span><span class="at">color</span></span>
+<span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a>        item<span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".legend-dot"</span>)<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">opacity</span> <span class="op">=</span> <span class="st">"1"</span></span>
+<span id="cb3-200"><a href="#cb3-200" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb3-201"><a href="#cb3-201" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Notify OJS of the change</span></span>
+<span id="cb3-202"><a href="#cb3-202" aria-hidden="true" tabindex="-1"></a>      wrap<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="kw">new</span> <span class="bu">Set</span>(state)</span>
+<span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a>      wrap<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))</span>
+<span id="cb3-204"><a href="#cb3-204" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb3-205"><a href="#cb3-205" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb3-206"><a href="#cb3-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-207"><a href="#cb3-207" aria-hidden="true" tabindex="-1"></a>  wrap<span class="op">.</span><span class="at">value</span> <span class="op">=</span> state</span>
+<span id="cb3-208"><a href="#cb3-208" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> wrap</span>
+<span id="cb3-209"><a href="#cb3-209" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="213" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 212;"><span id="cb4-213"><a href="#cb4-213" aria-hidden="true" tabindex="-1"></a><span class="co">// ── Feature filter buttons ───────────────────────────────────────────────────</span></span>
+<span id="cb4-214"><a href="#cb4-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-215"><a href="#cb4-215" aria-hidden="true" tabindex="-1"></a>viewof activeFeature <span class="op">=</span> {</span>
+<span id="cb4-216"><a href="#cb4-216" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wrap <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;div&gt;&lt;/div&gt;`</span></span>
+<span id="cb4-217"><a href="#cb4-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-218"><a href="#cb4-218" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> label <span class="op">=</span> wrap<span class="op">.</span><span class="fu">appendChild</span>(<span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb4-219"><a href="#cb4-219" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.4rem;</span></span>
+<span id="cb4-220"><a href="#cb4-220" aria-hidden="true" tabindex="-1"></a><span class="vs">                letter-spacing:0.08em;text-transform:uppercase;"&gt;</span></span>
+<span id="cb4-221"><a href="#cb4-221" aria-hidden="true" tabindex="-1"></a><span class="vs">      Highlight a feature →</span></span>
+<span id="cb4-222"><a href="#cb4-222" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb4-223"><a href="#cb4-223" aria-hidden="true" tabindex="-1"></a><span class="vs">  `</span>)</span>
+<span id="cb4-224"><a href="#cb4-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-225"><a href="#cb4-225" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> btnRow <span class="op">=</span> wrap<span class="op">.</span><span class="fu">appendChild</span>(<span class="fu">html</span><span class="vs">`&lt;div class="feature-filters"&gt;&lt;/div&gt;`</span>)</span>
+<span id="cb4-226"><a href="#cb4-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-227"><a href="#cb4-227" aria-hidden="true" tabindex="-1"></a>  wrap<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="kw">null</span></span>
+<span id="cb4-228"><a href="#cb4-228" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> activeBtn <span class="op">=</span> <span class="kw">null</span></span>
+<span id="cb4-229"><a href="#cb4-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-230"><a href="#cb4-230" aria-hidden="true" tabindex="-1"></a>  FEATURES<span class="op">.</span><span class="fu">forEach</span>(feat <span class="kw">=&gt;</span> {</span>
+<span id="cb4-231"><a href="#cb4-231" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> btn <span class="op">=</span> btnRow<span class="op">.</span><span class="fu">appendChild</span>(<span class="fu">html</span><span class="vs">`&lt;button class="filter-btn"&gt;</span><span class="sc">${</span>feat<span class="sc">}</span><span class="vs">&lt;/button&gt;`</span>)</span>
+<span id="cb4-232"><a href="#cb4-232" aria-hidden="true" tabindex="-1"></a>    btn<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">"click"</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb4-233"><a href="#cb4-233" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (activeBtn <span class="op">===</span> btn) {</span>
+<span id="cb4-234"><a href="#cb4-234" aria-hidden="true" tabindex="-1"></a>        btn<span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">remove</span>(<span class="st">"active"</span>)</span>
+<span id="cb4-235"><a href="#cb4-235" aria-hidden="true" tabindex="-1"></a>        activeBtn <span class="op">=</span> <span class="kw">null</span></span>
+<span id="cb4-236"><a href="#cb4-236" aria-hidden="true" tabindex="-1"></a>        wrap<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="kw">null</span></span>
+<span id="cb4-237"><a href="#cb4-237" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb4-238"><a href="#cb4-238" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (activeBtn) activeBtn<span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">remove</span>(<span class="st">"active"</span>)</span>
+<span id="cb4-239"><a href="#cb4-239" aria-hidden="true" tabindex="-1"></a>        btn<span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">add</span>(<span class="st">"active"</span>)</span>
+<span id="cb4-240"><a href="#cb4-240" aria-hidden="true" tabindex="-1"></a>        activeBtn <span class="op">=</span> btn</span>
+<span id="cb4-241"><a href="#cb4-241" aria-hidden="true" tabindex="-1"></a>        wrap<span class="op">.</span><span class="at">value</span> <span class="op">=</span> feat</span>
+<span id="cb4-242"><a href="#cb4-242" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-243"><a href="#cb4-243" aria-hidden="true" tabindex="-1"></a>      wrap<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> { <span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span> }))</span>
+<span id="cb4-244"><a href="#cb4-244" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb4-245"><a href="#cb4-245" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb4-246"><a href="#cb4-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-247"><a href="#cb4-247" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> wrap</span>
+<span id="cb4-248"><a href="#cb4-248" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="252" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 251;"><span id="cb5-252"><a href="#cb5-252" aria-hidden="true" tabindex="-1"></a><span class="co">// ── Radar chart ──────────────────────────────────────────────────────────────</span></span>
+<span id="cb5-253"><a href="#cb5-253" aria-hidden="true" tabindex="-1"></a><span class="co">// Returns an SVG element. OJS places it into the page automatically.</span></span>
+<span id="cb5-254"><a href="#cb5-254" aria-hidden="true" tabindex="-1"></a><span class="co">// Depends on: activeGenres (re-runs whenever the legend is clicked)</span></span>
+<span id="cb5-255"><a href="#cb5-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-256"><a href="#cb5-256" aria-hidden="true" tabindex="-1"></a>radarChart <span class="op">=</span> {</span>
+<span id="cb5-257"><a href="#cb5-257" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> W <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb5-258"><a href="#cb5-258" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> H <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb5-259"><a href="#cb5-259" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cx <span class="op">=</span> W <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> cy <span class="op">=</span> H <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb5-260"><a href="#cb5-260" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> R  <span class="op">=</span> W <span class="op">*</span> <span class="fl">0.35</span></span>
+<span id="cb5-261"><a href="#cb5-261" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> N  <span class="op">=</span> FEATURES<span class="op">.</span><span class="at">length</span></span>
+<span id="cb5-262"><a href="#cb5-262" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> angles <span class="op">=</span> FEATURES<span class="op">.</span><span class="fu">map</span>((_<span class="op">,</span> i) <span class="kw">=&gt;</span> (<span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">*</span> <span class="dv">2</span> <span class="op">*</span> i) <span class="op">/</span> N <span class="op">-</span> <span class="bu">Math</span><span class="op">.</span><span class="cn">PI</span> <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb5-263"><a href="#cb5-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-264"><a href="#cb5-264" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Helper: get [x, y] for a feature value on the radar</span></span>
+<span id="cb5-265"><a href="#cb5-265" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">pt</span>(featIndex<span class="op">,</span> val) {</span>
+<span id="cb5-266"><a href="#cb5-266" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> a <span class="op">=</span> angles[featIndex]</span>
+<span id="cb5-267"><a href="#cb5-267" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [cx <span class="op">+</span> val <span class="op">*</span> R <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(a)<span class="op">,</span> cy <span class="op">+</span> val <span class="op">*</span> R <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(a)]</span>
+<span id="cb5-268"><a href="#cb5-268" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-269"><a href="#cb5-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-270"><a href="#cb5-270" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Helper: polygon points string from array of [x,y] pairs</span></span>
+<span id="cb5-271"><a href="#cb5-271" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">polyPoints</span>(pairs) {</span>
+<span id="cb5-272"><a href="#cb5-272" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pairs<span class="op">.</span><span class="fu">map</span>(p <span class="kw">=&gt;</span> p<span class="op">.</span><span class="fu">join</span>(<span class="st">","</span>))<span class="op">.</span><span class="fu">join</span>(<span class="st">" "</span>)</span>
+<span id="cb5-273"><a href="#cb5-273" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-274"><a href="#cb5-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-275"><a href="#cb5-275" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svgNS <span class="op">=</span> <span class="st">"http://www.w3.org/2000/svg"</span></span>
+<span id="cb5-276"><a href="#cb5-276" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svg <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"svg"</span>)</span>
+<span id="cb5-277"><a href="#cb5-277" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="vs">`0 0 </span><span class="sc">${</span>W<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>H<span class="sc">}</span><span class="vs">`</span>)</span>
+<span id="cb5-278"><a href="#cb5-278" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"width"</span><span class="op">,</span> <span class="st">"100%"</span>)</span>
+<span id="cb5-279"><a href="#cb5-279" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">overflow</span> <span class="op">=</span> <span class="st">"visible"</span></span>
+<span id="cb5-280"><a href="#cb5-280" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">display</span> <span class="op">=</span> <span class="st">"block"</span></span>
+<span id="cb5-281"><a href="#cb5-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-282"><a href="#cb5-282" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Grid rings</span></span>
+<span id="cb5-283"><a href="#cb5-283" aria-hidden="true" tabindex="-1"></a>  <span class="op">;</span>[<span class="fl">0.25</span><span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.75</span><span class="op">,</span> <span class="fl">1.0</span>]<span class="op">.</span><span class="fu">forEach</span>(r <span class="kw">=&gt;</span> {</span>
+<span id="cb5-284"><a href="#cb5-284" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> ring <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"polygon"</span>)</span>
+<span id="cb5-285"><a href="#cb5-285" aria-hidden="true" tabindex="-1"></a>    ring<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"points"</span><span class="op">,</span> <span class="fu">polyPoints</span>(angles<span class="op">.</span><span class="fu">map</span>(a <span class="kw">=&gt;</span> [</span>
+<span id="cb5-286"><a href="#cb5-286" aria-hidden="true" tabindex="-1"></a>      cx <span class="op">+</span> r <span class="op">*</span> R <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(a)<span class="op">,</span></span>
+<span id="cb5-287"><a href="#cb5-287" aria-hidden="true" tabindex="-1"></a>      cy <span class="op">+</span> r <span class="op">*</span> R <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(a)</span>
+<span id="cb5-288"><a href="#cb5-288" aria-hidden="true" tabindex="-1"></a>    ])))</span>
+<span id="cb5-289"><a href="#cb5-289" aria-hidden="true" tabindex="-1"></a>    ring<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"none"</span>)</span>
+<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a>    ring<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#2a2a2a"</span>)</span>
+<span id="cb5-291"><a href="#cb5-291" aria-hidden="true" tabindex="-1"></a>    ring<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="st">"1"</span>)</span>
+<span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">appendChild</span>(ring)</span>
+<span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-294"><a href="#cb5-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-295"><a href="#cb5-295" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Axis lines + labels</span></span>
+<span id="cb5-296"><a href="#cb5-296" aria-hidden="true" tabindex="-1"></a>  FEATURES<span class="op">.</span><span class="fu">forEach</span>((feat<span class="op">,</span> i) <span class="kw">=&gt;</span> {</span>
+<span id="cb5-297"><a href="#cb5-297" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> a <span class="op">=</span> angles[i]</span>
+<span id="cb5-298"><a href="#cb5-298" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [x2<span class="op">,</span> y2] <span class="op">=</span> [cx <span class="op">+</span> R <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(a)<span class="op">,</span> cy <span class="op">+</span> R <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(a)]</span>
+<span id="cb5-299"><a href="#cb5-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-300"><a href="#cb5-300" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> line <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"line"</span>)</span>
+<span id="cb5-301"><a href="#cb5-301" aria-hidden="true" tabindex="-1"></a>    line<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x1"</span><span class="op">,</span> cx)<span class="op">;</span> line<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y1"</span><span class="op">,</span> cy)</span>
+<span id="cb5-302"><a href="#cb5-302" aria-hidden="true" tabindex="-1"></a>    line<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x2"</span><span class="op">,</span> x2)<span class="op">;</span> line<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y2"</span><span class="op">,</span> y2)</span>
+<span id="cb5-303"><a href="#cb5-303" aria-hidden="true" tabindex="-1"></a>    line<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#2a2a2a"</span>)</span>
+<span id="cb5-304"><a href="#cb5-304" aria-hidden="true" tabindex="-1"></a>    line<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="st">"1"</span>)</span>
+<span id="cb5-305"><a href="#cb5-305" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">appendChild</span>(line)</span>
+<span id="cb5-306"><a href="#cb5-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-307"><a href="#cb5-307" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> lx <span class="op">=</span> cx <span class="op">+</span> (R <span class="op">+</span> <span class="dv">22</span>) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(a)</span>
+<span id="cb5-308"><a href="#cb5-308" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> ly <span class="op">=</span> cy <span class="op">+</span> (R <span class="op">+</span> <span class="dv">22</span>) <span class="op">*</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(a)</span>
+<span id="cb5-309"><a href="#cb5-309" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> isHighlighted <span class="op">=</span> activeFeature <span class="op">===</span> feat</span>
+<span id="cb5-310"><a href="#cb5-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-311"><a href="#cb5-311" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> txt <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"text"</span>)</span>
+<span id="cb5-312"><a href="#cb5-312" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x"</span><span class="op">,</span> lx)</span>
+<span id="cb5-313"><a href="#cb5-313" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y"</span><span class="op">,</span> ly)</span>
+<span id="cb5-314"><a href="#cb5-314" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"text-anchor"</span><span class="op">,</span></span>
+<span id="cb5-315"><a href="#cb5-315" aria-hidden="true" tabindex="-1"></a>      <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(a) <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">?</span> <span class="st">"start"</span> <span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">cos</span>(a) <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.1</span> <span class="op">?</span> <span class="st">"end"</span> <span class="op">:</span> <span class="st">"middle"</span>)</span>
+<span id="cb5-316"><a href="#cb5-316" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"dominant-baseline"</span><span class="op">,</span></span>
+<span id="cb5-317"><a href="#cb5-317" aria-hidden="true" tabindex="-1"></a>      <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(a) <span class="op">&gt;</span> <span class="fl">0.1</span> <span class="op">?</span> <span class="st">"hanging"</span> <span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sin</span>(a) <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.1</span> <span class="op">?</span> <span class="st">"auto"</span> <span class="op">:</span> <span class="st">"middle"</span>)</span>
+<span id="cb5-318"><a href="#cb5-318" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill"</span><span class="op">,</span> isHighlighted <span class="op">?</span> <span class="st">"#f0f0f0"</span> <span class="op">:</span> <span class="st">"#555"</span>)</span>
+<span id="cb5-319"><a href="#cb5-319" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="st">"9"</span>)</span>
+<span id="cb5-320"><a href="#cb5-320" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-family"</span><span class="op">,</span> <span class="st">"DM Sans, sans-serif"</span>)</span>
+<span id="cb5-321"><a href="#cb5-321" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-weight"</span><span class="op">,</span> isHighlighted <span class="op">?</span> <span class="st">"700"</span> <span class="op">:</span> <span class="st">"400"</span>)</span>
+<span id="cb5-322"><a href="#cb5-322" aria-hidden="true" tabindex="-1"></a>    txt<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> feat<span class="op">.</span><span class="fu">toUpperCase</span>()</span>
+<span id="cb5-323"><a href="#cb5-323" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">appendChild</span>(txt)</span>
+<span id="cb5-324"><a href="#cb5-324" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-325"><a href="#cb5-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-326"><a href="#cb5-326" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Genre polygons — dim genres that are toggled off</span></span>
+<span id="cb5-327"><a href="#cb5-327" aria-hidden="true" tabindex="-1"></a>  genreProfiles<span class="op">.</span><span class="fu">forEach</span>(d <span class="kw">=&gt;</span> {</span>
+<span id="cb5-328"><a href="#cb5-328" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> isOn <span class="op">=</span> activeGenres<span class="op">.</span><span class="fu">has</span>(d<span class="op">.</span><span class="at">genre</span>)</span>
+<span id="cb5-329"><a href="#cb5-329" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> pairs <span class="op">=</span> FEATURES<span class="op">.</span><span class="fu">map</span>((_<span class="op">,</span> i) <span class="kw">=&gt;</span> <span class="fu">pt</span>(i<span class="op">,</span> d<span class="op">.</span><span class="at">features</span>[FEATURES[i]] <span class="op">??</span> <span class="dv">0</span>))</span>
+<span id="cb5-330"><a href="#cb5-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-331"><a href="#cb5-331" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> poly <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"polygon"</span>)</span>
+<span id="cb5-332"><a href="#cb5-332" aria-hidden="true" tabindex="-1"></a>    poly<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"points"</span><span class="op">,</span> <span class="fu">polyPoints</span>(pairs))</span>
+<span id="cb5-333"><a href="#cb5-333" aria-hidden="true" tabindex="-1"></a>    poly<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill"</span><span class="op">,</span> d<span class="op">.</span><span class="at">color</span>)</span>
+<span id="cb5-334"><a href="#cb5-334" aria-hidden="true" tabindex="-1"></a>    poly<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill-opacity"</span><span class="op">,</span> isOn <span class="op">?</span> <span class="st">"0.15"</span> <span class="op">:</span> <span class="st">"0.02"</span>)</span>
+<span id="cb5-335"><a href="#cb5-335" aria-hidden="true" tabindex="-1"></a>    poly<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke"</span><span class="op">,</span> d<span class="op">.</span><span class="at">color</span>)</span>
+<span id="cb5-336"><a href="#cb5-336" aria-hidden="true" tabindex="-1"></a>    poly<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke-width"</span><span class="op">,</span> isOn <span class="op">?</span> <span class="st">"2.5"</span> <span class="op">:</span> <span class="st">"0.5"</span>)</span>
+<span id="cb5-337"><a href="#cb5-337" aria-hidden="true" tabindex="-1"></a>    poly<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke-opacity"</span><span class="op">,</span> isOn <span class="op">?</span> <span class="st">"0.9"</span> <span class="op">:</span> <span class="st">"0.15"</span>)</span>
+<span id="cb5-338"><a href="#cb5-338" aria-hidden="true" tabindex="-1"></a>    poly<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">transition</span> <span class="op">=</span> <span class="st">"all 0.35s ease"</span></span>
+<span id="cb5-339"><a href="#cb5-339" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">appendChild</span>(poly)</span>
+<span id="cb5-340"><a href="#cb5-340" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-341"><a href="#cb5-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-342"><a href="#cb5-342" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Wrap in a titled container</span></span>
+<span id="cb5-343"><a href="#cb5-343" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wrap <span class="op">=</span> <span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb5-344"><a href="#cb5-344" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;</span></span>
+<span id="cb5-345"><a href="#cb5-345" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.5rem;</span></span>
+<span id="cb5-346"><a href="#cb5-346" aria-hidden="true" tabindex="-1"></a><span class="vs">                  letter-spacing:0.08em;text-transform:uppercase;"&gt;</span></span>
+<span id="cb5-347"><a href="#cb5-347" aria-hidden="true" tabindex="-1"></a><span class="vs">        Radar — Audio Fingerprints</span></span>
+<span id="cb5-348"><a href="#cb5-348" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/div&gt;</span></span>
+<span id="cb5-349"><a href="#cb5-349" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>svg<span class="sc">}</span></span>
+<span id="cb5-350"><a href="#cb5-350" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb5-351"><a href="#cb5-351" aria-hidden="true" tabindex="-1"></a><span class="vs">  `</span></span>
+<span id="cb5-352"><a href="#cb5-352" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> wrap</span>
+<span id="cb5-353"><a href="#cb5-353" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="357" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 356;"><span id="cb6-357"><a href="#cb6-357" aria-hidden="true" tabindex="-1"></a><span class="co">// ── Grouped bar chart ────────────────────────────────────────────────────────</span></span>
+<span id="cb6-358"><a href="#cb6-358" aria-hidden="true" tabindex="-1"></a><span class="co">// Depends on: activeGenres, activeFeature</span></span>
+<span id="cb6-359"><a href="#cb6-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-360"><a href="#cb6-360" aria-hidden="true" tabindex="-1"></a>barChart <span class="op">=</span> {</span>
+<span id="cb6-361"><a href="#cb6-361" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> W <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb6-362"><a href="#cb6-362" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> H <span class="op">=</span> <span class="dv">220</span></span>
+<span id="cb6-363"><a href="#cb6-363" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> margin <span class="op">=</span> { <span class="dt">top</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">right</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">bottom</span><span class="op">:</span> <span class="dv">36</span><span class="op">,</span> <span class="dt">left</span><span class="op">:</span> <span class="dv">24</span> }</span>
+<span id="cb6-364"><a href="#cb6-364" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> innerW <span class="op">=</span> W <span class="op">-</span> margin<span class="op">.</span><span class="at">left</span> <span class="op">-</span> margin<span class="op">.</span><span class="at">right</span></span>
+<span id="cb6-365"><a href="#cb6-365" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> innerH <span class="op">=</span> H <span class="op">-</span> margin<span class="op">.</span><span class="at">top</span> <span class="op">-</span> margin<span class="op">.</span><span class="at">bottom</span></span>
+<span id="cb6-366"><a href="#cb6-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-367"><a href="#cb6-367" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svgNS <span class="op">=</span> <span class="st">"http://www.w3.org/2000/svg"</span></span>
+<span id="cb6-368"><a href="#cb6-368" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svg <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"svg"</span>)</span>
+<span id="cb6-369"><a href="#cb6-369" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="vs">`0 0 </span><span class="sc">${</span>W<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>H<span class="sc">}</span><span class="vs">`</span>)</span>
+<span id="cb6-370"><a href="#cb6-370" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"width"</span><span class="op">,</span> <span class="st">"100%"</span>)</span>
+<span id="cb6-371"><a href="#cb6-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-372"><a href="#cb6-372" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> g <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"g"</span>)</span>
+<span id="cb6-373"><a href="#cb6-373" aria-hidden="true" tabindex="-1"></a>  g<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"transform"</span><span class="op">,</span> <span class="vs">`translate(</span><span class="sc">${</span>margin<span class="op">.</span><span class="at">left</span><span class="sc">}</span><span class="vs">,</span><span class="sc">${</span>margin<span class="op">.</span><span class="at">top</span><span class="sc">}</span><span class="vs">)`</span>)</span>
+<span id="cb6-374"><a href="#cb6-374" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">appendChild</span>(g)</span>
+<span id="cb6-375"><a href="#cb6-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-376"><a href="#cb6-376" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Y-axis grid lines</span></span>
+<span id="cb6-377"><a href="#cb6-377" aria-hidden="true" tabindex="-1"></a>  <span class="op">;</span>[<span class="dv">0</span><span class="op">,</span> <span class="fl">0.25</span><span class="op">,</span> <span class="fl">0.5</span><span class="op">,</span> <span class="fl">0.75</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">.</span><span class="fu">forEach</span>(v <span class="kw">=&gt;</span> {</span>
+<span id="cb6-378"><a href="#cb6-378" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> y <span class="op">=</span> innerH <span class="op">-</span> v <span class="op">*</span> innerH</span>
+<span id="cb6-379"><a href="#cb6-379" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> gridLine <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"line"</span>)</span>
+<span id="cb6-380"><a href="#cb6-380" aria-hidden="true" tabindex="-1"></a>    gridLine<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="dv">0</span>)<span class="op">;</span> gridLine<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y1"</span><span class="op">,</span> y)</span>
+<span id="cb6-381"><a href="#cb6-381" aria-hidden="true" tabindex="-1"></a>    gridLine<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x2"</span><span class="op">,</span> innerW)<span class="op">;</span> gridLine<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y2"</span><span class="op">,</span> y)</span>
+<span id="cb6-382"><a href="#cb6-382" aria-hidden="true" tabindex="-1"></a>    gridLine<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#1e1e1e"</span>)</span>
+<span id="cb6-383"><a href="#cb6-383" aria-hidden="true" tabindex="-1"></a>    gridLine<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="st">"1"</span>)</span>
+<span id="cb6-384"><a href="#cb6-384" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">appendChild</span>(gridLine)</span>
+<span id="cb6-385"><a href="#cb6-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-386"><a href="#cb6-386" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> tick <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"text"</span>)</span>
+<span id="cb6-387"><a href="#cb6-387" aria-hidden="true" tabindex="-1"></a>    tick<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x"</span><span class="op">,</span> <span class="op">-</span><span class="dv">4</span>)<span class="op">;</span> tick<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y"</span><span class="op">,</span> y)</span>
+<span id="cb6-388"><a href="#cb6-388" aria-hidden="true" tabindex="-1"></a>    tick<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"text-anchor"</span><span class="op">,</span> <span class="st">"end"</span>)</span>
+<span id="cb6-389"><a href="#cb6-389" aria-hidden="true" tabindex="-1"></a>    tick<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"dominant-baseline"</span><span class="op">,</span> <span class="st">"middle"</span>)</span>
+<span id="cb6-390"><a href="#cb6-390" aria-hidden="true" tabindex="-1"></a>    tick<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="st">"7"</span>)</span>
+<span id="cb6-391"><a href="#cb6-391" aria-hidden="true" tabindex="-1"></a>    tick<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-family"</span><span class="op">,</span> <span class="st">"DM Sans, sans-serif"</span>)</span>
+<span id="cb6-392"><a href="#cb6-392" aria-hidden="true" tabindex="-1"></a>    tick<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"#444"</span>)</span>
+<span id="cb6-393"><a href="#cb6-393" aria-hidden="true" tabindex="-1"></a>    tick<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> v<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)</span>
+<span id="cb6-394"><a href="#cb6-394" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">appendChild</span>(tick)</span>
+<span id="cb6-395"><a href="#cb6-395" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb6-396"><a href="#cb6-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-397"><a href="#cb6-397" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> featW   <span class="op">=</span> innerW <span class="op">/</span> FEATURES<span class="op">.</span><span class="at">length</span></span>
+<span id="cb6-398"><a href="#cb6-398" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> barPad  <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb6-399"><a href="#cb6-399" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> genreW  <span class="op">=</span> (featW <span class="op">-</span> barPad <span class="op">*</span> <span class="dv">2</span>) <span class="op">/</span> genreProfiles<span class="op">.</span><span class="at">length</span></span>
+<span id="cb6-400"><a href="#cb6-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-401"><a href="#cb6-401" aria-hidden="true" tabindex="-1"></a>  FEATURES<span class="op">.</span><span class="fu">forEach</span>((feat<span class="op">,</span> fi) <span class="kw">=&gt;</span> {</span>
+<span id="cb6-402"><a href="#cb6-402" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> isFeatHighlighted <span class="op">=</span> activeFeature <span class="op">===</span> feat <span class="op">||</span> activeFeature <span class="op">===</span> <span class="kw">null</span></span>
+<span id="cb6-403"><a href="#cb6-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-404"><a href="#cb6-404" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Feature label on x-axis</span></span>
+<span id="cb6-405"><a href="#cb6-405" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> xlabel <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"text"</span>)</span>
+<span id="cb6-406"><a href="#cb6-406" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x"</span><span class="op">,</span> fi <span class="op">*</span> featW <span class="op">+</span> featW <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb6-407"><a href="#cb6-407" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y"</span><span class="op">,</span> innerH <span class="op">+</span> <span class="dv">14</span>)</span>
+<span id="cb6-408"><a href="#cb6-408" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"text-anchor"</span><span class="op">,</span> <span class="st">"middle"</span>)</span>
+<span id="cb6-409"><a href="#cb6-409" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="st">"7.5"</span>)</span>
+<span id="cb6-410"><a href="#cb6-410" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-family"</span><span class="op">,</span> <span class="st">"DM Sans, sans-serif"</span>)</span>
+<span id="cb6-411"><a href="#cb6-411" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill"</span><span class="op">,</span> activeFeature <span class="op">===</span> feat <span class="op">?</span> <span class="st">"#f0f0f0"</span> <span class="op">:</span> <span class="st">"#444"</span>)</span>
+<span id="cb6-412"><a href="#cb6-412" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"font-weight"</span><span class="op">,</span> activeFeature <span class="op">===</span> feat <span class="op">?</span> <span class="st">"700"</span> <span class="op">:</span> <span class="st">"400"</span>)</span>
+<span id="cb6-413"><a href="#cb6-413" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> feat<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">5</span>)<span class="op">.</span><span class="fu">toUpperCase</span>()</span>
+<span id="cb6-414"><a href="#cb6-414" aria-hidden="true" tabindex="-1"></a>    g<span class="op">.</span><span class="fu">appendChild</span>(xlabel)</span>
+<span id="cb6-415"><a href="#cb6-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-416"><a href="#cb6-416" aria-hidden="true" tabindex="-1"></a>    genreProfiles<span class="op">.</span><span class="fu">forEach</span>((d<span class="op">,</span> gi) <span class="kw">=&gt;</span> {</span>
+<span id="cb6-417"><a href="#cb6-417" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> isGenreOn <span class="op">=</span> activeGenres<span class="op">.</span><span class="fu">has</span>(d<span class="op">.</span><span class="at">genre</span>)</span>
+<span id="cb6-418"><a href="#cb6-418" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> val <span class="op">=</span> d<span class="op">.</span><span class="at">features</span>[feat] <span class="op">??</span> <span class="dv">0</span></span>
+<span id="cb6-419"><a href="#cb6-419" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> barH <span class="op">=</span> val <span class="op">*</span> innerH</span>
+<span id="cb6-420"><a href="#cb6-420" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> x <span class="op">=</span> fi <span class="op">*</span> featW <span class="op">+</span> barPad <span class="op">+</span> gi <span class="op">*</span> genreW</span>
+<span id="cb6-421"><a href="#cb6-421" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> y <span class="op">=</span> innerH <span class="op">-</span> barH</span>
+<span id="cb6-422"><a href="#cb6-422" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> opacity <span class="op">=</span> (isFeatHighlighted <span class="op">&amp;&amp;</span> isGenreOn) <span class="op">?</span> <span class="fl">0.85</span> <span class="op">:</span> <span class="fl">0.07</span></span>
+<span id="cb6-423"><a href="#cb6-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-424"><a href="#cb6-424" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> rect <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElementNS</span>(svgNS<span class="op">,</span> <span class="st">"rect"</span>)</span>
+<span id="cb6-425"><a href="#cb6-425" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"x"</span><span class="op">,</span> x)</span>
+<span id="cb6-426"><a href="#cb6-426" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"y"</span><span class="op">,</span> y)</span>
+<span id="cb6-427"><a href="#cb6-427" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"width"</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(genreW <span class="op">-</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>))</span>
+<span id="cb6-428"><a href="#cb6-428" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"height"</span><span class="op">,</span> barH)</span>
+<span id="cb6-429"><a href="#cb6-429" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"fill"</span><span class="op">,</span> d<span class="op">.</span><span class="at">color</span>)</span>
+<span id="cb6-430"><a href="#cb6-430" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">setAttribute</span>(<span class="st">"opacity"</span><span class="op">,</span> opacity)</span>
+<span id="cb6-431"><a href="#cb6-431" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">transition</span> <span class="op">=</span> <span class="st">"opacity 0.3s ease"</span></span>
+<span id="cb6-432"><a href="#cb6-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-433"><a href="#cb6-433" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Tooltip on hover</span></span>
+<span id="cb6-434"><a href="#cb6-434" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">"mouseenter"</span><span class="op">,</span> e <span class="kw">=&gt;</span> {</span>
+<span id="cb6-435"><a href="#cb6-435" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> tip <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".chart-tooltip"</span>)</span>
+<span id="cb6-436"><a href="#cb6-436" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="op">!</span>tip) {</span>
+<span id="cb6-437"><a href="#cb6-437" aria-hidden="true" tabindex="-1"></a>          tip <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElement</span>(<span class="st">"div"</span>)</span>
+<span id="cb6-438"><a href="#cb6-438" aria-hidden="true" tabindex="-1"></a>          tip<span class="op">.</span><span class="at">className</span> <span class="op">=</span> <span class="st">"chart-tooltip"</span></span>
+<span id="cb6-439"><a href="#cb6-439" aria-hidden="true" tabindex="-1"></a>          <span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">appendChild</span>(tip)</span>
+<span id="cb6-440"><a href="#cb6-440" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-441"><a href="#cb6-441" aria-hidden="true" tabindex="-1"></a>        tip<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> <span class="vs">`&lt;strong style="color:</span><span class="sc">${</span>d<span class="op">.</span><span class="at">color</span><span class="sc">}</span><span class="vs">"&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">genre</span><span class="op">.</span><span class="fu">toUpperCase</span>()<span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;br&gt;</span><span class="sc">${</span>feat<span class="sc">}</span><span class="vs">: </span><span class="sc">${</span>val<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">3</span>)<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb6-442"><a href="#cb6-442" aria-hidden="true" tabindex="-1"></a>        tip<span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">add</span>(<span class="st">"visible"</span>)</span>
+<span id="cb6-443"><a href="#cb6-443" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb6-444"><a href="#cb6-444" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">"mousemove"</span><span class="op">,</span> e <span class="kw">=&gt;</span> {</span>
+<span id="cb6-445"><a href="#cb6-445" aria-hidden="true" tabindex="-1"></a>        <span class="kw">const</span> tip <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".chart-tooltip"</span>)</span>
+<span id="cb6-446"><a href="#cb6-446" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (tip) {</span>
+<span id="cb6-447"><a href="#cb6-447" aria-hidden="true" tabindex="-1"></a>          tip<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">left</span> <span class="op">=</span> (e<span class="op">.</span><span class="at">clientX</span> <span class="op">+</span> <span class="dv">14</span>) <span class="op">+</span> <span class="st">"px"</span></span>
+<span id="cb6-448"><a href="#cb6-448" aria-hidden="true" tabindex="-1"></a>          tip<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">top</span>  <span class="op">=</span> (e<span class="op">.</span><span class="at">clientY</span> <span class="op">-</span> <span class="dv">32</span>) <span class="op">+</span> <span class="st">"px"</span></span>
+<span id="cb6-449"><a href="#cb6-449" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-450"><a href="#cb6-450" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb6-451"><a href="#cb6-451" aria-hidden="true" tabindex="-1"></a>      rect<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">"mouseleave"</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb6-452"><a href="#cb6-452" aria-hidden="true" tabindex="-1"></a>        <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".chart-tooltip"</span>)<span class="op">?.</span><span class="at">classList</span><span class="op">.</span><span class="fu">remove</span>(<span class="st">"visible"</span>)</span>
+<span id="cb6-453"><a href="#cb6-453" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb6-454"><a href="#cb6-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-455"><a href="#cb6-455" aria-hidden="true" tabindex="-1"></a>      g<span class="op">.</span><span class="fu">appendChild</span>(rect)</span>
+<span id="cb6-456"><a href="#cb6-456" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb6-457"><a href="#cb6-457" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb6-458"><a href="#cb6-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-459"><a href="#cb6-459" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wrap <span class="op">=</span> <span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb6-460"><a href="#cb6-460" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;</span></span>
+<span id="cb6-461"><a href="#cb6-461" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.5rem;</span></span>
+<span id="cb6-462"><a href="#cb6-462" aria-hidden="true" tabindex="-1"></a><span class="vs">                  letter-spacing:0.08em;text-transform:uppercase;"&gt;</span></span>
+<span id="cb6-463"><a href="#cb6-463" aria-hidden="true" tabindex="-1"></a><span class="vs">        Bar chart — Feature comparison</span></span>
+<span id="cb6-464"><a href="#cb6-464" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/div&gt;</span></span>
+<span id="cb6-465"><a href="#cb6-465" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>svg<span class="sc">}</span></span>
+<span id="cb6-466"><a href="#cb6-466" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb6-467"><a href="#cb6-467" aria-hidden="true" tabindex="-1"></a><span class="vs">  `</span></span>
+<span id="cb6-468"><a href="#cb6-468" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> wrap</span>
+<span id="cb6-469"><a href="#cb6-469" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="473" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 472;"><span id="cb7-473"><a href="#cb7-473" aria-hidden="true" tabindex="-1"></a><span class="co">// ── Song preview cards ───────────────────────────────────────────────────────</span></span>
+<span id="cb7-474"><a href="#cb7-474" aria-hidden="true" tabindex="-1"></a><span class="co">// Shows top 3 songs for the first solo-selected genre.</span></span>
+<span id="cb7-475"><a href="#cb7-475" aria-hidden="true" tabindex="-1"></a><span class="co">// If 0 or all genres are selected, shows nothing.</span></span>
+<span id="cb7-476"><a href="#cb7-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-477"><a href="#cb7-477" aria-hidden="true" tabindex="-1"></a>songCards <span class="op">=</span> {</span>
+<span id="cb7-478"><a href="#cb7-478" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> active <span class="op">=</span> [<span class="op">...</span>activeGenres]</span>
+<span id="cb7-479"><a href="#cb7-479" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-480"><a href="#cb7-480" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Only show cards when exactly 1 genre is isolated</span></span>
+<span id="cb7-481"><a href="#cb7-481" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (active<span class="op">.</span><span class="at">length</span> <span class="op">===</span> <span class="dv">0</span> <span class="op">||</span> active<span class="op">.</span><span class="at">length</span> <span class="op">===</span> genreProfiles<span class="op">.</span><span class="at">length</span>) {</span>
+<span id="cb7-482"><a href="#cb7-482" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;div&gt;&lt;/div&gt;`</span></span>
+<span id="cb7-483"><a href="#cb7-483" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-484"><a href="#cb7-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-485"><a href="#cb7-485" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> focusGenre <span class="op">=</span> active[<span class="dv">0</span>]</span>
+<span id="cb7-486"><a href="#cb7-486" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> color <span class="op">=</span> genreProfiles<span class="op">.</span><span class="fu">find</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">genre</span> <span class="op">===</span> focusGenre)<span class="op">?.</span><span class="at">color</span> <span class="op">??</span> <span class="st">"#888"</span></span>
+<span id="cb7-487"><a href="#cb7-487" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> songs <span class="op">=</span> topSongs<span class="op">.</span><span class="fu">filter</span>(s <span class="kw">=&gt;</span> s<span class="op">.</span><span class="at">genre</span> <span class="op">===</span> focusGenre)<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">3</span>)</span>
+<span id="cb7-488"><a href="#cb7-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-489"><a href="#cb7-489" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>songs<span class="op">.</span><span class="at">length</span>) <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;div&gt;&lt;/div&gt;`</span></span>
+<span id="cb7-490"><a href="#cb7-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-491"><a href="#cb7-491" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb7-492"><a href="#cb7-492" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="grid-column: 1 / -1; margin-top: 0.75rem;"&gt;</span></span>
+<span id="cb7-493"><a href="#cb7-493" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.5rem;</span></span>
+<span id="cb7-494"><a href="#cb7-494" aria-hidden="true" tabindex="-1"></a><span class="vs">                  letter-spacing:0.08em;text-transform:uppercase;"&gt;</span></span>
+<span id="cb7-495"><a href="#cb7-495" aria-hidden="true" tabindex="-1"></a><span class="vs">        Top songs · </span><span class="sc">${</span>focusGenre<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="sc">}</span></span>
+<span id="cb7-496"><a href="#cb7-496" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/div&gt;</span></span>
+<span id="cb7-497"><a href="#cb7-497" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div class="song-cards"&gt;</span></span>
+<span id="cb7-498"><a href="#cb7-498" aria-hidden="true" tabindex="-1"></a><span class="vs">        </span><span class="sc">${</span>songs<span class="op">.</span><span class="fu">map</span>((song<span class="op">,</span> i) <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`</span></span>
+<span id="cb7-499"><a href="#cb7-499" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;div class="song-card" style="border-color:</span><span class="sc">${</span>color<span class="sc">}</span><span class="vs">33"&gt;</span></span>
+<span id="cb7-500"><a href="#cb7-500" aria-hidden="true" tabindex="-1"></a><span class="vs">            &lt;div class="song-card-rank" style="color:</span><span class="sc">${</span>color<span class="sc">}</span><span class="vs">"&gt;</span><span class="sc">${</span>i <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb7-501"><a href="#cb7-501" aria-hidden="true" tabindex="-1"></a><span class="vs">            &lt;div class="song-card-info"&gt;</span></span>
+<span id="cb7-502"><a href="#cb7-502" aria-hidden="true" tabindex="-1"></a><span class="vs">              &lt;div class="song-card-name"&gt;</span><span class="sc">${</span>song<span class="op">.</span><span class="at">track_name</span><span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb7-503"><a href="#cb7-503" aria-hidden="true" tabindex="-1"></a><span class="vs">              &lt;div class="song-card-artist"&gt;</span><span class="sc">${</span>song<span class="op">.</span><span class="at">track_artist</span><span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb7-504"><a href="#cb7-504" aria-hidden="true" tabindex="-1"></a><span class="vs">            &lt;/div&gt;</span></span>
+<span id="cb7-505"><a href="#cb7-505" aria-hidden="true" tabindex="-1"></a><span class="vs">            &lt;div class="song-card-pop"&gt;⬆ </span><span class="sc">${</span>song<span class="op">.</span><span class="at">popularity</span><span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb7-506"><a href="#cb7-506" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;/div&gt;</span></span>
+<span id="cb7-507"><a href="#cb7-507" aria-hidden="true" tabindex="-1"></a><span class="vs">        `</span>)<span class="sc">}</span></span>
+<span id="cb7-508"><a href="#cb7-508" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/div&gt;</span></span>
+<span id="cb7-509"><a href="#cb7-509" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb7-510"><a href="#cb7-510" aria-hidden="true" tabindex="-1"></a><span class="vs">  `</span></span>
+<span id="cb7-511"><a href="#cb7-511" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell hidden">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="516" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 515;"><span id="cb8-516"><a href="#cb8-516" aria-hidden="true" tabindex="-1"></a><span class="co">// ── Move OJS output nodes into the chart-panel slots ────────────────────────</span></span>
+<span id="cb8-517"><a href="#cb8-517" aria-hidden="true" tabindex="-1"></a><span class="co">//</span></span>
+<span id="cb8-518"><a href="#cb8-518" aria-hidden="true" tabindex="-1"></a><span class="co">// OJS places each cell's output into a div[id^="ojs-cell-"] inside</span></span>
+<span id="cb8-519"><a href="#cb8-519" aria-hidden="true" tabindex="-1"></a><span class="co">// #quarto-content. We move those nodes into the pre-declared slot divs</span></span>
+<span id="cb8-520"><a href="#cb8-520" aria-hidden="true" tabindex="-1"></a><span class="co">// inside .chart-panel so the grid layout applies correctly.</span></span>
+<span id="cb8-521"><a href="#cb8-521" aria-hidden="true" tabindex="-1"></a><span class="co">//</span></span>
+<span id="cb8-522"><a href="#cb8-522" aria-hidden="true" tabindex="-1"></a><span class="co">// We do this once, after all cells have rendered, using requestAnimationFrame.</span></span>
+<span id="cb8-523"><a href="#cb8-523" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-524"><a href="#cb8-524" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-525"><a href="#cb8-525" aria-hidden="true" tabindex="-1"></a>  <span class="kw">function</span> <span class="fu">moveIntoSlots</span>() {</span>
+<span id="cb8-526"><a href="#cb8-526" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Map: slot id → the OJS cell output element to move there</span></span>
+<span id="cb8-527"><a href="#cb8-527" aria-hidden="true" tabindex="-1"></a>    <span class="co">// OJS cell outputs are identified by finding the rendered wrapper</span></span>
+<span id="cb8-528"><a href="#cb8-528" aria-hidden="true" tabindex="-1"></a>    <span class="co">// that contains our specific root elements.</span></span>
+<span id="cb8-529"><a href="#cb8-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-530"><a href="#cb8-530" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">findCellContaining</span>(selector) {</span>
+<span id="cb8-531"><a href="#cb8-531" aria-hidden="true" tabindex="-1"></a>      <span class="co">// OJS wraps each cell in div.observablehq or div[id^="ojs-cell"]</span></span>
+<span id="cb8-532"><a href="#cb8-532" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> el <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(selector)</span>
+<span id="cb8-533"><a href="#cb8-533" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="op">!</span>el) <span class="cf">return</span> <span class="kw">null</span></span>
+<span id="cb8-534"><a href="#cb8-534" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Walk up to find the OJS cell wrapper</span></span>
+<span id="cb8-535"><a href="#cb8-535" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> node <span class="op">=</span> el</span>
+<span id="cb8-536"><a href="#cb8-536" aria-hidden="true" tabindex="-1"></a>      <span class="cf">while</span> (node <span class="op">&amp;&amp;</span> node<span class="op">.</span><span class="at">parentElement</span>) {</span>
+<span id="cb8-537"><a href="#cb8-537" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (</span>
+<span id="cb8-538"><a href="#cb8-538" aria-hidden="true" tabindex="-1"></a>          node<span class="op">.</span><span class="at">parentElement</span><span class="op">.</span><span class="at">id</span> <span class="op">===</span> <span class="st">"quarto-content"</span> <span class="op">||</span></span>
+<span id="cb8-539"><a href="#cb8-539" aria-hidden="true" tabindex="-1"></a>          node<span class="op">.</span><span class="at">parentElement</span><span class="op">.</span><span class="at">classList</span><span class="op">.</span><span class="fu">contains</span>(<span class="st">"observablehq-center"</span>) <span class="op">||</span></span>
+<span id="cb8-540"><a href="#cb8-540" aria-hidden="true" tabindex="-1"></a>          node<span class="op">.</span><span class="at">parentElement</span><span class="op">.</span><span class="at">tagName</span> <span class="op">===</span> <span class="st">"MAIN"</span></span>
+<span id="cb8-541"><a href="#cb8-541" aria-hidden="true" tabindex="-1"></a>        ) <span class="cf">return</span> node</span>
+<span id="cb8-542"><a href="#cb8-542" aria-hidden="true" tabindex="-1"></a>        node <span class="op">=</span> node<span class="op">.</span><span class="at">parentElement</span></span>
+<span id="cb8-543"><a href="#cb8-543" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb8-544"><a href="#cb8-544" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> node</span>
+<span id="cb8-545"><a href="#cb8-545" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-546"><a href="#cb8-546" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-547"><a href="#cb8-547" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> slots <span class="op">=</span> {</span>
+<span id="cb8-548"><a href="#cb8-548" aria-hidden="true" tabindex="-1"></a>      <span class="st">"slot-legend"</span><span class="op">:</span>  <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".genre-legend"</span>)<span class="op">,</span></span>
+<span id="cb8-549"><a href="#cb8-549" aria-hidden="true" tabindex="-1"></a>      <span class="st">"slot-filters"</span><span class="op">:</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".feature-filters"</span>)<span class="op">,</span></span>
+<span id="cb8-550"><a href="#cb8-550" aria-hidden="true" tabindex="-1"></a>      <span class="st">"slot-radar"</span><span class="op">:</span>   <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">"[style*='Radar']"</span>)<span class="op">,</span></span>
+<span id="cb8-551"><a href="#cb8-551" aria-hidden="true" tabindex="-1"></a>      <span class="st">"slot-bar"</span><span class="op">:</span>     <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">"[style*='Bar chart']"</span>)<span class="op">,</span></span>
+<span id="cb8-552"><a href="#cb8-552" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-553"><a href="#cb8-553" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-554"><a href="#cb8-554" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Simpler approach: just grab ALL ojs-cell outputs in order</span></span>
+<span id="cb8-555"><a href="#cb8-555" aria-hidden="true" tabindex="-1"></a>    <span class="co">// and move them into chart-panel children sequentially</span></span>
+<span id="cb8-556"><a href="#cb8-556" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> panel <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"main-chart-panel"</span>)</span>
+<span id="cb8-557"><a href="#cb8-557" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>panel) { <span class="fu">requestAnimationFrame</span>(moveIntoSlots)<span class="op">;</span> <span class="cf">return</span> }</span>
+<span id="cb8-558"><a href="#cb8-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-559"><a href="#cb8-559" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> slotLegend  <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"slot-legend"</span>)</span>
+<span id="cb8-560"><a href="#cb8-560" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> slotFilters <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"slot-filters"</span>)</span>
+<span id="cb8-561"><a href="#cb8-561" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> slotRadar   <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"slot-radar"</span>)</span>
+<span id="cb8-562"><a href="#cb8-562" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> slotBar     <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"slot-bar"</span>)</span>
+<span id="cb8-563"><a href="#cb8-563" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> slotSongs   <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">"slot-songs"</span>)</span>
+<span id="cb8-564"><a href="#cb8-564" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-565"><a href="#cb8-565" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Find OJS outputs by their rendered class .observablehq</span></span>
+<span id="cb8-566"><a href="#cb8-566" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> ojsCells <span class="op">=</span> [<span class="op">...</span><span class="bu">document</span><span class="op">.</span><span class="fu">querySelectorAll</span>(<span class="st">".observablehq"</span>)]</span>
+<span id="cb8-567"><a href="#cb8-567" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (ojsCells<span class="op">.</span><span class="at">length</span> <span class="op">&lt;</span> <span class="dv">4</span>) { <span class="fu">requestAnimationFrame</span>(moveIntoSlots)<span class="op">;</span> <span class="cf">return</span> }</span>
+<span id="cb8-568"><a href="#cb8-568" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-569"><a href="#cb8-569" aria-hidden="true" tabindex="-1"></a>    <span class="co">// The cells render in document order:</span></span>
+<span id="cb8-570"><a href="#cb8-570" aria-hidden="true" tabindex="-1"></a>    <span class="co">// cell 0 = legend (viewof activeGenres)</span></span>
+<span id="cb8-571"><a href="#cb8-571" aria-hidden="true" tabindex="-1"></a>    <span class="co">// cell 1 = filters (viewof activeFeature)</span></span>
+<span id="cb8-572"><a href="#cb8-572" aria-hidden="true" tabindex="-1"></a>    <span class="co">// cell 2 = radarChart</span></span>
+<span id="cb8-573"><a href="#cb8-573" aria-hidden="true" tabindex="-1"></a>    <span class="co">// cell 3 = barChart</span></span>
+<span id="cb8-574"><a href="#cb8-574" aria-hidden="true" tabindex="-1"></a>    <span class="co">// cell 4 = songCards</span></span>
+<span id="cb8-575"><a href="#cb8-575" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-576"><a href="#cb8-576" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> legendEl  <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".genre-legend"</span>)<span class="op">?.</span><span class="fu">closest</span>(<span class="st">".observablehq"</span>)</span>
+<span id="cb8-577"><a href="#cb8-577" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> filterEl  <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".feature-filters"</span>)<span class="op">?.</span><span class="fu">closest</span>(<span class="st">".observablehq"</span>)</span>
+<span id="cb8-578"><a href="#cb8-578" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> radarEl   <span class="op">=</span> ojsCells<span class="op">.</span><span class="fu">find</span>(c <span class="kw">=&gt;</span> c<span class="op">.</span><span class="fu">querySelector</span>(<span class="st">"svg"</span>) <span class="op">&amp;&amp;</span> c <span class="op">!==</span> filterEl)</span>
+<span id="cb8-579"><a href="#cb8-579" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> barEl     <span class="op">=</span> ojsCells<span class="op">.</span><span class="fu">filter</span>(c <span class="kw">=&gt;</span> c<span class="op">.</span><span class="fu">querySelector</span>(<span class="st">"svg"</span>) <span class="op">&amp;&amp;</span> c <span class="op">!==</span> filterEl)[<span class="dv">1</span>]</span>
+<span id="cb8-580"><a href="#cb8-580" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> songEl    <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".song-cards"</span>)<span class="op">?.</span><span class="fu">closest</span>(<span class="st">".observablehq"</span>)</span>
+<span id="cb8-581"><a href="#cb8-581" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-582"><a href="#cb8-582" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (legendEl  <span class="op">&amp;&amp;</span> slotLegend)  slotLegend<span class="op">.</span><span class="fu">appendChild</span>(legendEl)</span>
+<span id="cb8-583"><a href="#cb8-583" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (filterEl  <span class="op">&amp;&amp;</span> slotFilters) slotFilters<span class="op">.</span><span class="fu">appendChild</span>(filterEl)</span>
+<span id="cb8-584"><a href="#cb8-584" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (radarEl   <span class="op">&amp;&amp;</span> slotRadar)   slotRadar<span class="op">.</span><span class="fu">appendChild</span>(radarEl)</span>
+<span id="cb8-585"><a href="#cb8-585" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (barEl     <span class="op">&amp;&amp;</span> slotBar)     slotBar<span class="op">.</span><span class="fu">appendChild</span>(barEl)</span>
+<span id="cb8-586"><a href="#cb8-586" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (songEl    <span class="op">&amp;&amp;</span> slotSongs)   slotSongs<span class="op">.</span><span class="fu">appendChild</span>(songEl)</span>
+<span id="cb8-587"><a href="#cb8-587" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-588"><a href="#cb8-588" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-589"><a href="#cb8-589" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Give OJS time to render all cells first</span></span>
+<span id="cb8-590"><a href="#cb8-590" aria-hidden="true" tabindex="-1"></a>  <span class="pp">setTimeout</span>(moveIntoSlots<span class="op">,</span> <span class="dv">300</span>)</span>
+<span id="cb8-591"><a href="#cb8-591" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display hidden">
+<div id="ojs-cell-7" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     Scrollama — step activation
+     ═══════════════════════════════════════════════════════════════════════ -->
+<script type="module">
+import scrollama from "https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm"
+
+function initScroller() {
+  const steps = document.querySelectorAll("#genre-steps .step")
+  if (steps.length === 0) {
+    setTimeout(initScroller, 150)
+    return
+  }
+
+  const scroller = scrollama()
+  scroller
+    .setup({
+      step:   "#genre-steps .step",
+      offset: 0.5,
+      debug:  false,
+    })
+    .onStepEnter(({ element }) => {
+      steps.forEach(s => s.classList.remove("is-active"))
+      element.classList.add("is-active")
+    })
+
+  window.addEventListener("resize", scroller.resize)
+  console.log("Scrollama ready.")
+}
+
+initScroller()
+</script>
+
+<div class="chart-tooltip"></div>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlxuLy8g4pSA4pSAIExvYWQgZGF0YSDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbmdlbnJlUHJvZmlsZXMgPSBGaWxlQXR0YWNobWVudChcImRhdGEvcHJvY2Vzc2VkL2dlbnJlX3Byb2ZpbGVzLmpzb25cIikuanNvbigpXG50b3BTb25ncyAgICAgID0gRmlsZUF0dGFjaG1lbnQoXCJkYXRhL3Byb2Nlc3NlZC90b3Bfc29uZ3MuanNvblwiKS5qc29uKClcblxuLy8g4pSA4pSAIENvbnN0YW50cyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkZFQVRVUkVTID0gW1wiRGFuY2VhYmlsaXR5XCIsIFwiRW5lcmd5XCIsIFwiVmFsZW5jZVwiLCBcIkFjb3VzdGljbmVzc1wiLCBcIlRlbXBvXCIsIFwiU3BlZWNoaW5lc3NcIl1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ii8vIOKUgOKUgCBMZWdlbmQgKGludGVyYWN0aXZlIGdlbnJlIGZpbHRlcikg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG4vL1xuLy8gV2UgdXNlIElucHV0cy5jaGVja2JveCBmcm9tIHRoZSBzdGRsaWIg4oCUIHRoaXMgaXMgdGhlIGlkaW9tYXRpYyBPSlMgcGF0dGVybi5cbi8vIEl0IGdpdmVzIHVzIGEgcmVhY3RpdmUgU2V0IGF1dG9tYXRpY2FsbHk7IG5vIG1hbnVhbCBldmVudCBkaXNwYXRjaGluZyBuZWVkZWQuXG4vL1xuLy8gTm90ZTogd2Ugc3R5bGUgaXQgb3Vyc2VsdmVzIGJlY2F1c2Ugd2UgbmVlZCBjdXN0b20gcGlsbCBhcHBlYXJhbmNlLlxuXG52aWV3b2YgYWN0aXZlR2VucmVzID0ge1xuICAvLyBCdWlsZCBhIGN1c3RvbSBwaWxsLWJhc2VkIHRvZ2dsZSwgYnV0IHJldHVybiBhIHByb3BlciBPSlMgaW5wdXRcbiAgLy8gc28gb3RoZXIgY2VsbHMgY2FuIGRlcGVuZCBvbiBpdCByZWFjdGl2ZWx5LlxuXG4gIGNvbnN0IGFsbEdlbnJlcyA9IGdlbnJlUHJvZmlsZXMubWFwKGQgPT4gZC5nZW5yZSlcbiAgY29uc3Qgc3RhdGUgPSBuZXcgU2V0KGFsbEdlbnJlcykgICAvLyBhbGwgb24gaW5pdGlhbGx5XG5cbiAgY29uc3Qgd3JhcCA9IGh0bWxgPGRpdiBjbGFzcz1cImdlbnJlLWxlZ2VuZFwiPjwvZGl2PmBcblxuICBnZW5yZVByb2ZpbGVzLmZvckVhY2goZCA9PiB7XG4gICAgY29uc3QgaXRlbSA9IHdyYXAuYXBwZW5kQ2hpbGQoaHRtbGBcbiAgICAgIDxkaXYgY2xhc3M9XCJsZWdlbmQtaXRlbSBhY3RpdmVcIiBzdHlsZT1cImJvcmRlci1jb2xvcjogJHtkLmNvbG9yfVwiPlxuICAgICAgICA8ZGl2IGNsYXNzPVwibGVnZW5kLWRvdFwiIHN0eWxlPVwiYmFja2dyb3VuZDogJHtkLmNvbG9yfVwiPjwvZGl2PlxuICAgICAgICA8c3Bhbj4ke2QuZ2VucmUudG9VcHBlckNhc2UoKX08L3NwYW4+XG4gICAgICA8L2Rpdj5cbiAgICBgKVxuXG4gICAgaXRlbS5hZGRFdmVudExpc3RlbmVyKFwiY2xpY2tcIiwgKCkgPT4ge1xuICAgICAgaWYgKHN0YXRlLmhhcyhkLmdlbnJlKSkge1xuICAgICAgICBzdGF0ZS5kZWxldGUoZC5nZW5yZSlcbiAgICAgICAgaXRlbS5jbGFzc0xpc3QucmVtb3ZlKFwiYWN0aXZlXCIpXG4gICAgICAgIGl0ZW0uc3R5bGUuYm9yZGVyQ29sb3IgPSBcInRyYW5zcGFyZW50XCJcbiAgICAgICAgaXRlbS5xdWVyeVNlbGVjdG9yKFwiLmxlZ2VuZC1kb3RcIikuc3R5bGUub3BhY2l0eSA9IFwiMC4zXCJcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIHN0YXRlLmFkZChkLmdlbnJlKVxuICAgICAgICBpdGVtLmNsYXNzTGlzdC5hZGQoXCJhY3RpdmVcIilcbiAgICAgICAgaXRlbS5zdHlsZS5ib3JkZXJDb2xvciA9IGQuY29sb3JcbiAgICAgICAgaXRlbS5xdWVyeVNlbGVjdG9yKFwiLmxlZ2VuZC1kb3RcIikuc3R5bGUub3BhY2l0eSA9IFwiMVwiXG4gICAgICB9XG4gICAgICAvLyBOb3RpZnkgT0pTIG9mIHRoZSBjaGFuZ2VcbiAgICAgIHdyYXAudmFsdWUgPSBuZXcgU2V0KHN0YXRlKVxuICAgICAgd3JhcC5kaXNwYXRjaEV2ZW50KG5ldyBFdmVudChcImlucHV0XCIsIHsgYnViYmxlczogdHJ1ZSB9KSlcbiAgICB9KVxuICB9KVxuXG4gIHdyYXAudmFsdWUgPSBzdGF0ZVxuICByZXR1cm4gd3JhcFxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiLy8g4pSA4pSAIEZlYXR1cmUgZmlsdGVyIGJ1dHRvbnMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5cbnZpZXdvZiBhY3RpdmVGZWF0dXJlID0ge1xuICBjb25zdCB3cmFwID0gaHRtbGA8ZGl2PjwvZGl2PmBcblxuICBjb25zdCBsYWJlbCA9IHdyYXAuYXBwZW5kQ2hpbGQoaHRtbGBcbiAgICA8ZGl2IHN0eWxlPVwiZm9udC1zaXplOjAuN3JlbTtjb2xvcjp2YXIoLS10ZXh0LWRpbSk7bWFyZ2luLWJvdHRvbTowLjRyZW07XG4gICAgICAgICAgICAgICAgbGV0dGVyLXNwYWNpbmc6MC4wOGVtO3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtcIj5cbiAgICAgIEhpZ2hsaWdodCBhIGZlYXR1cmUg4oaSXG4gICAgPC9kaXY+XG4gIGApXG5cbiAgY29uc3QgYnRuUm93ID0gd3JhcC5hcHBlbmRDaGlsZChodG1sYDxkaXYgY2xhc3M9XCJmZWF0dXJlLWZpbHRlcnNcIj48L2Rpdj5gKVxuXG4gIHdyYXAudmFsdWUgPSBudWxsXG4gIGxldCBhY3RpdmVCdG4gPSBudWxsXG5cbiAgRkVBVFVSRVMuZm9yRWFjaChmZWF0ID0+IHtcbiAgICBjb25zdCBidG4gPSBidG5Sb3cuYXBwZW5kQ2hpbGQoaHRtbGA8YnV0dG9uIGNsYXNzPVwiZmlsdGVyLWJ0blwiPiR7ZmVhdH08L2J1dHRvbj5gKVxuICAgIGJ0bi5hZGRFdmVudExpc3RlbmVyKFwiY2xpY2tcIiwgKCkgPT4ge1xuICAgICAgaWYgKGFjdGl2ZUJ0biA9PT0gYnRuKSB7XG4gICAgICAgIGJ0bi5jbGFzc0xpc3QucmVtb3ZlKFwiYWN0aXZlXCIpXG4gICAgICAgIGFjdGl2ZUJ0biA9IG51bGxcbiAgICAgICAgd3JhcC52YWx1ZSA9IG51bGxcbiAgICAgIH0gZWxzZSB7XG4gICAgICAgIGlmIChhY3RpdmVCdG4pIGFjdGl2ZUJ0bi5jbGFzc0xpc3QucmVtb3ZlKFwiYWN0aXZlXCIpXG4gICAgICAgIGJ0bi5jbGFzc0xpc3QuYWRkKFwiYWN0aXZlXCIpXG4gICAgICAgIGFjdGl2ZUJ0biA9IGJ0blxuICAgICAgICB3cmFwLnZhbHVlID0gZmVhdFxuICAgICAgfVxuICAgICAgd3JhcC5kaXNwYXRjaEV2ZW50KG5ldyBFdmVudChcImlucHV0XCIsIHsgYnViYmxlczogdHJ1ZSB9KSlcbiAgICB9KVxuICB9KVxuXG4gIHJldHVybiB3cmFwXG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyDilIDilIAgUmFkYXIgY2hhcnQg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG4vLyBSZXR1cm5zIGFuIFNWRyBlbGVtZW50LiBPSlMgcGxhY2VzIGl0IGludG8gdGhlIHBhZ2UgYXV0b21hdGljYWxseS5cbi8vIERlcGVuZHMgb246IGFjdGl2ZUdlbnJlcyAocmUtcnVucyB3aGVuZXZlciB0aGUgbGVnZW5kIGlzIGNsaWNrZWQpXG5cbnJhZGFyQ2hhcnQgPSB7XG4gIGNvbnN0IFcgPSAzMDBcbiAgY29uc3QgSCA9IDMwMFxuICBjb25zdCBjeCA9IFcgLyAyLCBjeSA9IEggLyAyXG4gIGNvbnN0IFIgID0gVyAqIDAuMzVcbiAgY29uc3QgTiAgPSBGRUFUVVJFUy5sZW5ndGhcbiAgY29uc3QgYW5nbGVzID0gRkVBVFVSRVMubWFwKChfLCBpKSA9PiAoTWF0aC5QSSAqIDIgKiBpKSAvIE4gLSBNYXRoLlBJIC8gMilcblxuICAvLyBIZWxwZXI6IGdldCBbeCwgeV0gZm9yIGEgZmVhdHVyZSB2YWx1ZSBvbiB0aGUgcmFkYXJcbiAgZnVuY3Rpb24gcHQoZmVhdEluZGV4LCB2YWwpIHtcbiAgICBjb25zdCBhID0gYW5nbGVzW2ZlYXRJbmRleF1cbiAgICByZXR1cm4gW2N4ICsgdmFsICogUiAqIE1hdGguY29zKGEpLCBjeSArIHZhbCAqIFIgKiBNYXRoLnNpbihhKV1cbiAgfVxuXG4gIC8vIEhlbHBlcjogcG9seWdvbiBwb2ludHMgc3RyaW5nIGZyb20gYXJyYXkgb2YgW3gseV0gcGFpcnNcbiAgZnVuY3Rpb24gcG9seVBvaW50cyhwYWlycykge1xuICAgIHJldHVybiBwYWlycy5tYXAocCA9PiBwLmpvaW4oXCIsXCIpKS5qb2luKFwiIFwiKVxuICB9XG5cbiAgY29uc3Qgc3ZnTlMgPSBcImh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnXCJcbiAgY29uc3Qgc3ZnID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudE5TKHN2Z05TLCBcInN2Z1wiKVxuICBzdmcuc2V0QXR0cmlidXRlKFwidmlld0JveFwiLCBgMCAwICR7V30gJHtIfWApXG4gIHN2Zy5zZXRBdHRyaWJ1dGUoXCJ3aWR0aFwiLCBcIjEwMCVcIilcbiAgc3ZnLnN0eWxlLm92ZXJmbG93ID0gXCJ2aXNpYmxlXCJcbiAgc3ZnLnN0eWxlLmRpc3BsYXkgPSBcImJsb2NrXCJcblxuICAvLyBHcmlkIHJpbmdzXG4gIDtbMC4yNSwgMC41LCAwLjc1LCAxLjBdLmZvckVhY2gociA9PiB7XG4gICAgY29uc3QgcmluZyA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnROUyhzdmdOUywgXCJwb2x5Z29uXCIpXG4gICAgcmluZy5zZXRBdHRyaWJ1dGUoXCJwb2ludHNcIiwgcG9seVBvaW50cyhhbmdsZXMubWFwKGEgPT4gW1xuICAgICAgY3ggKyByICogUiAqIE1hdGguY29zKGEpLFxuICAgICAgY3kgKyByICogUiAqIE1hdGguc2luKGEpXG4gICAgXSkpKVxuICAgIHJpbmcuc2V0QXR0cmlidXRlKFwiZmlsbFwiLCBcIm5vbmVcIilcbiAgICByaW5nLnNldEF0dHJpYnV0ZShcInN0cm9rZVwiLCBcIiMyYTJhMmFcIilcbiAgICByaW5nLnNldEF0dHJpYnV0ZShcInN0cm9rZS13aWR0aFwiLCBcIjFcIilcbiAgICBzdmcuYXBwZW5kQ2hpbGQocmluZylcbiAgfSlcblxuICAvLyBBeGlzIGxpbmVzICsgbGFiZWxzXG4gIEZFQVRVUkVTLmZvckVhY2goKGZlYXQsIGkpID0+IHtcbiAgICBjb25zdCBhID0gYW5nbGVzW2ldXG4gICAgY29uc3QgW3gyLCB5Ml0gPSBbY3ggKyBSICogTWF0aC5jb3MoYSksIGN5ICsgUiAqIE1hdGguc2luKGEpXVxuXG4gICAgY29uc3QgbGluZSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnROUyhzdmdOUywgXCJsaW5lXCIpXG4gICAgbGluZS5zZXRBdHRyaWJ1dGUoXCJ4MVwiLCBjeCk7IGxpbmUuc2V0QXR0cmlidXRlKFwieTFcIiwgY3kpXG4gICAgbGluZS5zZXRBdHRyaWJ1dGUoXCJ4MlwiLCB4Mik7IGxpbmUuc2V0QXR0cmlidXRlKFwieTJcIiwgeTIpXG4gICAgbGluZS5zZXRBdHRyaWJ1dGUoXCJzdHJva2VcIiwgXCIjMmEyYTJhXCIpXG4gICAgbGluZS5zZXRBdHRyaWJ1dGUoXCJzdHJva2Utd2lkdGhcIiwgXCIxXCIpXG4gICAgc3ZnLmFwcGVuZENoaWxkKGxpbmUpXG5cbiAgICBjb25zdCBseCA9IGN4ICsgKFIgKyAyMikgKiBNYXRoLmNvcyhhKVxuICAgIGNvbnN0IGx5ID0gY3kgKyAoUiArIDIyKSAqIE1hdGguc2luKGEpXG4gICAgY29uc3QgaXNIaWdobGlnaHRlZCA9IGFjdGl2ZUZlYXR1cmUgPT09IGZlYXRcblxuICAgIGNvbnN0IHR4dCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnROUyhzdmdOUywgXCJ0ZXh0XCIpXG4gICAgdHh0LnNldEF0dHJpYnV0ZShcInhcIiwgbHgpXG4gICAgdHh0LnNldEF0dHJpYnV0ZShcInlcIiwgbHkpXG4gICAgdHh0LnNldEF0dHJpYnV0ZShcInRleHQtYW5jaG9yXCIsXG4gICAgICBNYXRoLmNvcyhhKSA+IDAuMSA/IFwic3RhcnRcIiA6IE1hdGguY29zKGEpIDwgLTAuMSA/IFwiZW5kXCIgOiBcIm1pZGRsZVwiKVxuICAgIHR4dC5zZXRBdHRyaWJ1dGUoXCJkb21pbmFudC1iYXNlbGluZVwiLFxuICAgICAgTWF0aC5zaW4oYSkgPiAwLjEgPyBcImhhbmdpbmdcIiA6IE1hdGguc2luKGEpIDwgLTAuMSA/IFwiYXV0b1wiIDogXCJtaWRkbGVcIilcbiAgICB0eHQuc2V0QXR0cmlidXRlKFwiZmlsbFwiLCBpc0hpZ2hsaWdodGVkID8gXCIjZjBmMGYwXCIgOiBcIiM1NTVcIilcbiAgICB0eHQuc2V0QXR0cmlidXRlKFwiZm9udC1zaXplXCIsIFwiOVwiKVxuICAgIHR4dC5zZXRBdHRyaWJ1dGUoXCJmb250LWZhbWlseVwiLCBcIkRNIFNhbnMsIHNhbnMtc2VyaWZcIilcbiAgICB0eHQuc2V0QXR0cmlidXRlKFwiZm9udC13ZWlnaHRcIiwgaXNIaWdobGlnaHRlZCA/IFwiNzAwXCIgOiBcIjQwMFwiKVxuICAgIHR4dC50ZXh0Q29udGVudCA9IGZlYXQudG9VcHBlckNhc2UoKVxuICAgIHN2Zy5hcHBlbmRDaGlsZCh0eHQpXG4gIH0pXG5cbiAgLy8gR2VucmUgcG9seWdvbnMg4oCUIGRpbSBnZW5yZXMgdGhhdCBhcmUgdG9nZ2xlZCBvZmZcbiAgZ2VucmVQcm9maWxlcy5mb3JFYWNoKGQgPT4ge1xuICAgIGNvbnN0IGlzT24gPSBhY3RpdmVHZW5yZXMuaGFzKGQuZ2VucmUpXG4gICAgY29uc3QgcGFpcnMgPSBGRUFUVVJFUy5tYXAoKF8sIGkpID0+IHB0KGksIGQuZmVhdHVyZXNbRkVBVFVSRVNbaV1dID8/IDApKVxuXG4gICAgY29uc3QgcG9seSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnROUyhzdmdOUywgXCJwb2x5Z29uXCIpXG4gICAgcG9seS5zZXRBdHRyaWJ1dGUoXCJwb2ludHNcIiwgcG9seVBvaW50cyhwYWlycykpXG4gICAgcG9seS5zZXRBdHRyaWJ1dGUoXCJmaWxsXCIsIGQuY29sb3IpXG4gICAgcG9seS5zZXRBdHRyaWJ1dGUoXCJmaWxsLW9wYWNpdHlcIiwgaXNPbiA/IFwiMC4xNVwiIDogXCIwLjAyXCIpXG4gICAgcG9seS5zZXRBdHRyaWJ1dGUoXCJzdHJva2VcIiwgZC5jb2xvcilcbiAgICBwb2x5LnNldEF0dHJpYnV0ZShcInN0cm9rZS13aWR0aFwiLCBpc09uID8gXCIyLjVcIiA6IFwiMC41XCIpXG4gICAgcG9seS5zZXRBdHRyaWJ1dGUoXCJzdHJva2Utb3BhY2l0eVwiLCBpc09uID8gXCIwLjlcIiA6IFwiMC4xNVwiKVxuICAgIHBvbHkuc3R5bGUudHJhbnNpdGlvbiA9IFwiYWxsIDAuMzVzIGVhc2VcIlxuICAgIHN2Zy5hcHBlbmRDaGlsZChwb2x5KVxuICB9KVxuXG4gIC8vIFdyYXAgaW4gYSB0aXRsZWQgY29udGFpbmVyXG4gIGNvbnN0IHdyYXAgPSBodG1sYFxuICAgIDxkaXY+XG4gICAgICA8ZGl2IHN0eWxlPVwiZm9udC1zaXplOjAuN3JlbTtjb2xvcjp2YXIoLS10ZXh0LWRpbSk7bWFyZ2luLWJvdHRvbTowLjVyZW07XG4gICAgICAgICAgICAgICAgICBsZXR0ZXItc3BhY2luZzowLjA4ZW07dGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlO1wiPlxuICAgICAgICBSYWRhciDigJQgQXVkaW8gRmluZ2VycHJpbnRzXG4gICAgICA8L2Rpdj5cbiAgICAgICR7c3ZnfVxuICAgIDwvZGl2PlxuICBgXG4gIHJldHVybiB3cmFwXG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyDilIDilIAgR3JvdXBlZCBiYXIgY2hhcnQg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG4vLyBEZXBlbmRzIG9uOiBhY3RpdmVHZW5yZXMsIGFjdGl2ZUZlYXR1cmVcblxuYmFyQ2hhcnQgPSB7XG4gIGNvbnN0IFcgPSAzMDBcbiAgY29uc3QgSCA9IDIyMFxuICBjb25zdCBtYXJnaW4gPSB7IHRvcDogMTAsIHJpZ2h0OiA4LCBib3R0b206IDM2LCBsZWZ0OiAyNCB9XG4gIGNvbnN0IGlubmVyVyA9IFcgLSBtYXJnaW4ubGVmdCAtIG1hcmdpbi5yaWdodFxuICBjb25zdCBpbm5lckggPSBIIC0gbWFyZ2luLnRvcCAtIG1hcmdpbi5ib3R0b21cblxuICBjb25zdCBzdmdOUyA9IFwiaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmdcIlxuICBjb25zdCBzdmcgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50TlMoc3ZnTlMsIFwic3ZnXCIpXG4gIHN2Zy5zZXRBdHRyaWJ1dGUoXCJ2aWV3Qm94XCIsIGAwIDAgJHtXfSAke0h9YClcbiAgc3ZnLnNldEF0dHJpYnV0ZShcIndpZHRoXCIsIFwiMTAwJVwiKVxuXG4gIGNvbnN0IGcgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50TlMoc3ZnTlMsIFwiZ1wiKVxuICBnLnNldEF0dHJpYnV0ZShcInRyYW5zZm9ybVwiLCBgdHJhbnNsYXRlKCR7bWFyZ2luLmxlZnR9LCR7bWFyZ2luLnRvcH0pYClcbiAgc3ZnLmFwcGVuZENoaWxkKGcpXG5cbiAgLy8gWS1heGlzIGdyaWQgbGluZXNcbiAgO1swLCAwLjI1LCAwLjUsIDAuNzUsIDFdLmZvckVhY2godiA9PiB7XG4gICAgY29uc3QgeSA9IGlubmVySCAtIHYgKiBpbm5lckhcbiAgICBjb25zdCBncmlkTGluZSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnROUyhzdmdOUywgXCJsaW5lXCIpXG4gICAgZ3JpZExpbmUuc2V0QXR0cmlidXRlKFwieDFcIiwgMCk7IGdyaWRMaW5lLnNldEF0dHJpYnV0ZShcInkxXCIsIHkpXG4gICAgZ3JpZExpbmUuc2V0QXR0cmlidXRlKFwieDJcIiwgaW5uZXJXKTsgZ3JpZExpbmUuc2V0QXR0cmlidXRlKFwieTJcIiwgeSlcbiAgICBncmlkTGluZS5zZXRBdHRyaWJ1dGUoXCJzdHJva2VcIiwgXCIjMWUxZTFlXCIpXG4gICAgZ3JpZExpbmUuc2V0QXR0cmlidXRlKFwic3Ryb2tlLXdpZHRoXCIsIFwiMVwiKVxuICAgIGcuYXBwZW5kQ2hpbGQoZ3JpZExpbmUpXG5cbiAgICBjb25zdCB0aWNrID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudE5TKHN2Z05TLCBcInRleHRcIilcbiAgICB0aWNrLnNldEF0dHJpYnV0ZShcInhcIiwgLTQpOyB0aWNrLnNldEF0dHJpYnV0ZShcInlcIiwgeSlcbiAgICB0aWNrLnNldEF0dHJpYnV0ZShcInRleHQtYW5jaG9yXCIsIFwiZW5kXCIpXG4gICAgdGljay5zZXRBdHRyaWJ1dGUoXCJkb21pbmFudC1iYXNlbGluZVwiLCBcIm1pZGRsZVwiKVxuICAgIHRpY2suc2V0QXR0cmlidXRlKFwiZm9udC1zaXplXCIsIFwiN1wiKVxuICAgIHRpY2suc2V0QXR0cmlidXRlKFwiZm9udC1mYW1pbHlcIiwgXCJETSBTYW5zLCBzYW5zLXNlcmlmXCIpXG4gICAgdGljay5zZXRBdHRyaWJ1dGUoXCJmaWxsXCIsIFwiIzQ0NFwiKVxuICAgIHRpY2sudGV4dENvbnRlbnQgPSB2LnRvRml4ZWQoMilcbiAgICBnLmFwcGVuZENoaWxkKHRpY2spXG4gIH0pXG5cbiAgY29uc3QgZmVhdFcgICA9IGlubmVyVyAvIEZFQVRVUkVTLmxlbmd0aFxuICBjb25zdCBiYXJQYWQgID0gMVxuICBjb25zdCBnZW5yZVcgID0gKGZlYXRXIC0gYmFyUGFkICogMikgLyBnZW5yZVByb2ZpbGVzLmxlbmd0aFxuXG4gIEZFQVRVUkVTLmZvckVhY2goKGZlYXQsIGZpKSA9PiB7XG4gICAgY29uc3QgaXNGZWF0SGlnaGxpZ2h0ZWQgPSBhY3RpdmVGZWF0dXJlID09PSBmZWF0IHx8IGFjdGl2ZUZlYXR1cmUgPT09IG51bGxcblxuICAgIC8vIEZlYXR1cmUgbGFiZWwgb24geC1heGlzXG4gICAgY29uc3QgeGxhYmVsID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudE5TKHN2Z05TLCBcInRleHRcIilcbiAgICB4bGFiZWwuc2V0QXR0cmlidXRlKFwieFwiLCBmaSAqIGZlYXRXICsgZmVhdFcgLyAyKVxuICAgIHhsYWJlbC5zZXRBdHRyaWJ1dGUoXCJ5XCIsIGlubmVySCArIDE0KVxuICAgIHhsYWJlbC5zZXRBdHRyaWJ1dGUoXCJ0ZXh0LWFuY2hvclwiLCBcIm1pZGRsZVwiKVxuICAgIHhsYWJlbC5zZXRBdHRyaWJ1dGUoXCJmb250LXNpemVcIiwgXCI3LjVcIilcbiAgICB4bGFiZWwuc2V0QXR0cmlidXRlKFwiZm9udC1mYW1pbHlcIiwgXCJETSBTYW5zLCBzYW5zLXNlcmlmXCIpXG4gICAgeGxhYmVsLnNldEF0dHJpYnV0ZShcImZpbGxcIiwgYWN0aXZlRmVhdHVyZSA9PT0gZmVhdCA/IFwiI2YwZjBmMFwiIDogXCIjNDQ0XCIpXG4gICAgeGxhYmVsLnNldEF0dHJpYnV0ZShcImZvbnQtd2VpZ2h0XCIsIGFjdGl2ZUZlYXR1cmUgPT09IGZlYXQgPyBcIjcwMFwiIDogXCI0MDBcIilcbiAgICB4bGFiZWwudGV4dENvbnRlbnQgPSBmZWF0LnNsaWNlKDAsIDUpLnRvVXBwZXJDYXNlKClcbiAgICBnLmFwcGVuZENoaWxkKHhsYWJlbClcblxuICAgIGdlbnJlUHJvZmlsZXMuZm9yRWFjaCgoZCwgZ2kpID0+IHtcbiAgICAgIGNvbnN0IGlzR2VucmVPbiA9IGFjdGl2ZUdlbnJlcy5oYXMoZC5nZW5yZSlcbiAgICAgIGNvbnN0IHZhbCA9IGQuZmVhdHVyZXNbZmVhdF0gPz8gMFxuICAgICAgY29uc3QgYmFySCA9IHZhbCAqIGlubmVySFxuICAgICAgY29uc3QgeCA9IGZpICogZmVhdFcgKyBiYXJQYWQgKyBnaSAqIGdlbnJlV1xuICAgICAgY29uc3QgeSA9IGlubmVySCAtIGJhckhcbiAgICAgIGNvbnN0IG9wYWNpdHkgPSAoaXNGZWF0SGlnaGxpZ2h0ZWQgJiYgaXNHZW5yZU9uKSA/IDAuODUgOiAwLjA3XG5cbiAgICAgIGNvbnN0IHJlY3QgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50TlMoc3ZnTlMsIFwicmVjdFwiKVxuICAgICAgcmVjdC5zZXRBdHRyaWJ1dGUoXCJ4XCIsIHgpXG4gICAgICByZWN0LnNldEF0dHJpYnV0ZShcInlcIiwgeSlcbiAgICAgIHJlY3Quc2V0QXR0cmlidXRlKFwid2lkdGhcIiwgTWF0aC5tYXgoZ2VucmVXIC0gMSwgMSkpXG4gICAgICByZWN0LnNldEF0dHJpYnV0ZShcImhlaWdodFwiLCBiYXJIKVxuICAgICAgcmVjdC5zZXRBdHRyaWJ1dGUoXCJmaWxsXCIsIGQuY29sb3IpXG4gICAgICByZWN0LnNldEF0dHJpYnV0ZShcIm9wYWNpdHlcIiwgb3BhY2l0eSlcbiAgICAgIHJlY3Quc3R5bGUudHJhbnNpdGlvbiA9IFwib3BhY2l0eSAwLjNzIGVhc2VcIlxuXG4gICAgICAvLyBUb29sdGlwIG9uIGhvdmVyXG4gICAgICByZWN0LmFkZEV2ZW50TGlzdGVuZXIoXCJtb3VzZWVudGVyXCIsIGUgPT4ge1xuICAgICAgICBsZXQgdGlwID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5jaGFydC10b29sdGlwXCIpXG4gICAgICAgIGlmICghdGlwKSB7XG4gICAgICAgICAgdGlwID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKVxuICAgICAgICAgIHRpcC5jbGFzc05hbWUgPSBcImNoYXJ0LXRvb2x0aXBcIlxuICAgICAgICAgIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQodGlwKVxuICAgICAgICB9XG4gICAgICAgIHRpcC5pbm5lckhUTUwgPSBgPHN0cm9uZyBzdHlsZT1cImNvbG9yOiR7ZC5jb2xvcn1cIj4ke2QuZ2VucmUudG9VcHBlckNhc2UoKX08L3N0cm9uZz48YnI+JHtmZWF0fTogJHt2YWwudG9GaXhlZCgzKX1gXG4gICAgICAgIHRpcC5jbGFzc0xpc3QuYWRkKFwidmlzaWJsZVwiKVxuICAgICAgfSlcbiAgICAgIHJlY3QuYWRkRXZlbnRMaXN0ZW5lcihcIm1vdXNlbW92ZVwiLCBlID0+IHtcbiAgICAgICAgY29uc3QgdGlwID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5jaGFydC10b29sdGlwXCIpXG4gICAgICAgIGlmICh0aXApIHtcbiAgICAgICAgICB0aXAuc3R5bGUubGVmdCA9IChlLmNsaWVudFggKyAxNCkgKyBcInB4XCJcbiAgICAgICAgICB0aXAuc3R5bGUudG9wICA9IChlLmNsaWVudFkgLSAzMikgKyBcInB4XCJcbiAgICAgICAgfVxuICAgICAgfSlcbiAgICAgIHJlY3QuYWRkRXZlbnRMaXN0ZW5lcihcIm1vdXNlbGVhdmVcIiwgKCkgPT4ge1xuICAgICAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLmNoYXJ0LXRvb2x0aXBcIik/LmNsYXNzTGlzdC5yZW1vdmUoXCJ2aXNpYmxlXCIpXG4gICAgICB9KVxuXG4gICAgICBnLmFwcGVuZENoaWxkKHJlY3QpXG4gICAgfSlcbiAgfSlcblxuICBjb25zdCB3cmFwID0gaHRtbGBcbiAgICA8ZGl2PlxuICAgICAgPGRpdiBzdHlsZT1cImZvbnQtc2l6ZTowLjdyZW07Y29sb3I6dmFyKC0tdGV4dC1kaW0pO21hcmdpbi1ib3R0b206MC41cmVtO1xuICAgICAgICAgICAgICAgICAgbGV0dGVyLXNwYWNpbmc6MC4wOGVtO3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtcIj5cbiAgICAgICAgQmFyIGNoYXJ0IOKAlCBGZWF0dXJlIGNvbXBhcmlzb25cbiAgICAgIDwvZGl2PlxuICAgICAgJHtzdmd9XG4gICAgPC9kaXY+XG4gIGBcbiAgcmV0dXJuIHdyYXBcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ii8vIOKUgOKUgCBTb25nIHByZXZpZXcgY2FyZHMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG4vLyBTaG93cyB0b3AgMyBzb25ncyBmb3IgdGhlIGZpcnN0IHNvbG8tc2VsZWN0ZWQgZ2VucmUuXG4vLyBJZiAwIG9yIGFsbCBnZW5yZXMgYXJlIHNlbGVjdGVkLCBzaG93cyBub3RoaW5nLlxuXG5zb25nQ2FyZHMgPSB7XG4gIGNvbnN0IGFjdGl2ZSA9IFsuLi5hY3RpdmVHZW5yZXNdXG5cbiAgLy8gT25seSBzaG93IGNhcmRzIHdoZW4gZXhhY3RseSAxIGdlbnJlIGlzIGlzb2xhdGVkXG4gIGlmIChhY3RpdmUubGVuZ3RoID09PSAwIHx8IGFjdGl2ZS5sZW5ndGggPT09IGdlbnJlUHJvZmlsZXMubGVuZ3RoKSB7XG4gICAgcmV0dXJuIGh0bWxgPGRpdj48L2Rpdj5gXG4gIH1cblxuICBjb25zdCBmb2N1c0dlbnJlID0gYWN0aXZlWzBdXG4gIGNvbnN0IGNvbG9yID0gZ2VucmVQcm9maWxlcy5maW5kKGQgPT4gZC5nZW5yZSA9PT0gZm9jdXNHZW5yZSk/LmNvbG9yID8/IFwiIzg4OFwiXG4gIGNvbnN0IHNvbmdzID0gdG9wU29uZ3MuZmlsdGVyKHMgPT4gcy5nZW5yZSA9PT0gZm9jdXNHZW5yZSkuc2xpY2UoMCwgMylcblxuICBpZiAoIXNvbmdzLmxlbmd0aCkgcmV0dXJuIGh0bWxgPGRpdj48L2Rpdj5gXG5cbiAgcmV0dXJuIGh0bWxgXG4gICAgPGRpdiBzdHlsZT1cImdyaWQtY29sdW1uOiAxIC8gLTE7IG1hcmdpbi10b3A6IDAuNzVyZW07XCI+XG4gICAgICA8ZGl2IHN0eWxlPVwiZm9udC1zaXplOjAuN3JlbTtjb2xvcjp2YXIoLS10ZXh0LWRpbSk7bWFyZ2luLWJvdHRvbTowLjVyZW07XG4gICAgICAgICAgICAgICAgICBsZXR0ZXItc3BhY2luZzowLjA4ZW07dGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlO1wiPlxuICAgICAgICBUb3Agc29uZ3MgwrcgJHtmb2N1c0dlbnJlLnRvVXBwZXJDYXNlKCl9XG4gICAgICA8L2Rpdj5cbiAgICAgIDxkaXYgY2xhc3M9XCJzb25nLWNhcmRzXCI+XG4gICAgICAgICR7c29uZ3MubWFwKChzb25nLCBpKSA9PiBodG1sYFxuICAgICAgICAgIDxkaXYgY2xhc3M9XCJzb25nLWNhcmRcIiBzdHlsZT1cImJvcmRlci1jb2xvcjoke2NvbG9yfTMzXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVwic29uZy1jYXJkLXJhbmtcIiBzdHlsZT1cImNvbG9yOiR7Y29sb3J9XCI+JHtpICsgMX08L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJzb25nLWNhcmQtaW5mb1wiPlxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwic29uZy1jYXJkLW5hbWVcIj4ke3NvbmcudHJhY2tfbmFtZX08L2Rpdj5cbiAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cInNvbmctY2FyZC1hcnRpc3RcIj4ke3NvbmcudHJhY2tfYXJ0aXN0fTwvZGl2PlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVwic29uZy1jYXJkLXBvcFwiPuKshiAke3NvbmcucG9wdWxhcml0eX08L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgYCl9XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgYFxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiLy8g4pSA4pSAIE1vdmUgT0pTIG91dHB1dCBub2RlcyBpbnRvIHRoZSBjaGFydC1wYW5lbCBzbG90cyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbi8vXG4vLyBPSlMgcGxhY2VzIGVhY2ggY2VsbCdzIG91dHB1dCBpbnRvIGEgZGl2W2lkXj1cIm9qcy1jZWxsLVwiXSBpbnNpZGVcbi8vICNxdWFydG8tY29udGVudC4gV2UgbW92ZSB0aG9zZSBub2RlcyBpbnRvIHRoZSBwcmUtZGVjbGFyZWQgc2xvdCBkaXZzXG4vLyBpbnNpZGUgLmNoYXJ0LXBhbmVsIHNvIHRoZSBncmlkIGxheW91dCBhcHBsaWVzIGNvcnJlY3RseS5cbi8vXG4vLyBXZSBkbyB0aGlzIG9uY2UsIGFmdGVyIGFsbCBjZWxscyBoYXZlIHJlbmRlcmVkLCB1c2luZyByZXF1ZXN0QW5pbWF0aW9uRnJhbWUuXG5cbntcbiAgZnVuY3Rpb24gbW92ZUludG9TbG90cygpIHtcbiAgICAvLyBNYXA6IHNsb3QgaWQg4oaSIHRoZSBPSlMgY2VsbCBvdXRwdXQgZWxlbWVudCB0byBtb3ZlIHRoZXJlXG4gICAgLy8gT0pTIGNlbGwgb3V0cHV0cyBhcmUgaWRlbnRpZmllZCBieSBmaW5kaW5nIHRoZSByZW5kZXJlZCB3cmFwcGVyXG4gICAgLy8gdGhhdCBjb250YWlucyBvdXIgc3BlY2lmaWMgcm9vdCBlbGVtZW50cy5cblxuICAgIGZ1bmN0aW9uIGZpbmRDZWxsQ29udGFpbmluZyhzZWxlY3Rvcikge1xuICAgICAgLy8gT0pTIHdyYXBzIGVhY2ggY2VsbCBpbiBkaXYub2JzZXJ2YWJsZWhxIG9yIGRpdltpZF49XCJvanMtY2VsbFwiXVxuICAgICAgY29uc3QgZWwgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKHNlbGVjdG9yKVxuICAgICAgaWYgKCFlbCkgcmV0dXJuIG51bGxcbiAgICAgIC8vIFdhbGsgdXAgdG8gZmluZCB0aGUgT0pTIGNlbGwgd3JhcHBlclxuICAgICAgbGV0IG5vZGUgPSBlbFxuICAgICAgd2hpbGUgKG5vZGUgJiYgbm9kZS5wYXJlbnRFbGVtZW50KSB7XG4gICAgICAgIGlmIChcbiAgICAgICAgICBub2RlLnBhcmVudEVsZW1lbnQuaWQgPT09IFwicXVhcnRvLWNvbnRlbnRcIiB8fFxuICAgICAgICAgIG5vZGUucGFyZW50RWxlbWVudC5jbGFzc0xpc3QuY29udGFpbnMoXCJvYnNlcnZhYmxlaHEtY2VudGVyXCIpIHx8XG4gICAgICAgICAgbm9kZS5wYXJlbnRFbGVtZW50LnRhZ05hbWUgPT09IFwiTUFJTlwiXG4gICAgICAgICkgcmV0dXJuIG5vZGVcbiAgICAgICAgbm9kZSA9IG5vZGUucGFyZW50RWxlbWVudFxuICAgICAgfVxuICAgICAgcmV0dXJuIG5vZGVcbiAgICB9XG5cbiAgICBjb25zdCBzbG90cyA9IHtcbiAgICAgIFwic2xvdC1sZWdlbmRcIjogIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIuZ2VucmUtbGVnZW5kXCIpLFxuICAgICAgXCJzbG90LWZpbHRlcnNcIjogZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5mZWF0dXJlLWZpbHRlcnNcIiksXG4gICAgICBcInNsb3QtcmFkYXJcIjogICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiW3N0eWxlKj0nUmFkYXInXVwiKSxcbiAgICAgIFwic2xvdC1iYXJcIjogICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCJbc3R5bGUqPSdCYXIgY2hhcnQnXVwiKSxcbiAgICB9XG5cbiAgICAvLyBTaW1wbGVyIGFwcHJvYWNoOiBqdXN0IGdyYWIgQUxMIG9qcy1jZWxsIG91dHB1dHMgaW4gb3JkZXJcbiAgICAvLyBhbmQgbW92ZSB0aGVtIGludG8gY2hhcnQtcGFuZWwgY2hpbGRyZW4gc2VxdWVudGlhbGx5XG4gICAgY29uc3QgcGFuZWwgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcIm1haW4tY2hhcnQtcGFuZWxcIilcbiAgICBpZiAoIXBhbmVsKSB7IHJlcXVlc3RBbmltYXRpb25GcmFtZShtb3ZlSW50b1Nsb3RzKTsgcmV0dXJuIH1cblxuICAgIGNvbnN0IHNsb3RMZWdlbmQgID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJzbG90LWxlZ2VuZFwiKVxuICAgIGNvbnN0IHNsb3RGaWx0ZXJzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJzbG90LWZpbHRlcnNcIilcbiAgICBjb25zdCBzbG90UmFkYXIgICA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwic2xvdC1yYWRhclwiKVxuICAgIGNvbnN0IHNsb3RCYXIgICAgID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJzbG90LWJhclwiKVxuICAgIGNvbnN0IHNsb3RTb25ncyAgID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJzbG90LXNvbmdzXCIpXG5cbiAgICAvLyBGaW5kIE9KUyBvdXRwdXRzIGJ5IHRoZWlyIHJlbmRlcmVkIGNsYXNzIC5vYnNlcnZhYmxlaHFcbiAgICBjb25zdCBvanNDZWxscyA9IFsuLi5kb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKFwiLm9ic2VydmFibGVocVwiKV1cbiAgICBpZiAob2pzQ2VsbHMubGVuZ3RoIDwgNCkgeyByZXF1ZXN0QW5pbWF0aW9uRnJhbWUobW92ZUludG9TbG90cyk7IHJldHVybiB9XG5cbiAgICAvLyBUaGUgY2VsbHMgcmVuZGVyIGluIGRvY3VtZW50IG9yZGVyOlxuICAgIC8vIGNlbGwgMCA9IGxlZ2VuZCAodmlld29mIGFjdGl2ZUdlbnJlcylcbiAgICAvLyBjZWxsIDEgPSBmaWx0ZXJzICh2aWV3b2YgYWN0aXZlRmVhdHVyZSlcbiAgICAvLyBjZWxsIDIgPSByYWRhckNoYXJ0XG4gICAgLy8gY2VsbCAzID0gYmFyQ2hhcnRcbiAgICAvLyBjZWxsIDQgPSBzb25nQ2FyZHNcblxuICAgIGNvbnN0IGxlZ2VuZEVsICA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIuZ2VucmUtbGVnZW5kXCIpPy5jbG9zZXN0KFwiLm9ic2VydmFibGVocVwiKVxuICAgIGNvbnN0IGZpbHRlckVsICA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIuZmVhdHVyZS1maWx0ZXJzXCIpPy5jbG9zZXN0KFwiLm9ic2VydmFibGVocVwiKVxuICAgIGNvbnN0IHJhZGFyRWwgICA9IG9qc0NlbGxzLmZpbmQoYyA9PiBjLnF1ZXJ5U2VsZWN0b3IoXCJzdmdcIikgJiYgYyAhPT0gZmlsdGVyRWwpXG4gICAgY29uc3QgYmFyRWwgICAgID0gb2pzQ2VsbHMuZmlsdGVyKGMgPT4gYy5xdWVyeVNlbGVjdG9yKFwic3ZnXCIpICYmIGMgIT09IGZpbHRlckVsKVsxXVxuICAgIGNvbnN0IHNvbmdFbCAgICA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIuc29uZy1jYXJkc1wiKT8uY2xvc2VzdChcIi5vYnNlcnZhYmxlaHFcIilcblxuICAgIGlmIChsZWdlbmRFbCAgJiYgc2xvdExlZ2VuZCkgIHNsb3RMZWdlbmQuYXBwZW5kQ2hpbGQobGVnZW5kRWwpXG4gICAgaWYgKGZpbHRlckVsICAmJiBzbG90RmlsdGVycykgc2xvdEZpbHRlcnMuYXBwZW5kQ2hpbGQoZmlsdGVyRWwpXG4gICAgaWYgKHJhZGFyRWwgICAmJiBzbG90UmFkYXIpICAgc2xvdFJhZGFyLmFwcGVuZENoaWxkKHJhZGFyRWwpXG4gICAgaWYgKGJhckVsICAgICAmJiBzbG90QmFyKSAgICAgc2xvdEJhci5hcHBlbmRDaGlsZChiYXJFbClcbiAgICBpZiAoc29uZ0VsICAgICYmIHNsb3RTb25ncykgICBzbG90U29uZ3MuYXBwZW5kQ2hpbGQoc29uZ0VsKVxuICB9XG5cbiAgLy8gR2l2ZSBPSlMgdGltZSB0byByZW5kZXIgYWxsIGNlbGxzIGZpcnN0XG4gIHNldFRpbWVvdXQobW92ZUludG9TbG90cywgMzAwKVxufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdhY3RpdmVHZW5yZXMnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnYWN0aXZlRmVhdHVyZScpIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+    tabsets.forEach(function(tabset) {
+      const tabby = new Tabby('#' + tabset.id);
+    });
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
