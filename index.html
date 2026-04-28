@@ -389,7 +389,7 @@
           <p>When we split the histogram, a striking gap appears. <span style="color: #5A9FD4;">Single-genre tracks</span> (<strong class="number">22,511 tracks</strong>) dominate the low and middle bins, but fade out above 80. <span style="color: #FF7F0E;">Multi-genre tracks</span> tell a completely different story — they barely appear in low bins, yet <span class="highlight">dominate the highest popularity ranges</span>. In the top bins (80–100), multi-genre tracks <span class="highlight">outnumber single-genre tracks</span> despite being only <strong>6.8%</strong> of the dataset. Look at the 90–95 bin: <strong>4 single-genre tracks</strong> vs. <strong>39 multi-genre tracks</strong>.</p>        </div>
         <div class="text-step" data-target="unstacked">
           <h2>The Statistical Divide: Two Different Worlds</h2>
-          <p>Fitting Gaussian curves reveals the true gap. Multi-genre tracks have a <span class="highlight">mean popularity of <strong>62.7</strong></span> — far above the single-genre mean of <strong>44.5</strong>. Their entire distribution shifts rightward, with almost no songs in the 0–20 range. This <strong>"popularity premium"</strong> likely comes from <span class="highlight">audience crossover</span> — a song tagged both "Pop" and "Hip Hop" gets playlists from both fanbases.</p>        
+          <p>Fitting Gaussian curves reveals the true gap. Multi-genre tracks have a <span class="highlight">mean popularity of <strong>66.01</strong></span> — far above the single-genre mean of <strong>39.46</strong>. Their entire distribution shifts rightward, with almost no songs in the 0–20 range. This <strong>"popularity premium"</strong> likely comes from <span class="highlight">audience crossover</span> — a song tagged both "Pop" and "Hip Hop" gets playlists from both fanbases.</p>        
           <div style="margin-bottom: 80px;"></div>
           <h3>But Multi-Genre Complicates Things</h3>
           <p>
@@ -458,9 +458,9 @@
     const decompBox        = document.getElementById('decomp-box');
 
     const stateTitles = {
-      overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined — 24,162 total' },
+      overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined' },
       stacked:   { title: 'Popularity by Genre Tag Count', subtitle: 'Stacked view: single-genre vs multi-genre' },
-      unstacked: { title: 'Single vs. Multi-Genre Patterns', subtitle: 'Gaussian fit excludes 0–5 bin' }
+      unstacked: { title: 'Single vs. Multi-Genre Patterns', subtitle: 'Statistical analysis' }
     };
 
     function updateDecompBox(mode) {
