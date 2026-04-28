@@ -4,7 +4,7 @@
 export const spec4 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
-    "text": "Average Track Popularity Over Time by Genre",
+    "text": "Average Genre Popularity Over Time: Diversification vs. Convergence",
     "subtitle": "Grouped by 5-year bins (1970+)",
     "fontSize": 18,
     "fontWeight": "bold",
@@ -119,7 +119,7 @@ export const spec4 = {
         "x": {
           "field": "year_bin",
           "type": "quantitative",
-          "title": "Year Interval Start",
+          "title": "Year",
           "scale": {"domain": [1970, 2020], "zero": false, "nice": false},
           "axis": {"format": "d", "labelAngle": 0}
         },
@@ -144,7 +144,7 @@ export const spec4 = {
         },
         "tooltip": [
           {"field": "playlist_genre", "type": "nominal", "title": "Genre"},
-          {"field": "year_bin", "type": "quantitative", "title": "Year Bin", "format": "d"},
+          {"field": "year_bin", "type": "quantitative", "title": "Year Bin Starts", "format": "d"},
           {"field": "avg_track_popularity", "type": "quantitative", "title": "Avg Popularity", "format": ".2f"}
         ]
       }
