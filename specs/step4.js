@@ -5,7 +5,7 @@ export const spec4 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": {
     "text": "Average Track Popularity Over Time by Genre",
-    "subtitle": "Grouped by adjustable 1-5 year bins (1970+)",
+    "subtitle": "Grouped by 5-year bins (1970+)",
     "fontSize": 18,
     "fontWeight": "bold",
     "subtitleFontSize": 13,
@@ -17,17 +17,6 @@ export const spec4 = {
   "padding": {"top": 24, "left": 72, "right": 24, "bottom": 56},
   "autosize": {"type": "fit", "contains": "padding"},
   "params": [
-    {
-      "name": "time_bin_years",
-      "value": 5,
-      "bind": {
-        "input": "range",
-        "name": "Time bin (years)",
-        "min": 1,
-        "max": 5,
-        "step": 1
-      }
-    },
     {
       "name": "genre_select",
       "select": {
@@ -52,7 +41,7 @@ export const spec4 = {
     {"filter": "isValid(datum.track_popularity)"},
     {"filter": "isValid(datum.playlist_genre) && datum.playlist_genre != ''"},
     {
-      "calculate": "floor(datum.release_year / time_bin_years) * time_bin_years",
+      "calculate": "floor(datum.release_year / 5) * 5",
       "as": "year_bin"
     },
     {
