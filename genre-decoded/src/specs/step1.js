@@ -12,10 +12,10 @@ export const spec1 = {
     "anchor": "start",
     "color": "#333"
   },
-  "width": 700,
+  "width": "container", // ← changed from fixed number
   "height": 400,
   "data": {
-    "url": "spotify_songs.csv",
+    "url": "data/spotify_songs.csv",
     "format": {"type": "csv"}
   },
   "transform": [

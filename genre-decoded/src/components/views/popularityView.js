@@ -1,25 +1,49 @@
-// Step 1: What is popularity?
+// Step 1: Popularity histogram (Vega-Lite)
 export function renderPopularityView() {
   const container = document.createElement("div")
   container.className = "view-container"
+  container.id = "popularity-view-container"
 
   const text = document.createElement("div")
   text.className = "view-text"
   text.innerHTML = `
-    <h3>📈 Popularity by Genre</h3>
-    <p>Spotify popularity (0–100) measures how often songs are played.  
-    Some genres dominate the charts — but the gap is smaller than you'd expect.</p>
+    <h3>📈 Track Popularity Distribution</h3>
+    <p>Spotify popularity (0–100) measures how often a track is played recently.  
+    The tallest bar is at 0–5 → most songs remain unheard.  
+    Use the toggle above the chart to switch between density (%) and raw count.</p>
   `
 
-  const chart = document.createElement("div")
-  chart.className = "view-chart"
-  chart.innerHTML = `
-    <div class="placeholder-chart">[ Popularity Bar Chart Placeholder ]</div>
-  `
+  const chartDiv = document.createElement("div")
+  chartDiv.id = "pop-chart"
+  chartDiv.style.minHeight = "460px"
+  chartDiv.style.width = "100%"
 
-  container.append(text, chart)
+  container.append(text, chartDiv)
   return container
 }
+
+// NOTE: VERSION 1
+// export function renderPopularityView() {
+//   const container = document.createElement("div")
+//   container.className = "view-container"
+
+//   const text = document.createElement("div")
+//   text.className = "view-text"
+//   text.innerHTML = `
+//     <h3>📈 Popularity by Genre</h3>
+//     <p>Spotify popularity (0–100) measures how often songs are played.  
+//     Some genres dominate the charts — but the gap is smaller than you'd expect.</p>
+//   `
+
+//   const chart = document.createElement("div")
+//   chart.className = "view-chart"
+//   chart.innerHTML = `
+//     <div class="placeholder-chart">[ Popularity Bar Chart Placeholder ]</div>
+//   `
+
+//   container.append(text, chart)
+//   return container
+// }
 
 
 // NOTE: VERSION 0

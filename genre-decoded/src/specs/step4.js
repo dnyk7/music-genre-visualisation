@@ -87,7 +87,7 @@ export const spec4 = {
         }
       ],
       "data": {
-        "url": "spotify_songs.csv",
+        "url": "data/spotify_songs.csv",
         "format": {"type": "csv"}
       },
       "transform": [
