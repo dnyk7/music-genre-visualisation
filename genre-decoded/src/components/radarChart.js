@@ -86,6 +86,24 @@ export function updateRadar() {
         .attr("stroke-opacity", isActive ? 1    : 0.05)  // ✅ stroke fades too
         .attr("stroke-width",   isActive ? 1.5  : 0.5)
     })
+  
+  paths.enter().append("polygon")
+  .on("mousemove", function(event, d) {
+    const tooltip = document.querySelector(".chart-tooltip")
+    // You need to know which feature is under mouse? Hard with radar.
+    // Simpler: show genre name and all features.
+    let html = `<strong>${d.genre}</strong><br>`
+    FEATURES.forEach(f => {
+      html += `${f}: ${(d.features[f] || 0).toFixed(2)}<br>`
+    })
+    tooltip.innerHTML = html
+    tooltip.classList.add("visible")
+    tooltip.style.left = (event.clientX + 12) + "px"
+    tooltip.style.top = (event.clientY - 20) + "px"
+  })
+  .on("mouseleave", () => {
+    document.querySelector(".chart-tooltip").classList.remove("visible")
+  })
 }
 
 // VERSION 0

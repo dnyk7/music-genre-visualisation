@@ -73,9 +73,9 @@ export function renderAll() {
 
     // For attributes view: legend + filters + charts
     if (state.view === "attributes") {
+      panel.appendChild(renderView(state.view))     // charts first
       panel.appendChild(renderLegend())
       panel.appendChild(renderFilters())
-      panel.appendChild(renderView(state.view))   // this returns radar+bar container
     } else {
       // For all other views, just append the view container (which contains text + a div for Vega)
       panel.appendChild(renderView(state.view))
