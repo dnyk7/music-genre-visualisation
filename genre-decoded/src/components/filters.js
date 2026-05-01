@@ -1,6 +1,6 @@
 import { state, updateChartsOnly } from "../main"
 
-const FEATURES = ["Danceability","Energy","Valence","Acousticness","Tempo","Speechiness"]
+const FEATURES = ["Danceability","Energy","Valence","Acousticness","Speechiness"]
 
 export function renderFilters() {
   const wrap = document.createElement("div")
@@ -39,30 +39,6 @@ export function renderFilters() {
   wrap.appendChild(buttons)
   return wrap
 }
-
-// import { state, renderAll } from "../main"
-
-// const FEATURES = ["Danceability","Energy","Valence","Acousticness","Tempo","Speechiness"]
-
-// export function renderFilters() {
-//   const wrap = document.createElement("div")
-//   wrap.className = "filters-wrap"
-//   wrap.id = "filters-container"
-
-//   FEATURES.forEach(feat => {
-//     const btn = document.createElement("button")
-//     btn.textContent = feat
-//     btn.className = "filter-btn"
-//     if (state.activeFeature === feat) btn.classList.add("active")
-
-//     btn.addEventListener("click", () => {
-//       state.activeFeature = (state.activeFeature === feat) ? null : feat
-//       renderAll()   // simple rebuild
-//     })
-//     wrap.appendChild(btn)
-//   })
-//   return wrap
-// }
 
 export function updateFiltersActive() {
   const btns = document.querySelectorAll("#filters-container .filter-btn")

@@ -1,4 +1,5 @@
 // Step 3: Genre Attributes
+// Adjust the features that buttons are created for under filters.js, and ensure the charts read from state.activeFeature to apply the filter logic.
 
 import { renderRadar } from "../radarChart"
 import { renderBar } from "../barChart"
