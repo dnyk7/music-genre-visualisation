@@ -7,6 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -305,7 +306,325 @@
       .text-step { min-height: auto; padding: 3rem 0; }
       .decomp-box { left: 10px; top: 90px; }
     }
-  </style>
+  
+/* ── Step 5: Song Explorer (D3.js) ── */
+#step5 {
+  display: block;
+  min-height: auto;
+  gap: 0;
+  padding: 4rem 0;
+}
+#step5.visible { opacity: 1; transform: translateY(0); }
+#step5 .step-chart {
+  width: 100%;
+  min-height: 920px;
+  padding: 1.5rem;
+}
+.step5-title-wrap {
+  margin-bottom: 1rem;
+}
+.step5-title-wrap .step-number {
+  margin-bottom: 0.75rem;
+}
+.step5-title-wrap h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.step5-title-wrap p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 0;
+}
+.step5-shell { width: 100%; }
+.step5-grid {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 18px;
+  align-items: stretch;
+}
+.step5-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 18px;
+  min-height: 760px;
+}
+.step5-pie-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.step5-panel-right {
+  display: flex;
+  flex-direction: column;
+}
+.step5-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #1e293b;
+}
+.step5-pie-layout-row {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 18px;
+}
+#step5-pie-chart { flex: 0 0 auto; }
+#step5-pie-chart .slice { cursor: pointer; }
+.step5-legend {
+  flex: 0 0 190px;
+  width: 190px;
+  max-width: 190px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-content: start;
+  font-size: 0.92rem;
+  color: #334155;
+}
+.step5-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.step5-legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.step5-legend-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.step5-genre-definitions {
+  width: 100%;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.step5-genre-box {
+  background: #ffffff;
+  border: 2px solid #CBD5E1;
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.step5-genre-box.active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+.step5-genre-box-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.step5-genre-box-definition {
+  color: #111827;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.step5-explorer-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.step5-explorer-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  background: #d1fae5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #047857;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.step5-panel-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.step5-subtle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+.step5-search-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+.step5-search-wrap input {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 14px 16px 14px 44px;
+  font-size: 1rem;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.step5-search-wrap input:focus {
+  border-color: #34d399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.18);
+}
+.step5-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 18px;
+  pointer-events: none;
+}
+.step5-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 14px;
+  background: #ffffff;
+}
+.step5-card-muted { background: #f8fafc; }
+.step5-section-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 10px;
+}
+.step5-search-list {
+  min-height: 170px;
+  max-height: 230px;
+  overflow: auto;
+  margin-bottom: 16px;
+}
+.step5-hint { color: #64748b; font-size: 0.92rem; }
+.step5-no-result { color: #dc2626; font-size: 0.92rem; }
+.step5-song-btn {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 16px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 8px;
+}
+.step5-song-btn:hover { border-color: #cbd5e1; }
+.step5-song-btn.active {
+  background: #ecfdf5;
+  border-color: #6ee7b7;
+  color: #065f46;
+}
+.step5-song-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.step5-song-subtitle {
+  margin-top: 4px;
+  font-size: 0.92rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.step5-song-info { margin-bottom: 16px; }
+.step5-song-info-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+.step5-song-info-meta {
+  color: #475569;
+  margin-bottom: 8px;
+}
+.step5-song-info-genre,
+.step5-song-info-popularity {
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.step5-song-info-popularity { margin-top: 6px; }
+.step5-radar-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: #f8fafc;
+}
+#step5-radar-chart-area svg { overflow: visible; }
+.step5-radar-values {
+  margin-top: 8px;
+  width: 100%;
+  max-width: 340px;
+  font-size: 0.92rem;
+  color: #334155;
+}
+.step5-value-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.step5-spotify-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  background: #059669;
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 16px;
+  font-weight: 600;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.step5-spotify-button:hover { background: #047857; }
+.step5-spotify-button.disabled {
+  background: #cbd5e1;
+  color: #475569;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+@media (max-width: 1100px) {
+  #step5 .step-chart { min-height: auto; }
+  .step5-grid { grid-template-columns: 1fr; }
+  .step5-panel { min-height: auto; }
+  .step5-pie-layout-row { flex-direction: column; align-items: center; }
+  .step5-legend {
+    width: 100%;
+    max-width: 520px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex: 0 0 auto;
+  }
+}
+@media (max-width: 800px) {
+  .step5-genre-definitions { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .step5-legend { grid-template-columns: 1fr; }
+}
+
+</style>
 </head>
 <body>
   <section class="hero">
@@ -430,6 +749,60 @@
       </div>
       <div class="step-chart" id="chart4"></div>
     </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STEP 5: Song Explorer (D3.js) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section class="step" id="step5">
+      <div class="step-chart">
+        <div class="step5-title-wrap">
+          <div class="step-number">5</div>
+          <h2>Spotify Genre Pie + Song Explorer</h2>
+          <p>Search for songs, compare audio features, and explore genre definitions.</p>
+        </div>
+        <div class="step5-shell">
+          <div class="step5-grid">
+            <section class="step5-panel step5-pie-panel">
+              <div class="step5-heading">Genres</div>
+              <div class="step5-pie-layout-row">
+                <svg id="step5-pie-chart" width="420" height="420"></svg>
+                <div id="step5-pie-legend" class="step5-legend"></div>
+              </div>
+              <div id="step5-genre-definitions" class="step5-genre-definitions"></div>
+            </section>
+            <section class="step5-panel step5-panel-right">
+              <div class="step5-explorer-header">
+                <div class="step5-explorer-icon">♫</div>
+                <div>
+                  <div class="step5-panel-title">Song Explorer</div>
+                  <div class="step5-subtle">Search by song name and compare audio features.</div>
+                </div>
+              </div>
+              <div class="step5-search-wrap">
+                <span class="step5-search-icon">⌕</span>
+                <input id="step5-search-input" type="text" placeholder="Search for a song name..." />
+              </div>
+              <div class="step5-card step5-card-muted step5-search-list">
+                <div class="step5-section-label">Search list</div>
+                <div id="step5-search-list-content" class="step5-hint">Start typing to search for a song.</div>
+              </div>
+              <div class="step5-card step5-song-info">
+                <div class="step5-section-label">Song info</div>
+                <div id="step5-song-info-content" class="step5-hint">No song selected.</div>
+              </div>
+              <div class="step5-card step5-card-muted step5-radar-panel">
+                <div class="step5-section-label" style="margin-bottom:6px;">Audio features</div>
+                <div id="step5-radar-chart-area"></div>
+              </div>
+              <div>
+                <a id="step5-spotify-link" class="step5-spotify-button disabled" href="#" target="_blank" rel="noreferrer">↗ Listen on Spotify</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
   </div>
 
@@ -587,5 +960,6 @@
 
     textSteps.forEach(step => textObserver.observe(step));
   </script>
+  <script src="./specs/step5.js"></script>
 </body>
 </html>
