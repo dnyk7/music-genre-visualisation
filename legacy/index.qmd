@@ -1,0 +1,158 @@
+---
+title: "Genre Decoded"
+execute:
+  echo: false
+  warning: false
+format:
+  html:
+    theme: none
+    css: styles.css
+    toc: false
+    page-layout: full
+---
+
+<div class="hero">
+  <div class="hero-label">A Spotify Data Story</div>
+  <h1>Genres have <em>personalities</em> — but not as different as you'd think.</h1>
+  <p class="hero-sub">
+    We analysed 28,000 songs across 6 genres using Spotify's audio fingerprints.
+  </p>
+</div>
+
+<section class="scroll-section" id="genre-personality">
+  <div class="scrolly" id="genre-scrolly">
+    <div class="scrolly-steps" id="genre-steps">
+      <div class="step is-active">
+        <div class="step-label">Sonic Fingerprints</div>
+        <h2>What makes a genre?</h2>
+        <p>The radar chart shows the median traits for all genres. Use the filters below to compare specific styles.</p>
+        <div id="slot-legend"></div>
+      </div>
+    </div>
+    <div class="scrolly-sticky">
+      <div class="chart-panel" id="main-panel">
+        <div id="slot-radar"></div>
+        <div id="slot-bar"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+```{ojs}
+//| echo: false
+//| output: false
+
+// 1. DATA AND STATE
+genreProfiles = FileAttachment("data/processed/genre_profiles.json").json()
+
+FEATURES = ["Danceability", "Energy", "Valence", "Acousticness", "Tempo", "Speechiness"]
+
+GENRE_COLORS = ({
+  "edm": "#1DB954", "latin": "#F72585", "pop": "#4CC9F0",
+  "r&b": "#7B2D8B", "rap": "#F77F00", "rock": "#D62828"
+})
+
+mutable activeGenres = ["edm", "latin", "pop", "r&b", "rap", "rock"]
+
+// 2. COMPONENTS
+legendNode = {
+  const container = html`<div class="legend-container"></div>`;
+  Object.entries(GENRE_COLORS).forEach(([genre, color]) => {
+    const btn = html`<button class="legend-item" style="--btn-color: ${color}">
+      <span class="dot" style="background:${color}"></span>
+      ${genre.toUpperCase()}
+    </button>`;
+    btn.onclick = () => {
+      if (mutable activeGenres.includes(genre)) {
+        mutable activeGenres = mutable activeGenres.filter(g => g !== genre);
+      } else {
+        mutable activeGenres = [...mutable activeGenres, genre];
+      }
+    };
+    container.appendChild(btn);
+  });
+  return container;
+}
+
+radarNode = {
+  const width = 300, height = 300, radius = 100;
+  const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+  const g = svg.append("g").attr("transform", `translate(${width/2},${height/2})`);
+  g.append("circle").attr("r", radius).attr("fill", "none").attr("stroke", "#333");
+  g.append("text").attr("text-anchor", "middle").attr("fill", "#666").attr("y", 5).text("RADAR");
+  return svg.node();
+}
+
+barNode = {
+  const width = 300, height = 300;
+  const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+  svg.append("rect").attr("x", 50).attr("y", 100).attr("width", 200).attr("height", 100).attr("fill", "#1DB954").attr("opacity", 0.3);
+  svg.append("text").attr("x", 150).attr("y", 155).attr("text-anchor", "middle").attr("fill", "#666").text("BARS");
+  return svg.node();
+}
+
+// 3. INJECTION LOGIC
+{
+  const lt = document.getElementById("slot-legend");
+  if (lt) { lt.innerHTML = ""; lt.appendChild(legendNode); }
+  const rt = document.getElementById("slot-radar");
+  if (rt) { rt.innerHTML = ""; rt.appendChild(radarNode); }
+  const bt = document.getElementById("slot-bar");
+  if (bt) { bt.innerHTML = ""; bt.appendChild(barNode); }
+}
+```
+
+```{=html}
+<style>
+  /* 1. HIDE ALL SOURCE CODE OUTPUTS */
+  .cell, .cell-code, .ojs-cell-output, .observablehq {
+    display: none !important;
+  }
+
+  /* 2. CHART LAYOUT */
+  .chart-panel {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px;
+    padding: 20px;
+    background: #141414;
+    border-radius: 20px;
+    border: 1px solid #222;
+  }
+
+  #slot-radar, #slot-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  svg {
+    max-width: 100%;
+    max-height: 300px;
+  }
+
+  /* 3. LEGEND */
+  .legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .legend-item {
+    background: transparent;
+    border: 1px solid #333;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  @media (max-width: 800px) {
+    .chart-panel { grid-template-columns: 1fr !important; }
+  }
+</style>
