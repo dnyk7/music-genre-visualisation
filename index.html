@@ -16,7 +16,7 @@
     .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; }
     .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em; }
     .hero p { font-size: 1.25rem; color: rgba(255,255,255,0.75); max-width: 600px; }
-    .scroll-hint { margin-top: 3rem; animation: bounce 2s infinite; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+    .scroll-hint { margin-top: 3rem; animation: bounce 5s infinite; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
     @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-10px)} 60%{transform:translateY(-5px)} }
     .scrolly-container { position: relative; max-width: 1200px; margin: 0 auto; padding: 4rem 1rem; }
 
@@ -24,6 +24,7 @@
     .step { display: flex; align-items: center; min-height: 100vh; gap: 3rem; padding: 4rem 0; opacity: 0.3; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
     .step.visible { opacity: 1; transform: translateY(0); }
     .step:nth-child(even) { flex-direction: row-reverse; }
+    @media (min-width: 901px) { #step4 { flex-direction: row; } }
     .step-text { flex: 0 0 35%; max-width: 400px; }
     .step-text h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
     .step-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
@@ -285,6 +286,31 @@
       margin-top: 1rem;
     }
 
+    /* Keep Step 4 chart in place while text scrolls a bit */
+    @media (min-width: 901px) {
+      #step4 {
+        min-height: 130vh;
+        align-items: flex-start;
+      }
+
+      #step4 .step-chart {
+        position: sticky;
+        top: 10vh;
+      }
+    }
+
+    @keyframes step4LineDraw {
+      from { stroke-dashoffset: 1200; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    #step4.timeline-enter #chart4.vega-embed svg g.mark-line.role-mark path,
+    #step4.timeline-enter #chart4.vega-embed svg g[class*="mark-line role-mark"] path {
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+      animation: step4LineDraw 5s ease-out forwards;
+    }
+
     .highlight {
     background-color: rgba(225, 255, 0, 0.4);
     font-weight: bold;
@@ -297,6 +323,7 @@
       .step-text { flex: 1; max-width: 100%; text-align: center; }
       .step-chart { width: 100%; }
       .vega-bind { position: relative !important; top: auto; right: auto; margin-bottom: 10px; }
+      #step4 .step-chart { position: relative; top: auto; }
 
       .sticky-step { flex-direction: column; }
       .sticky-chart-wrapper { position: relative; top: auto; width: 100%; height: 520px; margin-top: 0; transform: none; }
@@ -425,8 +452,8 @@
         <div class="step-number">4</div>
         <h2>More Genres, Shared Tastes</h2>
         <p>As genres like Latin and EDM emerged and grew from the 70s onward, the musical landscape became richer and more diverse.</p>
-        <p>But while the <strong>number</strong> of genres increased, the <strong>gap in popularity</strong> between them has decreased. We've moved from an era of a few dominant genres to a new age where we listen to a bit of everything.</p>
-        <p>So, where do <em><strong>your</strong></em>  tastes fit in? Let's explore.</p>
+        <p>But while the <strong>number</strong> of genres increased, their <strong>popularity</strong> levels have started to converge. The gap between them has decreased, and we've moved from an era of a few dominant genres to a new age where we listen to a bit of everything.</p>
+        <p>So, where do <strong>YOUR</strong>  tastes fit in? Let's explore.</p>
       </div>
       <div class="step-chart" id="chart4"></div>
     </section>
@@ -538,7 +565,14 @@
     // Standard steps (1, 3, 4): fade in when entering viewport
     const stepObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+
+          if (entry.target.id === 'step4' && !entry.target.dataset.timelineAnimated) {
+            entry.target.classList.add('timeline-enter');
+            entry.target.dataset.timelineAnimated = 'true';
+          }
+        }
       });
     }, { threshold: 0.25 });
 

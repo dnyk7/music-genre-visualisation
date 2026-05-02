@@ -121,7 +121,13 @@ export const spec4 = {
           "type": "quantitative",
           "title": "Year",
           "scale": {"domain": [1970, 2020], "zero": false, "nice": false},
-          "axis": {"format": "d", "labelAngle": 0}
+          "axis": {
+            "format": "d",
+            "labelAngle": 0,
+            "values": [1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2020],
+            "labelExpr": "datum.value % 10 === 0 ? datum.label : ''",
+            "tickSize": 4
+          }
         },
         "y": {
           "field": "avg_track_popularity",
@@ -155,7 +161,7 @@ export const spec4 = {
           {"mid": 1975, "label": "Generation X"},
           {"mid": 1988.5, "label": "Millennials/Generation Y"},
           {"mid": 2004.5, "label": "Zoomers/Generation Z"},
-          {"mid": 2016.5, "label": "Generation Alpha"}
+          {"mid": 2016.25, "label": "Generation Alpha"}
         ]
       },
       "mark": {
