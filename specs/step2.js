@@ -35,12 +35,6 @@ const CHART_PADDING_RIGHT  = 40;
 const CHART_PADDING_TOP    = 70;
 const CHART_PADDING_BOTTOM = 50;
 
-const SINGLE_DENSITY_SCALE = 4.5 * 100;
-const MULTI_DENSITY_SCALE  = 5.5 * 100;
-const SINGLE_COUNT_SCALE   = 4.5;
-const MULTI_COUNT_SCALE    = 5.5;
-
-const LABEL_BG_PADDING        = 6;
 const LABEL_BG_CORNER_RADIUS  = 4;
 const LABEL_BG_SINGLE         = COLOR_SINGLE_BG;
 const LABEL_BG_MULTI          = COLOR_MULTI_BG;
@@ -51,43 +45,111 @@ const LABEL_FONT_SIZE         = 13;
 const LABEL_FONT_WEIGHT       = "bold";
 
 // ═══════════════════════════════════════════════════════════════
-// 4 INDEPENDENT LABEL OFFSET RATIOS
+// OFFSET & SCALE CONST
 // ═══════════════════════════════════════════════════════════════
 
-const SINGLE_DENSITY_OFFSET = 1.07;
-const SINGLE_COUNT_OFFSET   = 1.07;
-const MULTI_DENSITY_OFFSET  = 1.13;
-const MULTI_COUNT_OFFSET    = 3.00;
+const COMMON_Y_MAX_DENSITY = 15;
+const COMMON_Y_MAX_COUNT = 5000;
 
-const LABEL_DX_SINGLE = -20;
-const LABEL_DX_MULTI  = -10;
+const SINGLE_LABEL_X_DENSITY = 27;
+const SINGLE_LABEL_Y_DENSITY = 9;
+const SINGLE_LABEL_X_COUNT = 27;
+const SINGLE_LABEL_Y_COUNT = 2936;
+const SINGLE_LABEL_X = SINGLE_LABEL_X_DENSITY;
+
+const MULTI_LABEL_X_DENSITY = 53.5;
+const MULTI_LABEL_Y_DENSITY = 10;
+const MULTI_LABEL_X_COUNT = 53.5;
+const MULTI_LABEL_Y_COUNT = 1000;
+const MULTI_LABEL_X = MULTI_LABEL_X_DENSITY;
 
 // ═══════════════════════════════════════════════════════════════
 // HARDCODED DATA
 // ═══════════════════════════════════════════════════════════════
 
-const histData = [
-  {bin_start:  0, bin_end:  5, single_count:  4007, multi_count:   29},
-  {bin_start:  5, bin_end: 10, single_count:   905, multi_count:   37},
-  {bin_start: 10, bin_end: 15, single_count:   785, multi_count:   35},
-  {bin_start: 15, bin_end: 20, single_count:   924, multi_count:   35},
-  {bin_start: 20, bin_end: 25, single_count:  1002, multi_count:   29},
-  {bin_start: 25, bin_end: 30, single_count:  1231, multi_count:   32},
-  {bin_start: 30, bin_end: 35, single_count:  1698, multi_count:   21},
-  {bin_start: 35, bin_end: 40, single_count:  2092, multi_count:   44},
-  {bin_start: 40, bin_end: 45, single_count:  2097, multi_count:   59},
-  {bin_start: 45, bin_end: 50, single_count:  2168, multi_count:   72},
-  {bin_start: 50, bin_end: 55, single_count:  2257, multi_count:   62},
-  {bin_start: 55, bin_end: 60, single_count:  2127, multi_count:   99},
-  {bin_start: 60, bin_end: 65, single_count:  1873, multi_count:  142},
-  {bin_start: 65, bin_end: 70, single_count:  1518, multi_count:  213},
-  {bin_start: 70, bin_end: 75, single_count:  1040, multi_count:  228},
-  {bin_start: 75, bin_end: 80, single_count:   581, multi_count:  249},
-  {bin_start: 80, bin_end: 85, single_count:   169, multi_count:  159},
-  {bin_start: 85, bin_end: 90, single_count:    40, multi_count:   83},
-  {bin_start: 90, bin_end: 95, single_count:     4, multi_count:   39},
-  {bin_start: 95, bin_end: 100, single_count:     0, multi_count:   12},
-];
+function parseCsvLine(line) {
+  const out = [];
+  let cur = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (ch === "," && !inQuotes) {
+      out.push(cur);
+      cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+function countGenres(playlistGenreRaw) {
+  if (!playlistGenreRaw) return 0;
+  const parts = String(playlistGenreRaw)
+    .split(/[|;,]/)
+    .map(s => s.trim())
+    .filter(Boolean);
+  return new Set(parts).size;
+}
+
+async function loadHistData() {
+  const bins = Array.from({ length: 20 }, (_, i) => ({
+    bin_start: i * 5,
+    bin_end: (i + 1) * 5,
+    single_count: 0,
+    multi_count: 0
+  }));
+
+  const res = await fetch("../cleaned_spotify.csv");
+  if (!res.ok) throw new Error(`Failed to load CSV: ${res.status}`);
+  const text = await res.text();
+  const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if (lines.length < 2) return bins;
+
+  const headers = parseCsvLine(lines[0]);
+  const popularityIdx = headers.indexOf("track_popularity");
+  const genreIdx = headers.indexOf("playlist_genre");
+  const trackIdIdx = headers.indexOf("track_id");
+  if (popularityIdx === -1 || genreIdx === -1 || trackIdIdx === -1) return bins;
+
+  // Equivalent to:
+  // track_genre_count = analysis_df.groupby('track_id')['playlist_genre'].nunique()
+  const trackGenreSetMap = new Map();
+  const parsedRows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const row = parseCsvLine(lines[i]);
+    const trackId = (row[trackIdIdx] ?? "").trim();
+    const genre = (row[genreIdx] ?? "").trim();
+    parsedRows.push(row);
+    if (!trackId || !genre) continue;
+    if (!trackGenreSetMap.has(trackId)) trackGenreSetMap.set(trackId, new Set());
+    trackGenreSetMap.get(trackId).add(genre);
+  }
+
+  for (let i = 0; i < parsedRows.length; i++) {
+    const row = parsedRows[i];
+    const pop = Number(row[popularityIdx]);
+    if (!Number.isFinite(pop)) continue;
+    if (pop < 0 || pop > 100) continue;
+
+    const binIdx = Math.min(19, Math.floor(pop / 5));
+    const trackId = (row[trackIdIdx] ?? "").trim();
+    const gCount = trackGenreSetMap.has(trackId) ? trackGenreSetMap.get(trackId).size : 0;
+    if (gCount > 1) bins[binIdx].multi_count += 1;
+    else bins[binIdx].single_count += 1;
+  }
+  return bins;
+}
+
+const histData = await loadHistData();
 
 const singleTotal = histData.reduce((s, d) => s + d.single_count, 0);
 const multiTotal  = histData.reduce((s, d) => s + d.multi_count, 0);
@@ -105,6 +167,7 @@ histData.forEach(d => {
   });
 });
 
+
 // ── State 2: Stacked (each group as proportion of total) ──
 const histStacked = [];
 histData.forEach(d => {
@@ -116,24 +179,24 @@ histData.forEach(d => {
   histStacked.push({
     bin_start: d.bin_start,
     bin_end: d.bin_end,
-    group: 'single-genre',
-    y_density: singleDensity,
-    y_count: singleCount,
+    group: 'multi-genre',
+    y_density: multiDensity,
+    y_count: multiCount,
     y0_density: 0,
-    y1_density: singleDensity,
+    y1_density: multiDensity,
     y0_count: 0,
-    y1_count: singleCount
+    y1_count: multiCount
   });
   histStacked.push({
     bin_start: d.bin_start,
     bin_end: d.bin_end,
-    group: 'multi-genre',
-    y_density: multiDensity,
-    y_count: multiCount,
-    y0_density: singleDensity,
-    y1_density: singleDensity + multiDensity,
-    y0_count: singleCount,
-    y1_count: singleCount + multiCount
+    group: 'single-genre',
+    y_density: singleDensity,
+    y_count: singleCount,
+    y0_density: multiDensity,
+    y1_density: multiDensity + singleDensity,
+    y0_count: multiCount,
+    y1_count: multiCount + singleCount
   });
 });
 
@@ -144,72 +207,60 @@ histData.forEach(d => {
     bin_start: d.bin_start,
     bin_end: d.bin_end,
     group: 'single-genre',
-    y_density: d.single_count / singleTotal * 100,
+    y_density: singleTotal > 0 ? (d.single_count / singleTotal * 100) : 0,
     y_count: d.single_count
   });
   histLong.push({
     bin_start: d.bin_start,
     bin_end: d.bin_end,
     group: 'multi-genre',
-    y_density: d.multi_count / multiTotal * 100,
+    y_density: multiTotal > 0 ? (d.multi_count / multiTotal * 100) : 0,
     y_count: d.multi_count
   });
 });
 
-const SINGLE_MEAN = 44.4973;
-const SINGLE_STD  = 18.3802;
-const SINGLE_COUNT = 22511;
-
-const MULTI_MEAN  = 62.7044;
-const MULTI_STD   = 20.5955;
-const MULTI_COUNT = 1651;
-
-function gaussianPDF(x, m, s) {
-  return (1 / (s * Math.sqrt(2 * Math.PI))) * Math.exp(-Math.pow(x - m, 2) / (2 * s * s));
-}
-
-function makeCurve(m, s, c) {
-  const p = [];
-  for (let x = 5; x <= 100; x++) {
-    const d = gaussianPDF(x, m, s);
-    p.push({
-      x: x,
-      y_density: d * c.densityScale,
-      y_count:   d * c.countScale
-    });
-  }
-  return p;
-}
-
-let singleCurve = makeCurve(SINGLE_MEAN, SINGLE_STD, {
-  densityScale: SINGLE_DENSITY_SCALE,
-  countScale:   SINGLE_COUNT * SINGLE_COUNT_SCALE
+const singleValues = [];
+const multiValues = [];
+histData.forEach(d => {
+  const mid = (d.bin_start + d.bin_end) / 2;
+  for (let i = 0; i < d.single_count; i++) singleValues.push(mid);
+  for (let i = 0; i < d.multi_count; i++) multiValues.push(mid);
 });
 
-let multiCurve = makeCurve(MULTI_MEAN, MULTI_STD, {
-  densityScale: MULTI_DENSITY_SCALE,
-  countScale:   MULTI_COUNT * MULTI_COUNT_SCALE
-});
+function mean(arr) {
+  if (!arr.length) return 0;
+  return arr.reduce((s, v) => s + v, 0) / arr.length;
+}
 
-let singlePeakDensity = gaussianPDF(SINGLE_MEAN, SINGLE_MEAN, SINGLE_STD) * SINGLE_DENSITY_SCALE;
-let singlePeakCount   = gaussianPDF(SINGLE_MEAN, SINGLE_MEAN, SINGLE_STD) * SINGLE_COUNT * SINGLE_COUNT_SCALE;
-let multiPeakDensity  = gaussianPDF(MULTI_MEAN,  MULTI_MEAN,  MULTI_STD)  * MULTI_DENSITY_SCALE;
-let multiPeakCount    = gaussianPDF(MULTI_MEAN,  MULTI_MEAN,  MULTI_STD)  * MULTI_COUNT  * MULTI_COUNT_SCALE;
+function std(arr, m) {
+  if (!arr.length) return 0;
+  const variance = arr.reduce((s, v) => s + Math.pow(v - m, 2), 0) / arr.length;
+  return Math.sqrt(variance);
+}
 
-let singlePeak = {
-  x: SINGLE_MEAN + LABEL_DX_SINGLE,
-  y_density: singlePeakDensity * SINGLE_DENSITY_OFFSET,
-  y_count:   singlePeakCount   * SINGLE_COUNT_OFFSET,
+const SINGLE_COUNT = singleValues.length;
+const MULTI_COUNT = multiValues.length;
+const SINGLE_MEAN = mean(singleValues);
+const MULTI_MEAN = mean(multiValues);
+const SINGLE_STD = std(singleValues, SINGLE_MEAN);
+const MULTI_STD = std(multiValues, MULTI_MEAN);
+
+const singlePeak = {
+  x_density: SINGLE_LABEL_X_DENSITY,
+  x_count: SINGLE_LABEL_X_COUNT,
+  y_density: SINGLE_LABEL_Y_DENSITY,
+  y_count: SINGLE_LABEL_Y_COUNT,
   label: 'single-genre (=1)',
   mean: SINGLE_MEAN,
   std: SINGLE_STD,
   count: SINGLE_COUNT
 };
 
-let multiPeak = {
-  x: MULTI_MEAN + LABEL_DX_MULTI,
-  y_density: multiPeakDensity * MULTI_DENSITY_OFFSET,
-  y_count:   multiPeakCount   * MULTI_COUNT_OFFSET,
+const multiPeak = {
+  x_density: MULTI_LABEL_X_DENSITY,
+  x_count: MULTI_LABEL_X_COUNT,
+  y_density: MULTI_LABEL_Y_DENSITY,
+  y_count: MULTI_LABEL_Y_COUNT,
   label: 'multi-genre (>1)',
   mean: MULTI_MEAN,
   std: MULTI_STD,
@@ -271,9 +322,11 @@ export const spec2a = {
         "y": {
           "field": "y_val",
           "type": "quantitative",
+          "scale": {"domainMin": 0, "domainMax": {"signal": `mode == 'density' ? ${COMMON_Y_MAX_DENSITY} : ${COMMON_Y_MAX_COUNT}`}, "nice": false},
           "axis": {
             "minExtent": 40,
             "maxExtent": 40,
+            "values": {"signal": `mode == 'density' ? [2.5, 5, 7.5, 10, 12.5, 15] : null`},
             "labelExpr": "mode === 'count' ? format(datum.value, '~s') : format(datum.value, '.1f')"
           },
           "title": {
@@ -354,9 +407,11 @@ export const spec2b = {
         "y": {
           "field": "y1_val",
           "type": "quantitative",
+          "scale": {"domainMin": 0, "domainMax": {"signal": `mode == 'density' ? ${COMMON_Y_MAX_DENSITY} : ${COMMON_Y_MAX_COUNT}`}, "nice": false},
           "axis": {
             "minExtent": 40,
             "maxExtent": 40,
+            "values": {"signal": `mode == 'density' ? [2.5, 5, 7.5, 10, 12.5, 15] : null`},
             "labelExpr": "mode === 'count' ? format(datum.value, '~s') : format(datum.value, '.1f')"
           },
           "title": {
@@ -440,9 +495,11 @@ export const spec2c = {
           "field": "y_val",
           "type": "quantitative",
           "stack": null,
+          "scale": {"domainMin": 0, "domainMax": {"signal": `mode == 'density' ? ${COMMON_Y_MAX_DENSITY} : ${COMMON_Y_MAX_COUNT}`}, "nice": false},
           "axis": {
             "minExtent": 40,
             "maxExtent": 40,
+            "values": {"signal": `mode == 'density' ? [2.5, 5, 7.5, 10, 12.5, 15] : null`},
             "labelExpr": "mode === 'count' ? format(datum.value, '~s') : format(datum.value, '.1f')"
           },
           "title": {
@@ -465,66 +522,53 @@ export const spec2c = {
         ]
       }
     },
-    // ── Layer 2: Single-genre Gaussian curve ──
+
+    // ── Layer 2: Single-genre mean vertical line ──
     {
-      "data": {"values": singleCurve},
+      "data": {"values": [{"x": SINGLE_MEAN}]},
       "transform": [
-        {
-          "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
-          "as": "y_val"
-        }
+        {"calculate": "0", "as": "y0_val"},
+        {"calculate": `mode == 'density' ? ${COMMON_Y_MAX_DENSITY} : ${COMMON_Y_MAX_COUNT}`, "as": "y1_val"}
       ],
       "mark": {
-        "type": "line",
+        "type": "rule",
         "color": COLOR_SINGLE_CURVE,
         "strokeWidth": 2.5,
-        "opacity": 0.9,
-        "interpolate": "monotone"
+        "opacity": 0.95
       },
       "encoding": {
-        "x": {
-          "field": "x",
-          "type": "quantitative",
-          "scale": {"domain": [0, 100]}
-        },
-        "y": {
-          "field": "y_val",
-          "type": "quantitative"
-        }
+        "x": {"field": "x", "type": "quantitative", "scale": {"domain": [0, 100]}},
+        "y": {"field": "y1_val", "type": "quantitative"},
+        "y2": {"field": "y0_val"}
       }
     },
-    // ── Layer 3: Multi-genre Gaussian curve ──
+    // ── Layer 3: Multi-genre mean vertical line ──
     {
-      "data": {"values": multiCurve},
+      "data": {"values": [{"x": MULTI_MEAN}]},
       "transform": [
-        {
-          "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
-          "as": "y_val"
-        }
+        {"calculate": "0", "as": "y0_val"},
+        {"calculate": `mode == 'density' ? ${COMMON_Y_MAX_DENSITY} : ${COMMON_Y_MAX_COUNT}`, "as": "y1_val"}
       ],
       "mark": {
-        "type": "line",
+        "type": "rule",
         "color": COLOR_MULTI_CURVE,
         "strokeWidth": 2.5,
-        "opacity": 0.9,
-        "interpolate": "monotone"
+        "opacity": 0.95
       },
       "encoding": {
-        "x": {
-          "field": "x",
-          "type": "quantitative",
-          "scale": {"domain": [0, 100]}
-        },
-        "y": {
-          "field": "y_val",
-          "type": "quantitative"
-        }
+        "x": {"field": "x", "type": "quantitative", "scale": {"domain": [0, 100]}},
+        "y": {"field": "y1_val", "type": "quantitative"},
+        "y2": {"field": "y0_val"}
       }
     },
     // ── Layer 4: Single peak label BACKGROUND ──
     {
       "data": {"values": [singlePeak]},
       "transform": [
+        {
+          "calculate": "mode == 'density' ? datum.x_density : datum.x_count",
+          "as": "x_val"
+        },
         {
           "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
           "as": "y_val"
@@ -542,7 +586,7 @@ export const spec2c = {
       },
       "encoding": {
         "x": {
-          "field": "x",
+          "field": "x_val",
           "type": "quantitative",
           "scale": {"domain": [0, 100]}
         },
@@ -557,6 +601,10 @@ export const spec2c = {
       "data": {"values": [singlePeak]},
       "transform": [
         {
+          "calculate": "mode == 'density' ? datum.x_density : datum.x_count",
+          "as": "x_val"
+        },
+        {
           "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
           "as": "y_val"
         }
@@ -570,7 +618,7 @@ export const spec2c = {
         "color": COLOR_SINGLE_PRIMARY
       },
       "encoding": {
-        "x": {"field": "x", "type": "quantitative"},
+        "x": {"field": "x_val", "type": "quantitative"},
         "y": {"field": "y_val", "type": "quantitative"},
         "text": {"field": "label"},
         "tooltip": [
@@ -584,6 +632,10 @@ export const spec2c = {
     {
       "data": {"values": [multiPeak]},
       "transform": [
+        {
+          "calculate": "mode == 'density' ? datum.x_density : datum.x_count",
+          "as": "x_val"
+        },
         {
           "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
           "as": "y_val"
@@ -601,7 +653,7 @@ export const spec2c = {
       },
       "encoding": {
         "x": {
-          "field": "x",
+          "field": "x_val",
           "type": "quantitative",
           "scale": {"domain": [0, 100]}
         },
@@ -616,6 +668,10 @@ export const spec2c = {
       "data": {"values": [multiPeak]},
       "transform": [
         {
+          "calculate": "mode == 'density' ? datum.x_density : datum.x_count",
+          "as": "x_val"
+        },
+        {
           "calculate": "mode == 'density' ? datum.y_density : datum.y_count",
           "as": "y_val"
         }
@@ -629,7 +685,7 @@ export const spec2c = {
         "color": COLOR_MULTI_PRIMARY
       },
       "encoding": {
-        "x": {"field": "x", "type": "quantitative"},
+        "x": {"field": "x_val", "type": "quantitative"},
         "y": {"field": "y_val", "type": "quantitative"},
         "text": {"field": "label"},
         "tooltip": [
@@ -649,4 +705,4 @@ export const spec2c = {
 };
 
 // Backward compatibility
-export const spec2 = spec2c;
+// export const spec2 = spec2c;

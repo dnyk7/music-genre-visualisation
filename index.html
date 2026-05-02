@@ -31,6 +31,15 @@
     .step-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
     .step-number { display: inline-block; width: 36px; height: 36px; background: var(--accent); color: #fff; border-radius: 50%; text-align: center; line-height: 36px; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem; }
     .step-chart { flex: 1; background: var(--card-bg); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 1.5rem; border: 1px solid var(--border); min-height: 500px; position: relative; }
+    #chart1.player-panel { background: #000; color: #fff; overflow: hidden; }
+    .player-list { display: grid; gap: 10px; margin-bottom: 14px; }
+    .track-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; background: #151515; border: 1px solid #222; border-radius: 10px; padding: 8px; }
+    .track-cover { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; background: #1f1f1f; }
+    .track-title { font-size: 13px; font-weight: 700; line-height: 1.2; color: #fff; }
+    .track-meta { font-size: 11px; color: #b3b3b3; margin-top: 3px; }
+    .track-pill { font-size: 11px; font-weight: 700; color: #1DB954; background: rgba(29,185,84,0.12); border: 1px solid rgba(29,185,84,0.4); border-radius: 999px; padding: 5px 8px; white-space: nowrap; }
+    .playbar-photo { width: 100%; border-radius: 10px; border: 1px solid #222; display: block; background: #0f0f0f; }
+    .scalable-photo { transform-origin: top left; }
     .vega-bind {
       position: absolute !important;
       top: 60px;
@@ -666,17 +675,26 @@
     <!-- STEP 1: Overall Popularity                                    -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <section class="step" id="step1">
+
       <div class="step-text">
         <div class="step-number">1</div>
-        <h2>Every Track Gets a Popularity Score — But What Does It Really Mean?</h2>
-        <p>Spotify assigns every track a <span class="highlight">popularity score from 0 to 100</span>, 
-          based on how often it's been played recently. 
-          It's Spotify's own measure of "what people are actually listening to". 
-          But here's the question: <strong>do most songs live in the mainstream spotlight, 
-          or quietly in the shadows?</strong> 
-          Let's look at the actual distribution — you might be surprised.</p>      
-        </div>
-      <div class="step-chart" id="chart1"></div>
+        <h2>🎵 Every Track Gets a Popularity Score — But What Does It Really Mean?</h2>
+        <p>Spotify assigns every track a <span class="highlight">popularity score from 0 to 100</span>, based on how often it's been played recently. It's Spotify's own measure of "what people are actually listening to."</p>
+        
+        <p style="margin-top: 10px;">But here's the question: <strong>do most songs live in the mainstream spotlight, or quietly in the shadows?</strong></p>
+        
+        <p style="margin-top: 20px;">
+          💡 <strong>Question:</strong> What makes a song popular? Is it the genre? The time? Or something deeper? Let's find out.
+        </p>
+      </div>
+
+    <!-- example song -->
+    <div class="step-chart player-panel" id="chart1">
+      <img class="playbar-photo scalable-photo" id="player-playbar" src="./photos/spotify_badge.png" alt="Spotify logo badge">
+      <div class="player-list" id="player-track-list"></div>
+      <img class="playbar-photo" id="player-playbar" src="./photos/playbar.png" alt="Fake Spotify controls">
+    </div>
+    
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -739,7 +757,7 @@
           <p>When we split the histogram, a striking gap appears. <span style="color: #5A9FD4;">Single-genre tracks</span> (<strong class="number">22,511 tracks</strong>) dominate the low and middle bins, but fade out above 80. <span style="color: #FF7F0E;">Multi-genre tracks</span> tell a completely different story — they barely appear in low bins, yet <span class="highlight">dominate the highest popularity ranges</span>. In the top bins (80–100), multi-genre tracks <span class="highlight">outnumber single-genre tracks</span> despite being only <strong>6.8%</strong> of the dataset. Look at the 90–95 bin: <strong>4 single-genre tracks</strong> vs. <strong>39 multi-genre tracks</strong>.</p>        </div>
         <div class="text-step" data-target="unstacked">
           <h2>The Statistical Divide: Two Different Worlds</h2>
-          <p>Fitting Gaussian curves reveals the true gap. Multi-genre tracks have a <span class="highlight">mean popularity of <strong>62.7</strong></span> — far above the single-genre mean of <strong>44.5</strong>. Their entire distribution shifts rightward, with almost no songs in the 0–20 range. This <strong>"popularity premium"</strong> likely comes from <span class="highlight">audience crossover</span> — a song tagged both "Pop" and "Hip Hop" gets playlists from both fanbases.</p>        
+          <p>Fitting Gaussian curves reveals the true gap. Multi-genre tracks have a <span class="highlight">mean popularity of <strong>66.01</strong></span> — far above the single-genre mean of <strong>39.46</strong>. Their entire distribution shifts rightward, with almost no songs in the 0–20 range. This <strong>"popularity premium"</strong> likely comes from <span class="highlight">audience crossover</span> — a song tagged both "Pop" and "Hip Hop" gets playlists from both fanbases.</p>        
           <div style="margin-bottom: 80px;"></div>
           <h3>But Multi-Genre Complicates Things</h3>
           <p>
@@ -838,16 +856,110 @@
   </footer>
 
   <script type="module">
-    import { spec1 } from './specs/step1.js';
+    // import { spec1 } from './specs/step1.js';
     import { spec2a, spec2b, spec2c } from './specs/step2.js';
     import { spec3 } from './specs/step3.js';
     import { spec4 } from './specs/step4.js';
 
     const opts = { actions: true, renderer: 'svg' };
     const optsNoActions = { actions: false, renderer: 'svg' };
+    const STEP1_PHOTO_SCALE = 0.4;
 
-    // ── Step 1 ──
-    vegaEmbed('#chart1', spec1, opts);
+    // ── Step 1 (HTML panel) ──
+    const STEP1_TRACK_IDS = [
+      '0qcr5FMsEO85NAQjrlDRKo',
+      'TRACK_ID_2',
+      'TRACK_ID_3'
+    ];
+
+    const TRACK_COVER_BY_ID = {
+      TRACK_ID_1: './photos/0qcr5FMsEO85NAQjrlDRKo.png',
+      TRACK_ID_2: './photos/TRACK_ID_2.png',
+      TRACK_ID_3: './photos/TRACK_ID_3.png'
+    };
+
+    function parseCsvLine(line) {
+      const out = [];
+      let cur = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          out.push(cur); cur = '';
+        } else cur += ch;
+      }
+      out.push(cur);
+      return out;
+    }
+
+    async function renderStep1Tracks() {
+      const list = document.getElementById('player-track-list');
+      if (!list) return;
+      const res = await fetch('./cleaned_spotify.csv');
+      const text = await res.text();
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) return;
+      const headers = parseCsvLine(lines[0]);
+      const idx = {
+        id: headers.indexOf('track_id'),
+        name: headers.indexOf('track_name'),
+        pop: headers.indexOf('track_popularity'),
+        genre: headers.indexOf('playlist_genre'),
+        year: headers.indexOf('release_year')
+      };
+      const wanted = new Set(STEP1_TRACK_IDS);
+      const seen = new Set();
+      const rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCsvLine(lines[i]);
+        const id = row[idx.id];
+        if (!wanted.has(id) || seen.has(id)) continue;
+        seen.add(id);
+        rows.push({
+          id,
+          name: row[idx.name] || '(unknown track)',
+          pop: row[idx.pop] || '-',
+          genre: row[idx.genre] || '-',
+          year: row[idx.year] || '-',
+          cover: TRACK_COVER_BY_ID[id] || `./photos/${id}.png`
+        });
+        if (rows.length === 3) break;
+      }
+      const coverExists = async (src) => {
+        try {
+          const r = await fetch(src, { method: 'HEAD' });
+          return r.ok;
+        } catch (_) {
+          return false;
+        }
+      };
+
+      for (const d of rows) {
+        if (await coverExists(d.cover)) continue;
+        const jpg = d.cover.replace(/\.png$/i, '.jpg');
+        const jpeg = d.cover.replace(/\.png$/i, '.jpeg');
+        if (await coverExists(jpg)) d.cover = jpg;
+        else if (await coverExists(jpeg)) d.cover = jpeg;
+        else d.cover = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56"><rect width="100%" height="100%" fill="%231f1f1f"/></svg>';
+      }
+
+      list.innerHTML = rows.map(d => `
+        <div class="track-row">
+          <img class="track-cover" src="${d.cover}" alt="${d.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231f1f1f%22/></svg>'">
+          <div>
+            <div class="track-title">${d.name}</div>
+            <div class="track-meta">${d.genre} • ${d.year}</div>
+          </div>
+          <div class="track-pill">Pop ${d.pop}</div>
+        </div>
+      `).join('');
+    }
+    renderStep1Tracks();
+    const step1Photo = document.querySelector('#chart1 .scalable-photo');
+    if (step1Photo) step1Photo.style.transform = `scale(${STEP1_PHOTO_SCALE})`;
 
     // ── Step 2: three stacked chart states ──
     const chartViews = {};
@@ -864,9 +976,9 @@
     const decompBox        = document.getElementById('decomp-box');
 
     const stateTitles = {
-      overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined — 24,162 total' },
+      overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined' },
       stacked:   { title: 'Popularity by Genre Tag Count', subtitle: 'Stacked view: single-genre vs multi-genre' },
-      unstacked: { title: 'Single vs. Multi-Genre Patterns', subtitle: 'Gaussian fit excludes 0–5 bin' }
+      unstacked: { title: 'Single vs. Multi-Genre Patterns', subtitle: 'Statistical analysis' }
     };
 
     function updateDecompBox(mode) {
