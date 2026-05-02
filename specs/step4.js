@@ -87,7 +87,7 @@ export const spec4 = {
         }
       ],
       "data": {
-        "url": "spotify_songs.csv",
+        "url": "DataCleaning/cleaned_spotify.csv",
         "format": {"type": "csv"}
       },
       "transform": [

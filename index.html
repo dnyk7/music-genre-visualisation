@@ -941,10 +941,13 @@
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
 
-          if (entry.target.id === 'step4' && !entry.target.dataset.timelineAnimated) {
+          if (entry.target.id === 'step4') {
+            entry.target.classList.remove('timeline-enter');
+            void entry.target.offsetWidth;
             entry.target.classList.add('timeline-enter');
-            entry.target.dataset.timelineAnimated = 'true';
           }
+        } else if (entry.target.id === 'step4') {
+          entry.target.classList.remove('timeline-enter');
         }
       });
     }, { threshold: 0.25 });
