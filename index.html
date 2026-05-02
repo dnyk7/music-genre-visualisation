@@ -321,6 +321,133 @@
       animation: step4LineDraw 5s ease-out forwards;
     }
 
+    /* Step 3 (Dana): radar + bar + legend + filters */
+    #step3 .view-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    #step3 .key-insight {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    #step3 .takeaway {
+      border-left: 3px solid var(--accent);
+      background: #f7f7f7;
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+      font-size: 0.85rem;
+      color: #444;
+      margin: 0.3rem 0 0.4rem 0;
+    }
+    #step3 .view-chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+    #step3 .view-chart-grid > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #step3 .radar-svg,
+    #step3 .bar-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    #step3 .genre-legend-container { margin-top: 0.25rem; }
+    #step3 .legend-label,
+    #step3 .filters-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 0.25rem;
+    }
+    #step3 .genre-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    #step3 .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1.5px solid transparent;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    #step3 .legend-item.active { opacity: 1; }
+    #step3 .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    #step3 .filters-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: 0.3rem;
+    }
+    #step3 .filters-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    #step3 .filter-btn {
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: #666;
+      font-size: 0.75rem;
+      font-family: 'Inter', system-ui, sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    #step3 .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+    #step3 .feature-highlight {
+      font-size: 0.78rem;
+      text-align: center;
+      padding: 0.45rem;
+      background: #f5f5f5;
+      border-radius: 8px;
+      margin-top: 0.7rem;
+      color: #555;
+    }
+    .chart-tooltip {
+      position: fixed;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.75rem;
+      pointer-events: none;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .chart-tooltip.visible { opacity: 1; }
+
     .highlight {
     background-color: rgba(225, 255, 0, 0.4);
     font-weight: bold;
@@ -334,6 +461,7 @@
       .step-chart { width: 100%; }
       .vega-bind { position: relative !important; top: auto; right: auto; margin-bottom: 10px; }
       #step4 .step-chart { position: relative; top: auto; }
+      #step3 .view-chart-grid { grid-template-columns: 1fr; }
 
       .sticky-step { flex-direction: column; }
       .sticky-chart-wrapper { position: relative; top: auto; width: 100%; height: 520px; margin-top: 0; transform: none; }
@@ -858,7 +986,6 @@
   <script type="module">
     // import { spec1 } from './specs/step1.js';
     import { spec2a, spec2b, spec2c } from './specs/step2.js';
-    import { spec3 } from './specs/step3.js';
     import { spec4 } from './specs/step4.js';
 
     const opts = { actions: true, renderer: 'svg' };
@@ -1041,8 +1168,364 @@
       updateDecompBox('density');
     });
 
-    // ── Step 3 & 4 ──
-    vegaEmbed('#chart3', spec3, opts);
+    // ── Step 3 (Dana version merged into current page) ──
+    const step3State = {
+      data: null,
+      activeGenres: new Set(),
+      activeFeature: null
+    };
+    const STEP3_RADAR_FEATURES = ["Danceability", "Speechiness", "Valence", "Acousticness", "Energy"];
+    const STEP3_BAR_FEATURES = ["Danceability", "Energy", "Valence", "Acousticness", "Speechiness"];
+    const STEP3_RADAR = { width: 550, height: 500, margin: { top: 20, right: 20, bottom: 20, left: 20 } };
+    const STEP3_BAR = { width: 550, height: 450, margin: { top: 50, right: 20, bottom: 30, left: 110 } };
+
+    let step3RadarSvg = null;
+    let step3BarSvg = null;
+
+    function ensureStep3Tooltip() {
+      if (!document.querySelector('.chart-tooltip')) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'chart-tooltip';
+        document.body.appendChild(tooltip);
+      }
+    }
+
+    async function loadStep3Data() {
+      const urls = [
+        './genre-decoded/public/data/genre_profiles.json',
+        'genre-decoded/public/data/genre_profiles.json'
+      ];
+      for (const url of urls) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) return await res.json();
+        } catch (_) {}
+      }
+      return [];
+    }
+
+    function pointOnAxis(i, value, cx, cy, R, angles) {
+      const a = angles[i];
+      return [cx + value * R * Math.cos(a), cy + value * R * Math.sin(a)];
+    }
+
+    function renderStep3Layout() {
+      const chart3 = document.getElementById('chart3');
+      if (!chart3) return null;
+      chart3.innerHTML = '';
+
+      const container = document.createElement('div');
+      container.className = 'view-container';
+
+      const insight = document.createElement('div');
+      insight.className = 'key-insight';
+      insight.innerHTML = `<strong>Key insights:</strong> EDM and Latin are the most danceable and energetic. R&B and Pop feature higher valence. Rock is the least danceable, but most acoustic.`;
+
+      const annotation = document.createElement('div');
+      annotation.className = 'takeaway';
+      annotation.textContent = '📐 All audio features are normalised between 0 and 1.';
+
+      const grid = document.createElement('div');
+      grid.className = 'view-chart-grid';
+
+      const radarHost = document.createElement('div');
+      radarHost.id = 'step3-radar-host';
+      const barHost = document.createElement('div');
+      barHost.id = 'step3-bar-host';
+      grid.appendChild(radarHost);
+      grid.appendChild(barHost);
+
+      const legendSlot = document.createElement('div');
+      legendSlot.id = 'attributes-legend-slot';
+
+      const filtersSlot = document.createElement('div');
+      filtersSlot.id = 'attributes-filters-slot';
+
+      const featureHighlight = document.createElement('div');
+      featureHighlight.id = 'feature-highlight';
+      featureHighlight.className = 'feature-highlight';
+      featureHighlight.textContent = '✨ Hover over a genre →';
+
+      container.append(insight, annotation, grid, legendSlot, filtersSlot, featureHighlight);
+      chart3.appendChild(container);
+      return { radarHost, barHost, legendSlot, filtersSlot };
+    }
+
+    function renderStep3Legend(slotEl) {
+      const container = document.createElement('div');
+      container.className = 'genre-legend-container';
+      const label = document.createElement('div');
+      label.className = 'legend-label';
+      label.textContent = 'TOGGLE GENRES →';
+      const wrap = document.createElement('div');
+      wrap.className = 'genre-legend';
+
+      step3State.data.forEach(d => {
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        item.dataset.genre = d.genre;
+        item.style.borderColor = d.color;
+        if (step3State.activeGenres.has(d.genre)) item.classList.add('active');
+
+        const dot = document.createElement('div');
+        dot.className = 'legend-dot';
+        dot.style.background = d.color;
+
+        const genreLabel = document.createElement('span');
+        genreLabel.textContent = d.genre.toUpperCase();
+        item.append(dot, genreLabel);
+
+        item.addEventListener('click', () => {
+          if (step3State.activeGenres.has(d.genre)) {
+            step3State.activeGenres.delete(d.genre);
+            item.classList.remove('active');
+          } else {
+            step3State.activeGenres.add(d.genre);
+            item.classList.add('active');
+          }
+          updateStep3Charts();
+        });
+
+        const features = d.features;
+        const topFeature = Object.keys(features).reduce((a, b) => features[a] > features[b] ? a : b);
+        const topValue = features[topFeature];
+
+        item.addEventListener('mouseenter', () => {
+          const highlightDiv = document.getElementById('feature-highlight');
+          if (highlightDiv) highlightDiv.innerHTML = `✨ <strong>${d.genre}</strong>'s standout feature: ${topFeature} (${topValue.toFixed(2)}) ✨`;
+        });
+        item.addEventListener('mouseleave', () => {
+          const highlightDiv = document.getElementById('feature-highlight');
+          if (highlightDiv) highlightDiv.innerHTML = '✨ Hover over a genre →';
+        });
+
+        wrap.appendChild(item);
+      });
+
+      container.append(label, wrap);
+      slotEl.appendChild(container);
+    }
+
+    function renderStep3Filters(slotEl) {
+      const wrap = document.createElement('div');
+      wrap.className = 'filters-wrap';
+      wrap.id = 'filters-container';
+
+      const label = document.createElement('div');
+      label.className = 'filters-label';
+      label.textContent = 'Highlight a feature →';
+      wrap.appendChild(label);
+
+      const buttons = document.createElement('div');
+      buttons.className = 'filters-buttons';
+      STEP3_BAR_FEATURES.forEach(feat => {
+        const btn = document.createElement('button');
+        btn.textContent = feat;
+        btn.className = 'filter-btn';
+        if (step3State.activeFeature === feat) btn.classList.add('active');
+
+        btn.addEventListener('click', () => {
+          wrap.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          if (step3State.activeFeature === feat) {
+            step3State.activeFeature = null;
+          } else {
+            step3State.activeFeature = feat;
+            btn.classList.add('active');
+          }
+          updateStep3Charts();
+        });
+
+        buttons.appendChild(btn);
+      });
+      wrap.appendChild(buttons);
+      slotEl.appendChild(wrap);
+    }
+
+    function initStep3Radar(hostEl) {
+      const { width, height, margin } = STEP3_RADAR;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+      const cx = margin.left + innerW / 2;
+      const cy = margin.top + innerH / 2;
+      const R = Math.min(innerW, innerH) * 0.35;
+      const angles = STEP3_RADAR_FEATURES.map((_, i) => (i * 2 * Math.PI / STEP3_RADAR_FEATURES.length) - Math.PI / 2);
+
+      step3RadarSvg = d3.create('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'radar-svg');
+      const axes = step3RadarSvg.append('g').attr('class', 'radar-axes');
+
+      STEP3_RADAR_FEATURES.forEach((_, i) => {
+        const [x2, y2] = pointOnAxis(i, 1, cx, cy, R, angles);
+        axes.append('line').attr('x1', cx).attr('y1', cy).attr('x2', x2).attr('y2', y2).attr('stroke', '#aaa').attr('stroke-width', 1);
+      });
+      STEP3_RADAR_FEATURES.forEach((feat, i) => {
+        const [x, y] = pointOnAxis(i, 1.1, cx, cy, R, angles);
+        axes.append('text')
+          .attr('x', x).attr('y', y)
+          .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+          .attr('fill', 'black').attr('font-size', '16px').attr('font-weight', '500')
+          .text(feat);
+      });
+
+      hostEl.appendChild(step3RadarSvg.node());
+
+      return { cx, cy, R, angles };
+    }
+
+    function updateStep3Radar(geo) {
+      if (!step3RadarSvg || !step3State.data) return;
+      const { cx, cy, R, angles } = geo;
+      const paths = step3RadarSvg.selectAll('.genre-path').data(step3State.data, d => d.genre);
+      paths.exit().remove();
+
+      const pathsEnter = paths.enter().append('polygon')
+        .attr('class', 'genre-path')
+        .attr('stroke-width', 1.5)
+        .attr('fill', d => d.color)
+        .attr('stroke', d => d.color);
+
+      pathsEnter.merge(paths)
+        .transition().duration(400)
+        .attr('points', d => STEP3_RADAR_FEATURES.map((f, i) => pointOnAxis(i, d.features[f] ?? 0, cx, cy, R, angles)).join(' '))
+        .attr('fill-opacity', d => step3State.activeGenres.has(d.genre) ? 0.25 : 0.02)
+        .attr('stroke-opacity', d => step3State.activeGenres.has(d.genre) ? 1 : 0.05);
+
+      step3RadarSvg.on('mousemove', null).on('mouseleave', null);
+      step3RadarSvg.on('mousemove', function(event) {
+        const [mouseX, mouseY] = d3.pointer(event);
+        let angle = Math.atan2(mouseY - cy, mouseX - cx);
+        if (angle < 0) angle += 2 * Math.PI;
+
+        let minDiff = Infinity;
+        let closestFeature = null;
+        angles.forEach((a, i) => {
+          let diff = Math.abs(angle - a);
+          diff = Math.min(diff, 2 * Math.PI - diff);
+          if (diff < minDiff) { minDiff = diff; closestFeature = STEP3_RADAR_FEATURES[i]; }
+        });
+
+        let hoveredGenre = null;
+        for (const genreData of step3State.data) {
+          const points = STEP3_RADAR_FEATURES.map((f, i) => pointOnAxis(i, genreData.features[f] ?? 0, cx, cy, R, angles));
+          if (d3.polygonContains(points, [mouseX, mouseY])) { hoveredGenre = genreData; break; }
+        }
+        const tooltip = document.querySelector('.chart-tooltip');
+        if (!tooltip) return;
+        if (hoveredGenre && closestFeature) {
+          const val = hoveredGenre.features[closestFeature] ?? 0;
+          tooltip.innerHTML = `<strong style="color:${hoveredGenre.color}">${hoveredGenre.genre}</strong><br>${closestFeature}: ${val.toFixed(3)}`;
+          tooltip.classList.add('visible');
+          tooltip.style.left = `${event.clientX + 12}px`;
+          tooltip.style.top = `${event.clientY - 20}px`;
+        } else {
+          tooltip.classList.remove('visible');
+        }
+      });
+      step3RadarSvg.on('mouseleave', () => {
+        document.querySelector('.chart-tooltip')?.classList.remove('visible');
+      });
+    }
+
+    function initStep3Bar(hostEl) {
+      const { width, height } = STEP3_BAR;
+      step3BarSvg = d3.create('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'bar-svg');
+      hostEl.appendChild(step3BarSvg.node());
+    }
+
+    function updateStep3Bar() {
+      if (!step3BarSvg || !step3State.data) return;
+      const { width, height, margin } = STEP3_BAR;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+      const yScale = d3.scaleBand().domain(STEP3_BAR_FEATURES).range([0, innerH]).padding(0.2);
+      const xScale = d3.scaleLinear().domain([0, 1]).range([0, innerW]);
+      const totalGenres = step3State.data.length;
+      const barHeight = yScale.bandwidth() / totalGenres;
+
+      let axes = step3BarSvg.select('.bar-axes');
+      if (axes.empty()) {
+        axes = step3BarSvg.append('g').attr('class', 'bar-axes');
+        axes.append('g')
+          .attr('transform', `translate(${margin.left},${margin.top})`)
+          .call(d3.axisTop(xScale).ticks(5))
+          .selectAll('text').attr('font-size', '16px').attr('fill', 'black').attr('font-weight', '500');
+        axes.append('g')
+          .attr('transform', `translate(${margin.left},${margin.top})`)
+          .call(d3.axisLeft(yScale))
+          .selectAll('text').attr('font-size', '16px').attr('fill', 'black').attr('font-weight', '500');
+        axes.append('text')
+          .attr('x', margin.left + innerW / 2).attr('y', margin.top - 25).attr('text-anchor', 'middle')
+          .attr('fill', 'black').attr('font-size', '16px').attr('font-weight', '500')
+          .text('Normalised value (0 → 1)');
+        axes.selectAll('.domain, .tick line').attr('stroke', '#999');
+      }
+
+      const groups = step3BarSvg.selectAll('.genre-group').data(step3State.data, d => d.genre);
+      groups.exit().remove();
+      const groupsEnter = groups.enter().append('g').attr('class', 'genre-group');
+      const allGroups = groupsEnter.merge(groups);
+
+      allGroups.each(function(genreData, idx) {
+        const group = d3.select(this);
+        const rects = group.selectAll('rect').data(STEP3_BAR_FEATURES);
+        rects.exit().remove();
+        const rectsEnter = rects.enter().append('rect')
+          .attr('y', margin.top).attr('height', barHeight - 1).attr('x', margin.left).attr('width', 0).attr('fill', genreData.color);
+        rectsEnter.merge(rects)
+          .transition().duration(400)
+          .attr('y', d => margin.top + yScale(d) + idx * barHeight)
+          .attr('height', barHeight - 1)
+          .attr('x', margin.left)
+          .attr('width', d => xScale(genreData.features[d] ?? 0))
+          .attr('opacity', d => {
+            if (!step3State.activeGenres.has(genreData.genre)) return 0.08;
+            if (step3State.activeFeature && step3State.activeFeature !== d) return 0.08;
+            return 0.85;
+          });
+
+        group.selectAll('rect').each(function(d) {
+          this.onmousemove = (event) => {
+            const tooltip = document.querySelector('.chart-tooltip');
+            if (!tooltip) return;
+            const val = genreData.features[d] ?? 0;
+            tooltip.innerHTML = `<strong style="color:${genreData.color}">${genreData.genre}</strong><br>${d}: ${val.toFixed(3)}`;
+            tooltip.classList.add('visible');
+            tooltip.style.left = `${event.clientX + 12}px`;
+            tooltip.style.top = `${event.clientY - 20}px`;
+          };
+          this.onmouseleave = () => {
+            document.querySelector('.chart-tooltip')?.classList.remove('visible');
+          };
+        });
+      });
+    }
+
+    function updateStep3Charts() {
+      if (!step3State._radarGeo) return;
+      updateStep3Radar(step3State._radarGeo);
+      updateStep3Bar();
+    }
+
+    async function initStep3() {
+      ensureStep3Tooltip();
+      const data = await loadStep3Data();
+      if (!Array.isArray(data) || !data.length) {
+        const chart3 = document.getElementById('chart3');
+        if (chart3) chart3.innerHTML = '<div style="color:#999;padding:1rem;">Step 3 data not found.</div>';
+        return;
+      }
+      step3State.data = data;
+      step3State.activeGenres = new Set(data.map(d => d.genre));
+      const slots = renderStep3Layout();
+      if (!slots) return;
+      renderStep3Legend(slots.legendSlot);
+      renderStep3Filters(slots.filtersSlot);
+      step3State._radarGeo = initStep3Radar(slots.radarHost);
+      initStep3Bar(slots.barHost);
+      updateStep3Charts();
+    }
+
+    // ── Step 4 ──
+    initStep3();
     vegaEmbed('#chart4', spec4, opts);
 
     // ── Scroll observers ──
