@@ -898,7 +898,7 @@
     async function renderStep1Tracks() {
       const list = document.getElementById('player-track-list');
       if (!list) return;
-      const res = await fetch('./cleaned_spotify.csv');
+      const res = await fetch('./DataCleaning/cleaned_spotify.csv');
       const text = await res.text();
       const lines = text.split(/\r?\n/).filter(Boolean);
       if (lines.length < 2) return;
@@ -976,7 +976,7 @@
     const decompBox        = document.getElementById('decomp-box');
 
     const stateTitles = {
-      overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined' },
+      overall:   { title: 'Track Popularity Distribution', subtitle: 'All tracks combined, hovering for details' },
       stacked:   { title: 'Popularity by Genre Tag Count', subtitle: 'Stacked view: single-genre vs multi-genre' },
       unstacked: { title: 'Single vs. Multi-Genre Patterns', subtitle: 'Statistical analysis' }
     };

@@ -108,7 +108,7 @@ async function loadHistData() {
     multi_count: 0
   }));
 
-  const res = await fetch("../cleaned_spotify.csv");
+  const res = await fetch("./DataCleaning/cleaned_spotify.csv");
   if (!res.ok) throw new Error(`Failed to load CSV: ${res.status}`);
   const text = await res.text();
   const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
