@@ -1,0 +1,97 @@
+<!-- 
+ Order MUST match stepsConfig 
+ If not:
+  wrong charts show
+  interactions break
+  debugging becomes hell
+
+ Index.html should ONLY contain:
+  - narrative text (left side)
+  - structure
+
+👉 Charts and placeholders belong in src/components/views/
+ -->
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genre Decoded – Spotify Data Story</title>
+
+  <!-- Your existing CSS (light theme + scrollama layout) -->
+  <link rel="stylesheet" href="/src/styles.css" />
+
+  <!-- Vega‑Lite libraries (for groupmate’s charts) -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <!-- Optional: Google Fonts for better typography (like groupmate’s) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HERO (the original, but class names match CSS) -->
+  <section class="hero">
+    <div class="hero-label">A SPOTIFY DATA STORY</div>
+    <h1>Genres have <em>personalities</em> — but not as different as you'd think.</h1>
+    <p class="hero-sub">
+      We analysed 28,000 songs across 6 genres using Spotify's audio fingerprints.
+    </p>
+    <div class="scroll-hint">Scroll to explore</div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- SCROLL SECTION (your scrollytelling) -->
+  <section class="scrolly">
+    <!-- LEFT: narrative steps (match your stepConfig.js) -->
+    <div class="scrolly-steps">
+      <div class="step is-active" data-view="popularity">
+        <div class="step-label">Step 1</div>
+        <h2>What is popularity?</h2>
+        <p>Some genres dominate the charts — but is that the whole story?</p>
+      </div>
+      <div class="step" data-view="multi">
+        <div class="step-label">Step 2</div>
+        <h2>Single vs Multi-genre</h2>
+        <p>Multi-genre tracks are more popular — but harder to analyze.</p>
+      </div>
+      <div class="step" data-view="attributes">
+      <div class="step-label">Step 3</div>
+        <h2>What makes a genre?</h2>
+        <p>Genres have distinct audio personalities — but differences are subtle.</p>
+        <div class="genre-definitions" style="margin-top: 1rem; font-size: 0.85rem; background: var(--surface2); padding: 0.8rem; border-radius: 8px;">
+          <strong>🎧 Feature definitions (0–1 scale):</strong><br>
+          • <strong>Danceability</strong> – how suitable for dancing<br>
+          • <strong>Energy</strong> – intensity and activity<br>
+          • <strong>Valence</strong> – musical positiveness (happy/sad)<br>
+          • <strong>Acousticness</strong> – likelihood of being acoustic<br>
+          • <strong>Speechiness</strong> – presence of spoken words
+        </div>
+      </div>
+      <div class="step" data-view="time">
+        <div class="step-label">Step 4</div>
+        <h2>Time Trends</h2>
+        <p>Genres diversified, but popularity converged.</p>
+      </div>
+      <div class="step" data-view="sunburst">
+        <div class="step-label">Step 5</div>
+        <h2>Explore Yourself</h2>
+        <p>Find your taste in the dataset.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: sticky chart panel (filled by main.js) -->
+    <div class="scrolly-sticky">
+      <div id="chart-panel" class="chart-panel"></div>
+    </div>
+  </section>
+
+  <div class="chart-tooltip"></div>
+
+  <!-- Your main module (handles state and view rendering) -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

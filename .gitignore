@@ -1,0 +1,8 @@
+
+
+# pixi files
+pixi.lock
+.pixi*
+/.quarto/
+**/*.quarto_ipynb
+_site/

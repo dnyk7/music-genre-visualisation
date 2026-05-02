@@ -1,0 +1,467 @@
+---
+title: "Genre Decoded"
+execute:
+  echo: false
+format:
+  html:
+    theme: none
+    css: styles.css
+    toc: false
+    page-layout: full
+---
+
+<div class="hero">
+  <div class="hero-label">A Spotify Data Story</div>
+  <h1>Genres have <em>personalities</em> — but not as different as you'd think.</h1>
+  <p class="hero-sub">
+    We analysed 28,000 songs across 6 genres using Spotify's audio fingerprints.
+    Here's what we found.
+  </p>
+  <div class="scroll-hint">Scroll to explore</div>
+</div>
+
+<div class="section-divider"></div>
+
+<section class="scroll-section" id="genre-personality">
+  <div class="scrolly" id="genre-scrolly">
+    <div class="scrolly-steps" id="genre-steps">
+      <div class="step is-active" data-step="intro">
+        <div class="step-label">Section 1 · Genre Attributes</div>
+        <h2>What makes a genre a genre?</h2>
+        <p>Spotify measures every song on six dimensions: how danceable it is,
+        how much energy it carries, how happy it sounds, how acoustic it feels,
+        how fast it moves, and how speech-heavy it is.</p>
+        <p style="margin-top:0.75rem">Together, these form a <strong>sonic fingerprint</strong>.
+        The radar chart shows the median fingerprint for all six genres at once.</p>
+      </div>
+      <div class="step" data-step="latin-edm">
+        <div class="step-label">Section 1 · Latin vs EDM</div>
+        <h2>The happiest genre isn't EDM — it's Latin.</h2>
+        <p><strong>Latin</strong> scores highest on both <em>valence</em> (happiness)
+        and <em>danceability</em>. EDM is the most energetic, but sits surprisingly
+        low on valence — intense, not joyful.</p>
+        <div class="takeaway"><strong>Try it:</strong> Click <em>latin</em> and <em>edm</em>
+        in the legend to isolate them and compare their radar shapes.</div>
+      </div>
+      <div class="step" data-step="rap">
+        <div class="step-label">Section 1 · Rap</div>
+        <h2>Rap has one feature that sets it apart from everything else.</h2>
+        <p>Speechiness — the measure of how many words are in a track — spikes
+        hard for rap. Every other genre clusters near zero.</p>
+        <div class="takeaway"><strong>Try it:</strong> Click <em>Speechiness</em>
+        in the feature buttons to highlight it in the bar chart.</div>
+      </div>
+      <div class="step" data-step="pop">
+        <div class="step-label">Section 1 · Pop</div>
+        <h2>Pop is the genre of averages.</h2>
+        <p>On every feature, pop sits closest to the dataset mean. No defining spike,
+        no extreme score. Pop's commercial logic is to borrow from everywhere and offend no one.</p>
+      </div>
+      <div class="step" data-step="similarity">
+        <div class="step-label">Section 1 · Takeaway</div>
+        <h2>No genre is truly extreme. The gaps are smaller than you'd expect.</h2>
+        <p>The radar polygons overlap significantly. Latin and R&amp;B are the most
+        similar pair. EDM and R&amp;B are the most different.</p>
+        <div class="takeaway"><strong>Next:</strong> If genres are already converging
+        in sound, how much further have they come over the decades?</div>
+      </div>
+    </div>
+    <div class="scrolly-sticky">
+      <div class="chart-panel" id="main-chart-panel">
+        <!-- OJS outputs are injected here by JS after render -->
+      </div>
+    </div>
+
+  </div>
+</section>
+
+```{ojs}
+//| echo: false
+//| output: false
+genreProfiles = FileAttachment("data/processed/genre_profiles.json").json()
+topSongs      = FileAttachment("data/processed/top_songs.json").json()
+FEATURES = ["Danceability","Energy","Valence","Acousticness","Tempo","Speechiness"]
+```
+
+```{ojs}
+// Legend — OJS returns this node directly, no getElementById needed
+viewof activeGenres = {
+  const allGenres = genreProfiles.map(d => d.genre)
+  const state = new Set(allGenres)
+
+  const wrap = document.createElement("div")
+  wrap.className = "genre-legend"
+  wrap.value = state
+
+  genreProfiles.forEach(d => {
+    const item = document.createElement("div")
+    item.className = "legend-item active"
+    item.style.borderColor = d.color
+
+    const dot = document.createElement("div")
+    dot.className = "legend-dot"
+    dot.style.background = d.color
+
+    const label = document.createElement("span")
+    label.textContent = d.genre.toUpperCase()
+
+    item.append(dot, label)
+    item.addEventListener("click", () => {
+      if (state.has(d.genre)) {
+        state.delete(d.genre)
+        item.classList.remove("active")
+        item.style.borderColor = "transparent"
+        dot.style.opacity = "0.3"
+      } else {
+        state.add(d.genre)
+        item.classList.add("active")
+        item.style.borderColor = d.color
+        dot.style.opacity = "1"
+      }
+      wrap.value = new Set(state)
+      wrap.dispatchEvent(new Event("input", { bubbles: true }))
+    })
+    wrap.appendChild(item)
+  })
+
+  return wrap
+}
+```
+
+```{ojs}
+// Feature filter buttons
+viewof activeFeature = {
+  const wrap = document.createElement("div")
+  wrap.className = "filters-wrap"
+  wrap.value = null
+
+  const lbl = document.createElement("div")
+  lbl.className = "filters-label"
+  lbl.textContent = "Highlight a feature →"
+
+  const row = document.createElement("div")
+  row.className = "feature-filters"
+
+  let activeBtn = null
+  FEATURES.forEach(feat => {
+    const btn = document.createElement("button")
+    btn.className = "filter-btn"
+    btn.textContent = feat
+    btn.addEventListener("click", () => {
+      if (activeBtn === btn) {
+        btn.classList.remove("active")
+        activeBtn = null
+        wrap.value = null
+      } else {
+        if (activeBtn) activeBtn.classList.remove("active")
+        btn.classList.add("active")
+        activeBtn = btn
+        wrap.value = feat
+      }
+      wrap.dispatchEvent(new Event("input", { bubbles: true }))
+    })
+    row.appendChild(btn)
+  })
+
+  wrap.append(lbl, row)
+  return wrap
+}
+```
+
+```{ojs}
+// Radar chart — returns an SVG wrapped in a div
+radarViz = {
+  const W = 260, H = 260
+  const cx = W/2, cy = H/2, R = W*0.33
+  const N = FEATURES.length
+  const angles = FEATURES.map((_, i) => Math.PI*2*i/N - Math.PI/2)
+
+  const polyPts = pairs => pairs.map(p => p.join(",")).join(" ")
+  const pt = (i, v) => [cx + v*R*Math.cos(angles[i]), cy + v*R*Math.sin(angles[i])]
+
+  const ns = "http://www.w3.org/2000/svg"
+  const svg = document.createElementNS(ns, "svg")
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`)
+  svg.setAttribute("width", "100%")
+  svg.style.overflow = "visible"
+
+  // Grid rings
+  ;[0.25, 0.5, 0.75, 1].forEach(r => {
+    const ring = document.createElementNS(ns, "polygon")
+    ring.setAttribute("points", polyPts(angles.map(a =>
+      [cx + r*R*Math.cos(a), cy + r*R*Math.sin(a)])))
+    ring.setAttribute("fill","none")
+    ring.setAttribute("stroke","#2a2a2a")
+    ring.setAttribute("stroke-width","1")
+    svg.appendChild(ring)
+  })
+
+  // Axes + labels
+  FEATURES.forEach((feat, i) => {
+    const a = angles[i]
+    const ln = document.createElementNS(ns, "line")
+    ln.setAttribute("x1", cx); ln.setAttribute("y1", cy)
+    ln.setAttribute("x2", cx + R*Math.cos(a))
+    ln.setAttribute("y2", cy + R*Math.sin(a))
+    ln.setAttribute("stroke","#2a2a2a"); ln.setAttribute("stroke-width","1")
+    svg.appendChild(ln)
+
+    const tx = document.createElementNS(ns, "text")
+    tx.setAttribute("x", cx + (R+20)*Math.cos(a))
+    tx.setAttribute("y", cy + (R+20)*Math.sin(a))
+    tx.setAttribute("text-anchor", Math.cos(a)>0.1?"start":Math.cos(a)<-0.1?"end":"middle")
+    tx.setAttribute("dominant-baseline", Math.sin(a)>0.1?"hanging":Math.sin(a)<-0.1?"auto":"middle")
+    tx.setAttribute("fill", activeFeature===feat ? "#f0f0f0" : "#555")
+    tx.setAttribute("font-size","9")
+    tx.setAttribute("font-family","DM Sans,sans-serif")
+    tx.setAttribute("font-weight", activeFeature===feat ? "700" : "400")
+    tx.textContent = feat.toUpperCase()
+    svg.appendChild(tx)
+  })
+
+  // Genre polygons
+  genreProfiles.forEach(d => {
+    const isOn = activeGenres.has(d.genre)
+    const poly = document.createElementNS(ns, "polygon")
+    poly.setAttribute("points", polyPts(FEATURES.map((_,i) =>
+      pt(i, d.features[FEATURES[i]] ?? 0))))
+    poly.setAttribute("fill", d.color)
+    poly.setAttribute("fill-opacity", isOn ? "0.15" : "0.02")
+    poly.setAttribute("stroke", d.color)
+    poly.setAttribute("stroke-width", isOn ? "2.5" : "0.5")
+    poly.setAttribute("stroke-opacity", isOn ? "0.9" : "0.15")
+    poly.style.transition = "all 0.3s ease"
+    svg.appendChild(poly)
+  })
+
+  const wrap = document.createElement("div")
+  const ttl = document.createElement("div")
+  ttl.className = "chart-title"
+  ttl.textContent = "Radar — Audio Fingerprints"
+  wrap.append(ttl, svg)
+  return wrap
+}
+```
+
+```{ojs}
+// Bar chart
+barViz = {
+  const W = 260, H = 200
+  const m = {top:10, right:8, bottom:34, left:26}
+  const iW = W-m.left-m.right, iH = H-m.top-m.bottom
+
+  const ns = "http://www.w3.org/2000/svg"
+  const svg = document.createElementNS(ns, "svg")
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`)
+  svg.setAttribute("width", "100%")
+
+  const g = document.createElementNS(ns, "g")
+  g.setAttribute("transform", `translate(${m.left},${m.top})`)
+  svg.appendChild(g)
+
+  // Grid + y-ticks
+  ;[0, 0.25, 0.5, 0.75, 1].forEach(v => {
+    const y = iH - v*iH
+    const gl = document.createElementNS(ns,"line")
+    gl.setAttribute("x1",0); gl.setAttribute("y1",y)
+    gl.setAttribute("x2",iW); gl.setAttribute("y2",y)
+    gl.setAttribute("stroke","#1e1e1e"); gl.setAttribute("stroke-width","1")
+    g.appendChild(gl)
+
+    const tk = document.createElementNS(ns,"text")
+    tk.setAttribute("x",-4); tk.setAttribute("y",y)
+    tk.setAttribute("text-anchor","end")
+    tk.setAttribute("dominant-baseline","middle")
+    tk.setAttribute("font-size","7")
+    tk.setAttribute("font-family","DM Sans,sans-serif")
+    tk.setAttribute("fill","#444")
+    tk.textContent = v.toFixed(2)
+    g.appendChild(tk)
+  })
+
+  const featW = iW / FEATURES.length
+  const genreW = (featW - 2) / genreProfiles.length
+
+  FEATURES.forEach((feat, fi) => {
+    const isHl = activeFeature === feat || activeFeature === null
+
+    const xl = document.createElementNS(ns,"text")
+    xl.setAttribute("x", fi*featW + featW/2)
+    xl.setAttribute("y", iH+13)
+    xl.setAttribute("text-anchor","middle")
+    xl.setAttribute("font-size","7.5")
+    xl.setAttribute("font-family","DM Sans,sans-serif")
+    xl.setAttribute("fill", activeFeature===feat ? "#f0f0f0" : "#444")
+    xl.setAttribute("font-weight", activeFeature===feat ? "700" : "400")
+    xl.textContent = feat.slice(0,5).toUpperCase()
+    g.appendChild(xl)
+
+    genreProfiles.forEach((d, gi) => {
+      const isOn = activeGenres.has(d.genre)
+      const val = d.features[feat] ?? 0
+      const barH = val * iH
+
+      const rect = document.createElementNS(ns,"rect")
+      rect.setAttribute("x", fi*featW + 1 + gi*genreW)
+      rect.setAttribute("y", iH - barH)
+      rect.setAttribute("width", Math.max(genreW-1, 1))
+      rect.setAttribute("height", barH)
+      rect.setAttribute("fill", d.color)
+      rect.setAttribute("opacity", isHl && isOn ? 0.85 : 0.07)
+      rect.style.transition = "opacity 0.3s ease"
+
+      rect.addEventListener("mouseenter", e => {
+        let tip = document.querySelector(".chart-tooltip")
+        if (!tip) { tip = document.createElement("div"); tip.className="chart-tooltip"; document.body.appendChild(tip) }
+        tip.innerHTML = `<strong style="color:${d.color}">${d.genre.toUpperCase()}</strong><br>${feat}: ${val.toFixed(3)}`
+        tip.classList.add("visible")
+      })
+      rect.addEventListener("mousemove", e => {
+        const tip = document.querySelector(".chart-tooltip")
+        if (tip) { tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY-32)+"px" }
+      })
+      rect.addEventListener("mouseleave", () =>
+        document.querySelector(".chart-tooltip")?.classList.remove("visible"))
+
+      g.appendChild(rect)
+    })
+  })
+
+  const wrap = document.createElement("div")
+  const ttl = document.createElement("div")
+  ttl.className = "chart-title"
+  ttl.textContent = "Bar Chart — Feature Comparison"
+  wrap.append(ttl, svg)
+  return wrap
+}
+```
+
+```{ojs}
+// Song cards (shown only when exactly 1 genre is active)
+songViz = {
+  const active = [...activeGenres]
+  if (active.length === 0 || active.length === genreProfiles.length)
+    return document.createElement("div")
+
+  const focusGenre = active[0]
+  const color = genreProfiles.find(d => d.genre === focusGenre)?.color ?? "#888"
+  const songs = topSongs.filter(s => s.genre === focusGenre).slice(0, 3)
+  if (!songs.length) return document.createElement("div")
+
+  const wrap = document.createElement("div")
+  const ttl = document.createElement("div")
+  ttl.className = "chart-title"
+  ttl.textContent = `Top songs · ${focusGenre.toUpperCase()}`
+
+  const cards = document.createElement("div")
+  cards.className = "song-cards"
+  songs.forEach((song, i) => {
+    cards.innerHTML += `
+      <div class="song-card" style="border-color:${color}33">
+        <div class="song-card-rank" style="color:${color}">${i+1}</div>
+        <div class="song-card-info">
+          <div class="song-card-name">${song.track_name}</div>
+          <div class="song-card-artist">${song.track_artist}</div>
+        </div>
+        <div class="song-card-pop">⬆ ${song.popularity}</div>
+      </div>`
+  })
+  wrap.append(ttl, cards)
+  return wrap
+}
+```
+
+```{=html}
+<style>
+  /* Hide the OJS cell wrappers that appear OUTSIDE chart-panel */
+  /* We move their children into chart-panel via JS below     */
+  .ojs-in-panel { display: none; }
+</style>
+
+<script type="module">
+// Wait for OJS to finish rendering all cells, then move the
+// produced DOM nodes into the chart-panel grid.
+// OJS cells with visible output produce a div.observablehq inside
+// div[id^="ojs-cell-"] wrappers that sit inside #quarto-content.
+// We relocate those nodes into the chart-panel.
+
+function buildPanel() {
+  const panel = document.getElementById("main-chart-panel")
+  if (!panel) { setTimeout(buildPanel, 50); return }
+
+  // The 5 visible OJS cells produce nodes that contain these classes:
+  const legendNode  = document.querySelector(".genre-legend")
+  const filtersNode = document.querySelector(".filters-wrap")
+  const radarNode   = document.querySelector(".chart-title")  // first chart-title = radar
+  const barNode     = document.querySelectorAll(".chart-title")[1]  // second = bar
+  const songsNode   = document.querySelector(".song-cards")
+
+  // We need the actual OJS wrapper divs, not just the inner nodes
+  function ojsParent(el) {
+    if (!el) return null
+    let node = el
+    // Walk up until we find a direct child of #quarto-content or main
+    while (node && node.parentElement &&
+           node.parentElement.id !== "quarto-content" &&
+           node.parentElement.tagName !== "MAIN" &&
+           !node.parentElement.classList.contains("observablehq-center")) {
+      node = node.parentElement
+    }
+    return node
+  }
+
+  // Need all five before we proceed
+  if (!legendNode || !filtersNode || !radarNode || !barNode) {
+    setTimeout(buildPanel, 80)
+    return
+  }
+
+  // Clear the panel placeholder text
+  panel.innerHTML = ""
+
+  // Build the 5 slot divs programmatically and move OJS output into them
+  const slots = [
+    { id: "slot-legend",  col: "1/-1", node: ojsParent(legendNode) },
+    { id: "slot-filters", col: "1/-1", node: ojsParent(filtersNode) },
+    { id: "slot-radar",   col: "1",    node: ojsParent(radarNode) },
+    { id: "slot-bar",     col: "2",    node: ojsParent(barNode) },
+  ]
+
+  if (songsNode) {
+    slots.push({ id: "slot-songs", col: "1/-1", node: ojsParent(songsNode) })
+  }
+
+  slots.forEach(({ id, col, node }) => {
+    const slot = document.createElement("div")
+    slot.id = id
+    slot.style.gridColumn = col
+    if (node) slot.appendChild(node)
+    panel.appendChild(slot)
+  })
+
+  console.log("Chart panel built.")
+}
+
+// OJS needs some time to resolve FileAttachments and render cells
+setTimeout(buildPanel, 600)
+</script>
+
+<script type="module">
+import scrollama from "https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm"
+
+function initScroller() {
+  const steps = document.querySelectorAll("#genre-steps .step")
+  if (!steps.length) { setTimeout(initScroller, 150); return }
+  const s = scrollama()
+  s.setup({ step: "#genre-steps .step", offset: 0.5 })
+   .onStepEnter(({ element }) => {
+     steps.forEach(el => el.classList.remove("is-active"))
+     element.classList.add("is-active")
+   })
+  window.addEventListener("resize", s.resize)
+}
+initScroller()
+</script>
+
+<div class="chart-tooltip"></div>
+```
