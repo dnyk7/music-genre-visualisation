@@ -551,6 +551,11 @@ body {
   color: var(--muted, #666);
   font-size: 1.05rem;
   line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.step-text p:last-child {
+  margin-bottom: 10vh;
 }
 
 .step-number {
@@ -872,8 +877,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 4rem 0;
+  justify-content: flex-start;
+  padding: 10rem 0 4rem;
   opacity: 0.3;
   transform: translateY(20px);
   transition: all 0.6s ease;
@@ -902,6 +907,11 @@ body {
   color: var(--muted, #666);
   font-size: 1.05rem;
   line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.text-step p:last-child {
+  margin-bottom: 12vh;
 }
 
 .text-step .step-number {
@@ -1230,6 +1240,7 @@ footer {
   padding: 1.5rem;
 }
 .step5-title-wrap {
+  margin-top: 0rem;
   margin-bottom: 1rem;
 }
 .step5-title-wrap .step-number {
@@ -1539,7 +1550,7 @@ footer {
   flex-direction: row;
   gap: 3rem;
   align-items: flex-start;
-  padding: 0;
+  padding: 4rem 0;
 }
 
 #step2 .sticky-chart-wrapper {
@@ -1620,9 +1631,16 @@ footer {
     position: sticky;
     top: 10vh;
   }
+  #step1 .step-text,
   #step3 .step-text,
   #step4 .step-text {
-    margin-top: 2.5rem;
+    margin-top: 10rem;
+  }
+  #step1 .step-text,
+  #step2 .scrolling-text,
+  #step3 .step-text,
+  #step4 .step-text {
+    padding-bottom: 20vh;
   }
 }
 
