@@ -23,7 +23,7 @@
   <div class="scrolly-container">
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!-- STEP 1: Overall Popularity                                    -->
+    <!-- STEP 1: Overview                                   -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <section class="step" id="step1">
 
@@ -41,7 +41,7 @@
 
     <!-- example song -->
     <div class="step-chart player-panel" id="chart1">
-      <img class="playbar-photo scalable-photo" id="player-playbar" src="./photos/spotify_badge.png" alt="Spotify logo badge">
+      <img class="playbar-photo scalable-photo" id="player-playbar" src="./photos/playlist.png" alt="Spotify logo badge">
       <div class="player-list" id="player-track-list"></div>
       <img class="playbar-photo" id="player-playbar" src="./photos/playbar.png" alt="Fake Spotify controls">
     </div>
@@ -230,7 +230,7 @@
 
     const opts = { actions: true, renderer: 'svg' };
     const optsNoActions = { actions: false, renderer: 'svg' };
-    const STEP1_PHOTO_SCALE = 0.4;
+    const STEP1_PHOTO_SCALE = 1;
 
     // ── Step 1 (HTML panel) ──
     const STEP1_TRACK_IDS = [
