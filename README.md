@@ -10,7 +10,7 @@ The project is presented as a 5-step narrative:
 
 1. **Step 1**: Distribution of track popularity (histogram).
 2. **Step 2**: Sticky scrollytelling comparison of single-genre vs multi-genre popularity patterns.
-3. **Step 3**: Audio feature comparison across features.
+3. **Step 3**: Audio feature comparison across genres.
 4. **Step 4**: Genre popularity trends over time (5-year bins).
 5. **Step 5**: Interactive song explorer (genre pie chart, song search, radar chart, Spotify track link).
 
