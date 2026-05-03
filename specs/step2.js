@@ -623,8 +623,8 @@ export const spec2c = {
         "text": {"field": "label"},
         "tooltip": [
           {"field": "mean",  "title": "Mean (μ)",    "format": ".2f"},
-          {"field": "std",   "title": "Std Dev (σ)", "format": ".2f"},
-          {"field": "count", "title": "n",           "format": ","}
+          //{"field": "std",   "title": "Std Dev (σ)", "format": ".2f"},
+          //{"field": "count", "title": "n",           "format": ","}
         ]
       }
     },
@@ -690,8 +690,8 @@ export const spec2c = {
         "text": {"field": "label"},
         "tooltip": [
           {"field": "mean",  "title": "Mean (μ)",    "format": ".2f"},
-          {"field": "std",   "title": "Std Dev (σ)", "format": ".2f"},
-          {"field": "count", "title": "n",           "format": ","}
+          //{"field": "std",   "title": "Std Dev (σ)", "format": ".2f"},
+          //{"field": "count", "title": "n",           "format": ","}
         ]
       }
     }
