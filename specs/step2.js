@@ -276,7 +276,7 @@ export const spec2a = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": 720,
   "height": 460,
-  "padding": {"top": 70, "left": 80, "right": 40, "bottom": 50},
+  "padding": {"top": 40, "left": 0, "right": 40, "bottom": 0},
   "autosize": {"type": "fit", "contains": "padding"},
   "params": [
     {
@@ -315,7 +315,7 @@ export const spec2a = {
           "field": "bin_start",
           "type": "quantitative",
           "scale": {"domain": [0, 100]},
-          "axis": {"tickMinStep": 5},
+          "axis": {"tickMinStep": 5, "grid": false},
           "title": "Track Popularity"
         },
         "x2": {"field": "bin_end", "type": "quantitative"},
@@ -358,7 +358,7 @@ export const spec2b = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": 720,
   "height": 460,
-  "padding": {"top": 70, "left": 80, "right": 40, "bottom": 50},
+  "padding": {"top": 40, "left": 0, "right": 40, "bottom": 0},
   "autosize": {"type": "fit", "contains": "padding"},
   "params": [
     {
@@ -400,7 +400,7 @@ export const spec2b = {
           "field": "bin_start",
           "type": "quantitative",
           "scale": {"domain": [0, 100]},
-          "axis": {"tickMinStep": 5},
+          "axis": {"tickMinStep": 5, "grid": false},
           "title": "Track Popularity"
         },
         "x2": {"field": "bin_end", "type": "quantitative"},
@@ -452,7 +452,7 @@ export const spec2c = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": 720,
   "height": 460,
-  "padding": {"top": 70, "left": 80, "right": 40, "bottom": 50},
+  "padding": {"top": 40, "left": 0, "right": 40, "bottom": 0},
   "autosize": {"type": "fit", "contains": "padding"},
   "params": [
     {
