@@ -4,6 +4,10 @@
 
 An interactive scrollytelling data visualisation built with **Vega-Lite** and **D3.js** using Spotify song data.
 
+## Live website
+
+https://dnyk7.github.io/music-genre-visualisation/
+
 ## Overview
 
 The project is presented as a 5-step narrative:
