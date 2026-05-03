@@ -1555,6 +1555,16 @@ footer {
   min-width: 0;
 }
 
+/* Match Steps 1-4 figure container width to Step 4 */
+#step1 .step-chart,
+#step2 .sticky-chart-wrapper,
+#step3 .step-chart,
+#step4 .step-chart {
+  flex: 0 0 65%;
+  width: 65%;
+  max-width: 65%;
+}
+
 /* Fix step4 chart sticky (already sticky via other rule) */
 #step1 .step-chart,
 #step3 .step-chart,
@@ -1563,10 +1573,36 @@ footer {
   top: 10vh;
   align-self: flex-start;
 }
-/* Override the row-reverse for step2 – keep chart left, text right */
-#step2 {
-  flex-direction: row !important;
-}
+/* Use one consistent horizontal flow for Steps 1-4 */
+#step1,
+#step2,
+#step3,
 #step4 {
   flex-direction: row !important;
+}
+
+/* Explicitly place figure left, text right (same positioning logic as Step 2) */
+#step1 .step-chart,
+#step2 .sticky-chart-wrapper,
+#step3 .step-chart,
+#step4 .step-chart {
+  order: 1;
+}
+
+#step1 .step-text,
+#step2 .scrolling-text,
+#step3 .step-text,
+#step4 .step-text {
+  order: 2;
+}
+
+@media (max-width: 900px) {
+  #step1 .step-chart,
+  #step2 .sticky-chart-wrapper,
+  #step3 .step-chart,
+  #step4 .step-chart {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 100%;
+  }
 }
