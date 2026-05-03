@@ -16,7 +16,7 @@
   <section class="hero">
     <div class="hero-label">A SPOTIFY DATA STORY</div>
     <h1>Genres have <em>personalities</em> — but not as different as you'd think.</h1>
-    <p class="hero-sub">We analysed over 20,000 songs across 6 genres using Spotify's audio fingerprints.</p>
+    <p class="hero-sub">We analysed over 30,000 songs across 6 genres using Spotify's audio fingerprints.</p>
     <div class="scroll-hint">Scroll to explore</div>
   </section>
 
@@ -73,7 +73,7 @@
             <span class="decomp-dot" style="background: #1F77B4;"></span>
             <span class="decomp-text">
               <span class="decomp-label">total</span>
-              <span class="decomp-main" id="decomp-total-main">24,162</span>
+              <span class="decomp-main" id="decomp-total-main">32,631</span>
               <span class="decomp-sub" id="decomp-total-sub">100%</span>
             </span>
           </div>
@@ -82,16 +82,16 @@
             <span class="decomp-dot" style="background: #5A9FD4;"></span>
             <span class="decomp-text">
               <span class="decomp-label">single genre</span>
-              <span class="decomp-main" id="decomp-single-main">22,511</span>
-              <span class="decomp-sub" id="decomp-single-sub">93.2%</span>
+              <span class="decomp-main" id="decomp-single-main">28,127</span>
+              <span class="decomp-sub" id="decomp-single-sub">86.20%</span>
             </span>
           </div>
           <div class="decomp-row">
             <span class="decomp-dot" style="background: #FF7F0E;"></span>
             <span class="decomp-text">
               <span class="decomp-label">multi genre</span>
-              <span class="decomp-main" id="decomp-multi-main">1,651</span>
-              <span class="decomp-sub" id="decomp-multi-sub">6.8%</span>
+              <span class="decomp-main" id="decomp-multi-main">4,504</span>
+              <span class="decomp-sub" id="decomp-multi-sub">13.80%</span>
             </span>
           </div>
         </div>
@@ -102,10 +102,10 @@
         <div class="text-step active" data-target="overall">
           <div class="step-number">2</div>
           <h2>The Largest Group? Songs That Barely Get Played</h2>
-          <p>The histogram reveals a surprising pattern: the <span class="highlight">tallest bar is at popularity 0–5</span>, containing <strong class="number">4,036 tracks</strong> — more than any other bin. That means the most common fate for a song on Spotify is to remain largely unheard. So what kind of songs <em>escape</em> this fate? The answer hides in an unexpected place: <span class="highlight">multi-genre tracks</span>. Notice how a small slice — only <strong class="number">1,651 tracks (6.8% of all songs)</strong> — carry <span class="highlight">multiple genre tags</span>. Yet as we move toward higher popularity, their presence grows dramatically.</p>        </div>
+          <p>The histogram reveals a surprising pattern: the <span class="highlight">tallest bar is at popularity 0–5</span>, containing <strong class="number">4,204 tracks</strong> — more than any other bin. That means the most common fate for a song on Spotify is to remain largely unheard. So what kind of songs <em>escape</em> this fate? The answer hides in an unexpected place: <span class="highlight">multi-genre tracks</span>. Notice how a small slice — only <strong class="number">4504 tracks (13.8% of all songs)</strong> — carry <span class="highlight">multiple genre tags</span>. Yet as we move toward higher popularity, their presence grows dramatically.</p>        </div>
         <div class="text-step" data-target="stacked">
           <h2>Multi-Genre Tracks: Small in Number, Massive at the Top</h2>
-          <p>When we split the histogram, a striking gap appears. <span style="color: #5A9FD4;">Single-genre tracks</span> (<strong class="number">22,511 tracks</strong>) dominate the low and middle bins, but fade out above 80. <span style="color: #FF7F0E;">Multi-genre tracks</span> tell a completely different story — they barely appear in low bins, yet <span class="highlight">dominate the highest popularity ranges</span>. In the top bins (80–100), multi-genre tracks <span class="highlight">outnumber single-genre tracks</span> despite being only <strong>6.8%</strong> of the dataset. Look at the 90–95 bin: <strong>4 single-genre tracks</strong> vs. <strong>39 multi-genre tracks</strong>.</p>        </div>
+          <p>When we split the histogram, a striking gap appears. <span style="color: #5A9FD4;">Single-genre tracks</span> (<strong class="number">28,127 tracks</strong>) dominate the low and middle bins, but fade out above 80. <span style="color: #FF7F0E;">Multi-genre tracks</span> tell a completely different story — they barely appear in low bins, yet <span class="highlight">dominate the highest popularity ranges</span>. In the top bins (80–100), multi-genre tracks <span class="highlight">outnumber single-genre tracks</span> despite being only <strong>13.8%</strong> of the dataset.</p>        </div>
         <div class="text-step" data-target="unstacked">
           <h2>The Statistical Divide: Two Different Worlds</h2>
           <p>Fitting Gaussian curves reveals the true gap. Multi-genre tracks have a <span class="highlight">mean popularity of <strong>66.01</strong></span> — far above the single-genre mean of <strong>39.46</strong>. Their entire distribution shifts rightward, with almost no songs in the 0–20 range. This <strong>"popularity premium"</strong> likely comes from <span class="highlight">audience crossover</span> — a song tagged both "Pop" and "Hip Hop" gets playlists from both fanbases.</p>        
@@ -351,18 +351,18 @@
     function updateDecompBox(mode) {
       if (mode === 'density') {
         decompTotalMain.textContent  = '100%';
-        decompTotalSub.textContent   = '24,162';
+        decompTotalSub.textContent   = '32,631';
         decompSingleMain.textContent = '93.2%';
-        decompSingleSub.textContent  = '22,511';
-        decompMultiMain.textContent  = '6.8%';
-        decompMultiSub.textContent   = '1,651';
+        decompSingleSub.textContent  = '28,127';
+        decompMultiMain.textContent  = '13.8%';
+        decompMultiSub.textContent   = '4,504';
       } else {
-        decompTotalMain.textContent  = '24,162';
+        decompTotalMain.textContent  = '32,631';
         decompTotalSub.textContent   = '100%';
-        decompSingleMain.textContent = '22,511';
+        decompSingleMain.textContent = '28,127';
         decompSingleSub.textContent  = '93.2%';
-        decompMultiMain.textContent  = '1,651';
-        decompMultiSub.textContent   = '6.8%';
+        decompMultiMain.textContent  = '4,504';
+        decompMultiSub.textContent   = '13.8%';
       }
     }
 

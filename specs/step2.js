@@ -155,6 +155,16 @@ const singleTotal = histData.reduce((s, d) => s + d.single_count, 0);
 const multiTotal  = histData.reduce((s, d) => s + d.multi_count, 0);
 const totalAll    = singleTotal + multiTotal;
 
+console.log("=".repeat(50));
+console.log("GENRE CASE COUNTS");
+console.log("=".repeat(50));
+console.log(`Single-genre tracks:  ${singleTotal.toLocaleString()}`);
+console.log(`Multi-genre tracks:   ${multiTotal.toLocaleString()}`);
+console.log(`Total tracks:         ${totalAll.toLocaleString()}`);
+console.log("=".repeat(50));
+console.log(`Single-genre %:       ${(singleTotal/totalAll*100).toFixed(2)}%`);
+console.log(`Multi-genre %:        ${(multiTotal/totalAll*100).toFixed(2)}%`);
+
 // ── State 1: Overall (merged counts) ──
 // Using the EXACT same structure as the working uploaded spec
 const overallData = [];
