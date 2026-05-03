@@ -1152,7 +1152,21 @@ footer {
     top: auto;
   }
   #step3 .view-chart-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: stretch;
+  }
+  #step3-radar-host,
+  #step3-bar-host {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #step3-radar-host svg,
+  #step3-bar-host svg {
+    width: 100%;
+    height: auto;
+    display: block;
   }
   .sticky-step {
     flex-direction: column;

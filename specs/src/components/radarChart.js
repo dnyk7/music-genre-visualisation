@@ -4,8 +4,10 @@ import { state } from "./main.js"
 const FEATURES = ["Danceability", "Speechiness", "Valence", "Acousticness", "Energy"]
 
 let svg = null
-let width = 550, height = 500
+let width = 450, height = 450
 let margin = { top: 20, right: 20, bottom: 20, left: 20 }
+// let width = 580, height = 520;
+// let margin = { top: 50, right: 50, bottom: 50, left: 50 };
 let cx, cy, R, angles
 
 function initGeometry() {
@@ -31,6 +33,8 @@ export function renderRadar() {
     const container = document.createElement("div")
     svg = d3.create("svg")
       .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("width", width)
+      .attr("height", height)
       .attr("class", "radar-svg")
     initGeometry()
     drawAxesAndLabels()

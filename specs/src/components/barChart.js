@@ -3,8 +3,8 @@ import { state } from "./main.js"
 // d3 is loaded globally via CDN in index.html
 const FEATURES = ["Danceability", "Energy", "Valence", "Acousticness", "Speechiness"]
 let svg = null
-let width = 550, height = 450
-let margin = { top: 50, right: 20, bottom: 30, left: 110 }
+let width = 550, height = 550
+let margin = { top: 70, right: 20, bottom: 40, left: 140 };
 
 export function resetChart() {
   svg = null
@@ -31,7 +31,7 @@ function drawAxes() {
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .call(d3.axisTop(xScale).ticks(5))
     .selectAll("text")
-    .attr("font-size", "16px")
+    .attr("font-size", "20px")
     .attr("fill", "black")
     .attr("font-weight", "500")
 
@@ -39,7 +39,7 @@ function drawAxes() {
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .call(d3.axisLeft(yScale))
     .selectAll("text")
-    .attr("font-size", "16px")
+    .attr("font-size", "20px")
     .attr("fill", "black")
     .attr("font-weight", "500")
 
@@ -48,9 +48,9 @@ function drawAxes() {
     .attr("y", margin.top - 25)
     .attr("text-anchor", "middle")
     .attr("fill", "black")
-    .attr("font-size", "16px")
+    .attr("font-size", "20px")
     .attr("font-weight", "500")
-    .text("Normalised value (0 → 1)")
+    // .text("Normalised value (0 → 1)")
 
   g.selectAll(".domain, .tick line")
     .attr("stroke", "#999")
@@ -61,6 +61,8 @@ export function renderBar() {
   if (!svg) {
     svg = d3.select(container).append("svg")
       .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("width", width)
+      .attr("height", height)
       .attr("class", "bar-svg")
     drawAxes()
   }
