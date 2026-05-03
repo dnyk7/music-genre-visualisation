@@ -1,0 +1,74 @@
+[
+  {
+    "genre": "edm",
+    "color": "#1DB954",
+    "features": {
+      "Danceability": 0.6549,
+      "Energy": 0.8132,
+      "Valence": 0.3916,
+      "Acousticness": 0.0734,
+      "Tempo": 0.5281,
+      "Speechiness": 0.0874
+    }
+  },
+  {
+    "genre": "latin",
+    "color": "#F72585",
+    "features": {
+      "Danceability": 0.7144,
+      "Energy": 0.7142,
+      "Valence": 0.6177,
+      "Acousticness": 0.2128,
+      "Tempo": 0.496,
+      "Speechiness": 0.1014
+    }
+  },
+  {
+    "genre": "pop",
+    "color": "#4CC9F0",
+    "features": {
+      "Danceability": 0.6369,
+      "Energy": 0.7026,
+      "Valence": 0.5053,
+      "Acousticness": 0.1703,
+      "Tempo": 0.5062,
+      "Speechiness": 0.072
+    }
+  },
+  {
+    "genre": "r&b",
+    "color": "#7B2D8B",
+    "features": {
+      "Danceability": 0.6685,
+      "Energy": 0.5861,
+      "Valence": 0.5387,
+      "Acousticness": 0.2642,
+      "Tempo": 0.4747,
+      "Speechiness": 0.116
+    }
+  },
+  {
+    "genre": "rap",
+    "color": "#F77F00",
+    "features": {
+      "Danceability": 0.7162,
+      "Energy": 0.65,
+      "Valence": 0.504,
+      "Acousticness": 0.1948,
+      "Tempo": 0.5021,
+      "Speechiness": 0.201
+    }
+  },
+  {
+    "genre": "rock",
+    "color": "#D62828",
+    "features": {
+      "Danceability": 0.5185,
+      "Energy": 0.7358,
+      "Valence": 0.5304,
+      "Acousticness": 0.1403,
+      "Tempo": 0.5227,
+      "Speechiness": 0.058
+    }
+  }
+]
