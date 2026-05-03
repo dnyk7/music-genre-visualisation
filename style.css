@@ -1611,6 +1611,21 @@ footer {
   order: 2;
 }
 
+@media (min-width: 901px) {
+  #step3 {
+    min-height: 130vh;
+    align-items: flex-start;
+  }
+  #step3 .step-chart {
+    position: sticky;
+    top: 10vh;
+  }
+  #step3 .step-text,
+  #step4 .step-text {
+    margin-top: 2.5rem;
+  }
+}
+
 @media (max-width: 900px) {
   #step1 .step-chart,
   #step2 .sticky-chart-wrapper,
