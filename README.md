@@ -42,4 +42,3 @@ Then open:
 - `specs/step5.js` — D3.js logic for the Step 5 explorer.
 - `DataCleaning/` — cleaned CSV and notebook.
 - `style.css` — standalone stylesheet (the current `index.html` uses inline styles).
-- `del/` — older development files.
