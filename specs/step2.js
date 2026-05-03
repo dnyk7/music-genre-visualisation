@@ -250,7 +250,7 @@ const singlePeak = {
   x_count: SINGLE_LABEL_X_COUNT,
   y_density: SINGLE_LABEL_Y_DENSITY,
   y_count: SINGLE_LABEL_Y_COUNT,
-  label: 'single-genre (=1)',
+  label: 'mean of single-genre',
   mean: SINGLE_MEAN,
   std: SINGLE_STD,
   count: SINGLE_COUNT
@@ -261,7 +261,7 @@ const multiPeak = {
   x_count: MULTI_LABEL_X_COUNT,
   y_density: MULTI_LABEL_Y_DENSITY,
   y_count: MULTI_LABEL_Y_COUNT,
-  label: 'multi-genre (>1)',
+  label: 'mean of multi-genre',
   mean: MULTI_MEAN,
   std: MULTI_STD,
   count: MULTI_COUNT
@@ -580,7 +580,7 @@ export const spec2c = {
         "stroke": LABEL_BG_BORDER_SINGLE,
         "strokeWidth": LABEL_BG_BORDER_WIDTH,
         "cornerRadius": LABEL_BG_CORNER_RADIUS,
-        "width": 120,
+        "width": 145,
         "height": 26,
         "opacity": 0.9
       },
@@ -647,7 +647,7 @@ export const spec2c = {
         "stroke": LABEL_BG_BORDER_MULTI,
         "strokeWidth": LABEL_BG_BORDER_WIDTH,
         "cornerRadius": LABEL_BG_CORNER_RADIUS,
-        "width": 110,
+        "width": 140,
         "height": 26,
         "opacity": 0.9
       },
