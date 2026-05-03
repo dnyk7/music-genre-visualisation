@@ -54,7 +54,7 @@ function renderStep3Layout() {
 
   const insight = document.createElement('div')
   insight.className = 'key-insight'
-  insight.innerHTML = `<strong>Key insights:</strong> EDM and Latin are the most danceable and energetic. R&B and Pop feature higher valence. Rock is the least danceable, but most acoustic.`
+  insight.innerHTML = `<strong>Key insights:</strong> Surprisingly, <span style="color: #F77F00;">Rap</span> is the most danceable. <span style="color: #F72585;">Latin</span> is the second most danceable but highest valence. Then, <span style="color: #1DB954;">EDM</span> has the least acousticness but most energy.`
 
   const annotation = document.createElement('div')
   annotation.className = 'takeaway'
