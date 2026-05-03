@@ -12,7 +12,7 @@ export const spec4 = {
     "subtitleColor": "#777",
     "anchor": "start"
   },
-  "width": 650,
+  "width": 720,
   "height": 460,
   "padding": {"top": 0, "left": 0, "right": 0, "bottom": 0},
   "autosize": {"type": "fit", "contains": "padding"},

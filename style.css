@@ -649,7 +649,7 @@ body {
 /* Vega bind controls */
 .vega-bind {
   position: absolute !important;
-  top: 60px;
+  top: 50px;
   right: 10px;
   background: rgba(255, 255, 255, 0.95);
   padding: 10px 14px;
@@ -794,7 +794,7 @@ body {
 .decomp-box {
   position: absolute;
   top: 15px;
-  left: 505px;
+  right: 10px;
   background: #fff;
   border: 1px solid var(--border, #e5e5e5);
   border-radius: 8px;
@@ -1573,6 +1573,7 @@ footer {
   top: 10vh;
   align-self: flex-start;
 }
+
 /* Use one consistent horizontal flow for Steps 1-4 */
 #step1,
 #step2,
