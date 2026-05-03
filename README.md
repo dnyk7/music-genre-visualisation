@@ -10,6 +10,10 @@ An interactive scrollytelling data visualisation that explores Spotify track pop
 
 ---
 
+## Live website
+
+https://dnyk7.github.io/music-genre-visualisation/
+
 ## Overview
 
 The project guides you through a 5‑step story:
@@ -44,6 +48,7 @@ All audio features are normalised to a 0–1 scale for fair genre‑to‑genre c
 
 Because the project uses only static files, any HTTP server works:
 
+```bash
 # Python 3, Run a local HTTP server from the project root:
 python -m http.server 8000
 
@@ -51,6 +56,8 @@ python -m http.server 8000
 npx serve .
 
 # VS Code Live Server extension
+```
+
 > Note: No build step is required – the site is pure HTML/CSS/JS.
 
 Then open:
@@ -59,6 +66,7 @@ http://localhost:8000/index.html
 
 ## Project structure
 
+```txt
 ├── index.html               # Main entry point (scrollytelling layout, visualisation wiring)
 ├── style.css                # Global styles
 ├── specs/                   # Vega‑Lite specifications (steps 1,2 and 4)
@@ -72,6 +80,10 @@ http://localhost:8000/index.html
 │   └── main.js              # Scrollama setup, view routing
 ├── DataCleaning/            # Cleaned data (csv) and preprocessing notebook
 └── photos/                  # Assets (cover images, Spotify badge)
+```
+
+---
+
 ## Tech stack
 
 - Vega‑Lite – declarative grammar for steps 1, 2 & 4
